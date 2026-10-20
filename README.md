@@ -16,15 +16,20 @@ envía correos).
 
 | Perfil | Qué se puede probar |
 |---|---|
-| Afiliada, afiliada a plazo fijo, jubilado, no afiliado | Buscar casa, reservar (confirmación inmediata), acta de entrega, mis reservas y desistimiento |
-| Otro servicio público | Reserva con hasta 15 días de anticipación, tarifa diferenciada y pago anticipado (Art. 9) |
+| Afiliada, afiliada a plazo fijo, jubilado, no afiliado | Buscar casa, reservar (confirmación inmediata), acta de entrega, mis reservas, desistimiento y postulación al sorteo de verano |
+| Otro servicio público | Reserva con hasta 15 días de anticipación, tarifa diferenciada y pago por transferencia (Art. 9); no postula al sorteo |
 | Encargada regional | Llegadas y salidas, ocupación, reservas de la región, inventario y acta de entrega |
-| Oficina Central | Alertas, nómina de descuentos, pagos, casas y tarifas, bloqueos y dashboard |
+| Oficina Central | Alertas, nómina de descuentos, pagos, casas y tarifas, bloqueos, sorteo de temporada alta y dashboard |
 
 También puede ingresar con su propio RUT y nombre eligiendo «Sí»: como la maqueta no
 tiene nóminas reales, un RUT válido que no está en la nómina de prueba entra como
 afiliado/a activo/a de demostración de la Región Metropolitana. El RUT solo queda en el
 navegador de quien lo escribe.
+
+**Sorteo de temporada alta:** la postulación de verano 2027 está abierta. Postule como
+afiliada en «Sorteo verano»; luego, como Oficina Central, entre a «Sorteo» y use
+«Realizar sorteo» (en la maqueta se puede adelantar). Desde ahí también se registra un
+desistimiento para ver cómo el cupo se ofrece a la lista de espera.
 
 **Reiniciar datos de prueba**, en el pie de página, vuelve todo al estado inicial.
 
