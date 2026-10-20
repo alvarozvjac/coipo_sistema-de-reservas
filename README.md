@@ -21,6 +21,11 @@ envía correos).
 | Encargada regional | Llegadas y salidas, ocupación, reservas de la región, inventario y acta de entrega |
 | Oficina Central | Alertas, nómina de descuentos, pagos, casas y tarifas, bloqueos y dashboard |
 
+También puede ingresar con su propio RUT y nombre eligiendo «Sí»: como la maqueta no
+tiene nóminas reales, un RUT válido que no está en la nómina de prueba entra como
+afiliado/a activo/a de demostración de la Región Metropolitana. El RUT solo queda en el
+navegador de quien lo escribe.
+
 **Reiniciar datos de prueba**, en el pie de página, vuelve todo al estado inicial.
 
 ## Contenido del repositorio
