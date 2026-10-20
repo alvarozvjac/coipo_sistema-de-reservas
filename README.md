@@ -18,8 +18,8 @@ envía correos).
 |---|---|
 | Afiliada, afiliada a plazo fijo, jubilado, no afiliado | Buscar casa, reservar (confirmación inmediata), acta de entrega, mis reservas, desistimiento y postulación al sorteo de verano |
 | Otro servicio público | Reserva con hasta 15 días de anticipación, tarifa diferenciada y pago por transferencia (Art. 9); no postula al sorteo |
-| Encargada regional | Llegadas y salidas, ocupación, reservas de la región, inventario y acta de entrega |
-| Oficina Central | Alertas, nómina de descuentos, pagos, casas y tarifas, bloqueos, sorteo de temporada alta y dashboard |
+| Encargada regional | Llegadas y salidas, ocupación, reservas de la región, inventario, acta de entrega y reserva a nombre de otra persona |
+| Oficina Central | Alertas, nómina de descuentos, pagos, casas y tarifas, bloqueos, sorteo de temporada alta, reserva a nombre de otra persona y dashboard |
 
 También puede ingresar con su propio RUT y nombre eligiendo «Sí»: como la maqueta no
 tiene nóminas reales, un RUT válido que no está en la nómina de prueba entra como
