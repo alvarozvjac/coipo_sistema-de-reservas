@@ -1,0 +1,59 @@
+@import 'tailwindcss';
+
+/* Paleta institucional. Se usa como bg-verde-700, text-tinta-600, etc. */
+@theme {
+  --color-verde-50: #eef6f0;
+  --color-verde-100: #d6eadc;
+  --color-verde-200: #acd4b8;
+  --color-verde-500: #2f7d4a;
+  --color-verde-600: #1f6b3b;
+  --color-verde-700: #185530;
+  --color-verde-800: #123f24;
+  --color-banner: #064928;
+
+  --color-fondo: #f7f6f2;
+  --color-borde: #e3e0d8;
+  --color-tinta-400: #8a877f;
+  --color-tinta-500: #6b6862;
+  --color-tinta-700: #3d3b37;
+  --color-tinta-900: #1d1c1a;
+
+  --color-alerta-50: #fdf6e7;
+  --color-alerta-700: #8a5a00;
+  --color-error-50: #fdeeee;
+  --color-error-700: #a32020;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-fondo);
+  color: var(--color-tinta-900);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-verde-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media print {
+  .no-imprimir {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+}

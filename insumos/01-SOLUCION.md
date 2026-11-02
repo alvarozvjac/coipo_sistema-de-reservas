@@ -1,8 +1,8 @@
 # CON001 · Red de Casas Bienestar (casas de veraneo) · Solución propuesta
 
 Fecha: 2026-11-02 · Versión de maqueta: https://alvarozvjac.github.io/coipo_sistema-de-reservas/
-@ `38662a8` · Fuente: proyecto `coipo_reserva_veraneo` (React 19 + Vite + Tailwind, sin
-backend), decisiones en su `docs/DECISIONES.md` · Manual de usuario:
+@ `38662a8` · Fuente: `fuente/` de este repositorio (React 19 + Vite + Tailwind, sin
+backend), decisiones en `fuente/docs/DECISIONES.md` · Manual de usuario:
 `manual-usuario.pdf` en este repositorio.
 
 ## Qué hace (una frase)

@@ -25,7 +25,7 @@ maqueta vigente, según la metodología UIA del tramo previo a la fábrica (obje
   las **casas de veraneo**; las de uso mixto cuentan como de veraneo. Rige el Reglamento
   General de Uso de Casas de Veraneo o Descanso (propuesta de octubre de 2026), que
   prevalece sobre la solicitud de julio. VERIFICADO (decisión registrada el 20-10-2026 en
-  `docs/DECISIONES.md` del proyecto fuente; reglamento recibido de la Jefatura del Servicio
+  `fuente/docs/DECISIONES.md`; reglamento recibido de la Jefatura del Servicio
   de Bienestar por correo el 16-10-2026).
 - **Contraparte técnica:** Jefatura del Servicio de Bienestar y profesionales de la
   Sección Administración de Bienestar (Oficina Central). VERIFICADO (destinatarios y
@@ -42,7 +42,7 @@ maqueta vigente, según la metodología UIA del tramo previo a la fábrica (obje
     ingeniería inversa y describen esa maqueta, no esta. VERIFICADO (leído el 02-11-2026).
   - Iniciativa **CON001 · Red Casas Bienestar** en Confluence: carpeta vacía al
     10-09-2026. VERIFICADO (informe de cruce repos/Confluence del proyecto UIA).
-  - Esta maqueta (`coipo_sistema-de-reservas`, fuente `coipo_reserva_veraneo`) es un
+  - Esta maqueta (`coipo_sistema-de-reservas`, con su fuente en `fuente/`) es un
     producto nuevo que usó `coipo_cabania` solo como referencia de datos, fotos y reglas.
     VERIFICADO (decisión de Álvaro Zegers, octubre de 2026).
 
@@ -143,4 +143,4 @@ atención» y la consolidación manual de descuentos. VERIFICADO (solicitud, pun
 | P7 | Estado de aprobación del reglamento propuesto | Jefatura del Servicio de Bienestar | 2026-11-02 | Abierto |
 | P8 | Tratamiento de datos personales y de la credencial de perro de asistencia | Fiscalía / encargado/a de protección de datos | 2026-11-02 | Abierto |
 | P9 | Resultado de la reunión del 30-10-2026 | Álvaro Zegers | 2026-11-02 | Abierto |
-| P10 | Reglas por confirmar listadas en `docs/DECISIONES.md` del proyecto fuente (fechas de temporada, 48 horas, 90 días, montos, plazo para transferir, etc.) | Jefatura del Servicio de Bienestar | 2026-10-20 | Abierto |
+| P10 | Reglas por confirmar listadas en `fuente/docs/DECISIONES.md` (fechas de temporada, 48 horas, 90 días, montos, plazo para transferir, etc.) | Jefatura del Servicio de Bienestar | 2026-10-20 | Abierto |

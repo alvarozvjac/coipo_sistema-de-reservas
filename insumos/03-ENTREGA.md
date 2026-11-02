@@ -42,7 +42,7 @@ viajan; credencial de perro de asistencia (sensible); descuentos por persona. To
 ## Pendientes abiertos (con persona)
 
 Ver la tabla de `00-PROBLEMA.md` (P1 a P10) y «Por confirmar con Bienestar» en
-`docs/DECISIONES.md` del proyecto fuente. Todos tienen persona a quien preguntar.
+`fuente/docs/DECISIONES.md`. Todos tienen persona a quien preguntar.
 
 ## Lo que el estándar de interfaz no trajo, o en que la maqueta se aparta
 
@@ -83,9 +83,9 @@ Leído como Luis, solo con estos cuatro archivos, el 2026-11-02:
   aprobación de la maqueta nueva → objetivo 6.
 - [FALTA] Verificación de la maqueta en local y en Pages: la versión vigente no se miró en
   la URL pública → objetivo 5, repetir contra la URL.
-- [FALTA] Código fuente versionado: la fuente (`coipo_reserva_veraneo`) no está en ningún
-  repositorio; aquí solo está la página compilada. Decidir con Álvaro dónde va → antes
-  de entregar.
+- [OK] Código fuente versionado en `fuente/` de este repositorio (decisión de Álvaro
+  Zegers, 02-11-2026); compila desde cero y la batería de pruebas pasa sobre esa
+  compilación.
 - [FALTA] Problema confirmado por la contraparte y escala con número (reservas por año) →
   objetivo 1 (P2, P3).
 - No comprobado: teléfono real, lectores de pantalla, Firefox y Safari.

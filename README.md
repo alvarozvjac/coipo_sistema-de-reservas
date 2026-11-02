@@ -43,9 +43,24 @@ desistimiento para ver cómo el cupo se ofrece a la lista de espera.
   `02-RASTRO.md`, `03-ENTREGA.md`).
 - `manual-usuario.pdf`: manual de usuario por perfil, con capturas y diagramas de flujo.
 - `index.html`: la maqueta completa en un solo archivo (código, estilos e imágenes
-  incluidos). Se genera desde el proyecto fuente `coipo_reserva_veraneo` con
-  `npm run build:pagina` (archivo `frontend/dist-pagina/github-pages/index.html`).
+  incluidos). Se genera desde `fuente/` con `npm run build:pagina` (archivo
+  `fuente/frontend/dist-pagina/github-pages/index.html`).
+- `fuente/`: código fuente de la maqueta (React 19 + Vite + Tailwind 4, sin backend) y
+  `fuente/docs/DECISIONES.md` con las decisiones y los pendientes con Bienestar.
+
+## Cómo actualizar la maqueta publicada
+
+```powershell
+cd fuente/frontend
+npm install
+npm run dev            # para trabajar: http://localhost:5173
+npm run build:pagina   # genera la página única
+copy dist-pagina\github-pages\index.html ..\..\index.html
+copy public\manual-usuario.pdf ..\..\manual-usuario.pdf
+```
+
+Luego se hace commit y push a `main`; GitHub Pages publica en uno o dos minutos.
 
 Norma de referencia: Reglamento General de Uso de Casas de Veraneo o Descanso (propuesta
 de actualización, octubre 2026). Las decisiones de diseño están en
-`coipo_reserva_veraneo/docs/DECISIONES.md`.
+`fuente/docs/DECISIONES.md`.

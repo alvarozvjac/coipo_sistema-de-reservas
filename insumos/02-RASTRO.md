@@ -54,8 +54,7 @@ aprobación trazable de quien decide.
 
 ## Decisiones
 
-Todas las decisiones de diseño, con su fecha y fuente, están en `docs/DECISIONES.md` del
-proyecto fuente. Las que cambiaron el producto:
+Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/DECISIONES.md`. Las que cambiaron el producto:
 
 - 2026-10 · Producto nuevo; `coipo_cabania` solo como referencia · Álvaro Zegers · la
   maqueta anterior era recargada y poco simple.
@@ -69,6 +68,8 @@ proyecto fuente. Las que cambiaron el producto:
   registra el pago · Álvaro Zegers.
 - 2026-11-02 · Un sorteo por temporada (verano o invierno); la postulación se abre solo
   cuando Oficina Central la habilita; pestaña «Temporadas» · Álvaro Zegers.
+- 2026-11-02 · El código fuente se versiona en `fuente/` de este repositorio · Álvaro
+  Zegers.
 - 2026-11-02 · Insumos en este repositorio público, con cargos en vez de nombres de
   Bienestar · Álvaro Zegers eligió el repositorio; el criterio de nombres es de esta
   documentación (regla 8 de la metodología).
@@ -80,7 +81,7 @@ Estándar leído: `coipo_master_produccion/identidad/ESTANDAR_UI.md` @ `0853a0e`
 obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 
 - 2026-11-02 · local (página única servida en `localhost`, y `vite preview`) · fuente
-  sin versionar en repositorio (ver `03-ENTREGA.md`) ·
+  versionada en `fuente/` desde el 02-11-2026 ·
   - Capturas de viewport miradas: 15 vistas por tamaño (ingreso y cada pestaña de
     Afiliada, Otro servicio público, Encargada regional y Oficina Central) en teléfono
     390 × 844 y escritorio 1440 × 960. El contenido principal empieza en y = 213 en el
