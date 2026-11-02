@@ -18,18 +18,19 @@ envía correos).
 
 | Perfil | Qué se puede probar |
 |---|---|
-| Afiliada, afiliada a plazo fijo, jubilado, no afiliado | Buscar casa, reservar (con planilla se confirma al instante; con transferencia queda «por confirmar» hasta que Oficina Central registra el pago), acta de entrega, mis reservas, desistimiento y postulación al sorteo de verano |
+| Afiliada, afiliada a plazo fijo, jubilado, no afiliado | Buscar casa, reservar (con planilla se confirma al instante; con transferencia queda «por confirmar» hasta que Oficina Central registra el pago), acta de entrega, mis reservas, desistimiento y postulación al sorteo en «Temporadas» (verano o invierno, cuando Oficina Central la habilita) |
 | Otro servicio público | Reserva con hasta 15 días de anticipación, tarifa diferenciada y pago por transferencia (Art. 9); no postula al sorteo |
 | Encargada regional | Llegadas y salidas, ocupación, reservas de la región, inventario, acta de entrega y reserva a nombre de otra persona |
-| Oficina Central | Alertas, nómina de descuentos, registro de transferencias (confirma la reserva), casas (retiro y reincorporación), tarifas (digitadas o por planilla Excel/CSV), bloqueos de fechas, temporadas altas y sorteo, reserva a nombre de otra persona y dashboard |
+| Oficina Central | Alertas, nómina de descuentos, registro de transferencias (confirma la reserva), casas (retiro y reincorporación), tarifas (digitadas o por planilla Excel/CSV), bloqueos de fechas, temporadas altas (habilitar la postulación de verano o invierno) y sorteo de cada una, reserva a nombre de otra persona y dashboard |
 
 También puede ingresar con su propio RUT y nombre eligiendo «Sí»: como la maqueta no
 tiene nóminas reales, un RUT válido que no está en la nómina de prueba entra como
 afiliado/a activo/a de demostración de la Región Metropolitana. El RUT solo queda en el
 navegador de quien lo escribe.
 
-**Sorteo de temporada alta:** la postulación de verano 2027 está abierta. Postule como
-afiliada en «Sorteo verano»; luego, como Oficina Central, entre a «Sorteo» y use
+**Sorteo de temporada alta:** la postulación de verano 2027 está abierta y la de invierno
+2027 todavía no se habilita. Postule como afiliada en «Temporadas»; luego, como Oficina
+Central, entre a «Temporadas»: ahí puede habilitar la postulación de invierno y usar
 «Realizar sorteo» (en la maqueta se puede adelantar). Desde ahí también se registra un
 desistimiento para ver cómo el cupo se ofrece a la lista de espera.
 
@@ -37,6 +38,9 @@ desistimiento para ver cómo el cupo se ofrece a la lista de espera.
 
 ## Contenido del repositorio
 
+- `insumos/`: problema, solución, rastro y entrega de la iniciativa CON001 según la
+  metodología UIA del tramo previo a la fábrica (`00-PROBLEMA.md`, `01-SOLUCION.md`,
+  `02-RASTRO.md`, `03-ENTREGA.md`).
 - `manual-usuario.pdf`: manual de usuario por perfil, con capturas y diagramas de flujo.
 - `index.html`: la maqueta completa en un solo archivo (código, estilos e imágenes
   incluidos). Se genera desde el proyecto fuente `coipo_reserva_veraneo` con
