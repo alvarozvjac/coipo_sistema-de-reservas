@@ -7,7 +7,7 @@ nombradas por cargo (repositorio público).
 
 Los objetivos 0 a 2 tienen pendientes abiertos con persona (`00-PROBLEMA.md`). El 3 está
 escrito (`01-SOLUCION.md`) y falta acordarlo. El 4 y el 5 están hechos sobre la versión
-`38662a8` y los cambios del 02-11-2026 posteriores. El 6 está bloqueado: no hay
+`a4cff06` (02-11-2026). El 6 está bloqueado: no hay
 aprobación trazable de quien decide.
 
 ## Entrevistas y reuniones
@@ -88,10 +88,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
     escritorio. La navegación de Oficina Central en el teléfono se desplaza de lado y
     corta «Dashboard» (es la pista de que hay más). Sin tema oscuro.
   - Criterios recorridos: C1 a C18 con pruebas automáticas (Playwright), en escritorio
-    1366 × 900 y en teléfono 390 × 844 con toque. Última corrida completa antes del
-    cambio de sorteo por temporada: 154 comprobaciones en escritorio y 153 en teléfono, 0
-    fallas. Después del cambio: prueba nueva de C18 (9 comprobaciones) en ambos tamaños,
-    sin fallas.
+    1366 × 900 y en teléfono 390 × 844 con toque: 163 comprobaciones en cada tamaño, 0
+    fallas (corrida final del 02-11-2026, sobre el código publicado en `a4cff06`).
   - Consola: 0 errores en las 30 vistas.
   - Barrido de datos: 10 RUT y 6 correos `@conaf.cl`, todos de la nómina ficticia de la
     maqueta (inventados, no se cruzaron con una nómina real); 0 apellidos de las personas
@@ -102,9 +100,10 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   de escritorio en el navegador del usuario sin errores de consola; las vistas de
   teléfono se hicieron con los mismos bytes servidos localmente (el navegador no se pudo
   achicar).
-- 2026-11-02 · pública @ `38662a8` · despliegue de GitHub Pages terminado con éxito
-  (GitHub Actions). **No lo comprobé en un navegador**: el computador del usuario no
-  respondió y este entorno no llega a `github.io`.
+- 2026-11-02 · pública @ `38662a8` y @ `a4cff06` · despliegues de GitHub Pages
+  terminados con éxito (GitHub Actions, 21:37 y 21:53 UTC). **No los comprobé en un
+  navegador**: el computador del usuario no respondió y este entorno no llega a
+  `github.io`.
 - Defectos vistos el 2026-11-02:
   - «Bloquear fechas» dejaba la pantalla en blanco (variable sin definir tras una edición
     del mismo día). Visto al correr las pruebas en teléfono; arreglado; se activó la regla
@@ -116,8 +115,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
     oculto para lectores de pantalla dentro de una tabla desplazable; arreglado.
   - Al habilitar una temporada sin sorteo anterior la página fallaba (prioridad sin
     sorteo previo); arreglado.
-- No comprobado: teléfono real; lectores de pantalla; Firefox y Safari; la versión
-  `38662a8` y posteriores en la URL pública.
+- No comprobado: teléfono real; lectores de pantalla; Firefox y Safari; las versiones
+  `38662a8` y `a4cff06` vistas en la URL pública.
 
 ## Validación
 
