@@ -5,6 +5,8 @@ Bienestar de CONAF, elaborada por la Unidad de Información y Análisis (UIA).
 
 **Ver la maqueta:** https://alvarozvjac.github.io/coipo_sistema-de-reservas/
 
+**Manual de usuario (PDF):** https://alvarozvjac.github.io/coipo_sistema-de-reservas/manual-usuario.pdf
+
 > Demostración no operacional. Personas, RUT, tarifas, reservas y fotografías son
 > ficticios. Lo que se haga en la maqueta se guarda solo en el navegador de quien la usa.
 
@@ -16,10 +18,10 @@ envía correos).
 
 | Perfil | Qué se puede probar |
 |---|---|
-| Afiliada, afiliada a plazo fijo, jubilado, no afiliado | Buscar casa, reservar (confirmación inmediata), acta de entrega, mis reservas, desistimiento y postulación al sorteo de verano |
+| Afiliada, afiliada a plazo fijo, jubilado, no afiliado | Buscar casa, reservar (con planilla se confirma al instante; con transferencia queda «por confirmar» hasta que Oficina Central registra el pago), acta de entrega, mis reservas, desistimiento y postulación al sorteo de verano |
 | Otro servicio público | Reserva con hasta 15 días de anticipación, tarifa diferenciada y pago por transferencia (Art. 9); no postula al sorteo |
 | Encargada regional | Llegadas y salidas, ocupación, reservas de la región, inventario, acta de entrega y reserva a nombre de otra persona |
-| Oficina Central | Alertas, nómina de descuentos, pagos, casas y tarifas, bloqueos, sorteo de temporada alta, reserva a nombre de otra persona y dashboard |
+| Oficina Central | Alertas, nómina de descuentos, registro de transferencias (confirma la reserva), casas (retiro y reincorporación), tarifas (digitadas o por planilla Excel/CSV), bloqueos de fechas, temporadas altas y sorteo, reserva a nombre de otra persona y dashboard |
 
 También puede ingresar con su propio RUT y nombre eligiendo «Sí»: como la maqueta no
 tiene nóminas reales, un RUT válido que no está en la nómina de prueba entra como
@@ -35,6 +37,7 @@ desistimiento para ver cómo el cupo se ofrece a la lista de espera.
 
 ## Contenido del repositorio
 
+- `manual-usuario.pdf`: manual de usuario por perfil, con capturas y diagramas de flujo.
 - `index.html`: la maqueta completa en un solo archivo (código, estilos e imágenes
   incluidos). Se genera desde el proyecto fuente `coipo_reserva_veraneo` con
   `npm run build:pagina` (archivo `frontend/dist-pagina/github-pages/index.html`).
