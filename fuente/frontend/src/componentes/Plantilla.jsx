@@ -37,7 +37,9 @@ export function Plantilla() {
   const navegar = useNavigate()
   const { pathname } = useLocation()
   // Al cambiar de página se parte desde arriba: en el teléfono el resultado de una acción quedaba fuera de la vista.
-  useEffect(() => window.scrollTo({ top: 0 }), [pathname])
+  useEffect(() => {
+    window.scrollTo({ top: 0 })
+  }, [pathname])
   const subtitulo = usuario.perfil === 'solicitante' ? CALIDADES[usuario.calidad] : PERFIL_ETIQUETA[usuario.perfil]
 
   return (

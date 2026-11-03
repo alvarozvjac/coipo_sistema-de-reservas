@@ -118,6 +118,16 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
     sorteo previo); arreglado.
 - No comprobado: teléfono real; lectores de pantalla; Firefox y Safari; las versiones
   `38662a8` y `a4cff06` vistas en la URL pública.
+- 2026-11-03 · pública · https://alvarozvjac.github.io/coipo_sistema-de-reservas/ @
+  `3e75e92` · el SHA-256 de lo servido coincide con el `index.html` del commit. En el Chrome
+  del usuario (versión actual) la pantalla queda en blanco al primer cambio de página
+  («TypeError: l is not a function» en la consola). Causa: el efecto que vuelve arriba
+  (`useEffect(() => window.scrollTo(...))`, del 02-11) devolvía el resultado de
+  `scrollTo`, que en el Chrome actual es una promesa; React la llamaba como función de
+  limpieza. Las pruebas no lo vieron porque el Chromium de Playwright devuelve `undefined`.
+  Reproducido en local imitando ese `scrollTo` (versión publicada: 1 de 3 cambios de página
+  y pantalla vacía; versión corregida: 3 de 3 sin errores). Corregido con llaves en el
+  efecto; la batería completa se corre ahora imitando el Chrome actual.
 
 ## Validación
 
@@ -136,6 +146,10 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - 2026-11-02 · CON001 · El código fuente de la maqueta quedó solo en copias locales
   cuando se borró la rama `veraneo` de `Sud-Austral/coipo_cabania`: versionar la fuente
   antes de publicar la página, que es solo el resultado compilado.
+- 2026-11-03 · CON001 · Un navegador de pruebas más antiguo que el de las personas oculta
+  defectos: la maqueta pasó 163 comprobaciones y se caía en el Chrome actual. Verificar
+  contra la URL pública en un navegador real después de cada publicación (objetivo 5,
+  paso 6), y escribir los efectos de React siempre con llaves.
 - 2026-11-02 · CON001 · La maqueta se construyó antes de levantar el problema con la
   contraparte (anti-patrón del objetivo 0): faltó preguntar desde el inicio quién aprueba
   y cuántas reservas hay por año.
