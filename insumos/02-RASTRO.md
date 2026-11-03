@@ -127,7 +127,15 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   limpieza. Las pruebas no lo vieron porque el Chromium de Playwright devuelve `undefined`.
   Reproducido en local imitando ese `scrollTo` (versión publicada: 1 de 3 cambios de página
   y pantalla vacía; versión corregida: 3 de 3 sin errores). Corregido con llaves en el
-  efecto; la batería completa se corre ahora imitando el Chrome actual.
+  efecto (`736e5d8`). Batería completa imitando el Chrome actual: escritorio y teléfono
+  390 × 844, 0 fallas.
+- 2026-11-03 · pública @ `736e5d8` · SHA-256 de lo servido coincide con el commit. En el
+  Chrome del usuario: reserva de afiliada con descuento por planilla (confirmada al
+  instante), regla de una reserva por mes, reserva de jubilado por transferencia («Reserva
+  por confirmar» con datos de la transferencia), registro del pago en Cobros (la reserva
+  pasa a confirmada), las cinco pestañas de Oficina Central y las tres de la encargada
+  regional; 0 errores de consola. No comprobado en la URL pública: vista de teléfono (la
+  ventana no se pudo achicar).
 
 ## Validación
 
