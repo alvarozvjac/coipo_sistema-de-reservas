@@ -100,7 +100,7 @@ export function Plantilla() {
       <footer className="no-imprimir border-t border-borde bg-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3 text-[13px] text-tinta-500">
           <span>
-            <strong className="font-semibold text-tinta-700">Maqueta de validación.</strong> Personas, tarifas y fotos son ficticias; nada se guarda fuera de este navegador.
+            <strong className="font-semibold text-tinta-700">Maqueta de validación.</strong> Personas, reservas y fotos son ficticias; casas y tarifas, del llamado de verano 2027. Nada se guarda fuera de este navegador.
           </span>
           <span className="flex flex-wrap gap-1">
             <a href={MANUAL} target="_blank" rel="noreferrer" className="rounded px-2 py-1 font-medium text-verde-700 hover:bg-verde-50">

@@ -157,7 +157,11 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   temporada con dos calendarios, 22 casas, sin desborde. Capturas de la postulación y del
   formulario de temporada miradas: se corrigieron la frase de los turnos («entre el … –
   …») y la fecha de inicio del verano en la tarjeta (mostraba el 5 y no el 2 de enero).
-  No comprobado: la URL pública con esta versión.
+- 2026-11-06 · pública @ `c0d1926` · el SHA-256 de lo servido coincide con el commit; en el
+  Chrome del usuario: tarifas del tramo 15–19 en el buscador, postulación a la Cabaña 02
+  de Puyehue con sus 13 turnos y las 6 cuotas desde marzo, 0 errores de consola (sin
+  enviar la postulación). Manual (PDF y documento) actualizado el mismo día con capturas
+  nuevas; el pie de la maqueta ya no dice que las tarifas son ficticias.
 
 ## Validación
 
