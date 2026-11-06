@@ -10,6 +10,8 @@ Bienestar de CONAF, elaborada por la Unidad de Información y Análisis (UIA).
 > Demostración no operacional. Personas, RUT, tarifas, reservas y fotografías son
 > ficticios. Lo que se haga en la maqueta se guarda solo en el navegador de quien la usa.
 
+**Vista celular:** en computador, el botón flotante «Vista celular», abajo a la izquierda muestra la maqueta dentro de un marco de teléfono de 390 × 844 px, para presentarla sin abrir las herramientas del navegador. Se cierra con «Cerrar» o Esc. En un teléfono real el botón no aparece.
+
 ## Cómo probarla
 
 En la pantalla de ingreso, el recuadro **«Maqueta · probar como»** carga una persona de

@@ -11,5 +11,51 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+/* Vista celular (UIA): muestra esta misma maqueta dentro de un marco de teléfono de 390 × 844 px.
+   Botón en el elemento [data-vista-celular-host] si existe; si no, flotante abajo a la izquierda.
+   Dentro del marco (?vista=celular) y en pantallas angostas el botón no se muestra. */
+(function(){
+  var Q=new URLSearchParams(location.search);
+  if(Q.get("vista")==="celular"){document.documentElement.setAttribute("data-en-vista-celular","");addEventListener("keydown",function(e){if(e.key==="Escape")try{parent.postMessage("vista-celular:cerrar","*")}catch(x){}},true);return}
+  var css="\
+.vc-btn{font-family:inherit;font-size:13px;font-weight:600;line-height:1.2;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;border:1px solid rgba(0,0,0,.18);background:#fff;color:#1d1c1a;cursor:pointer;white-space:nowrap}\
+.vc-btn:hover{border-color:#185530;color:#185530}.vc-btn svg{width:14px;height:14px}\
+.vc-flot{position:fixed;left:16px;bottom:16px;z-index:2147483000;box-shadow:0 2px 10px rgba(0,0,0,.18)}\
+@media (max-width:700px){.vc-btn{display:none!important}}\
+.vc-ov{position:fixed;inset:0;z-index:2147483001;background:rgba(16,18,16,.86);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}\
+.vc-bar{display:flex;gap:8px;align-items:center;color:#fff;font:500 13px/1.3 system-ui,sans-serif}\
+.vc-bar button{font:600 13px system-ui,sans-serif;padding:6px 12px;border-radius:999px;border:0;background:#fff;color:#1d1c1a;cursor:pointer}\
+.vc-tel{background:#111;border-radius:44px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);transform-origin:top center}\
+.vc-tel iframe{display:block;width:390px;height:844px;border:0;border-radius:32px;background:#fff}";
+  var st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
+  function url(){return location.href.split("#")[0].split("?")[0]+"?vista=celular"+(location.hash||"")}
+  function abrir(){
+    var ov=document.createElement("div");ov.className="vc-ov";ov.setAttribute("role","dialog");ov.setAttribute("aria-modal","true");ov.setAttribute("aria-label","Vista celular de la maqueta");
+    ov.innerHTML='<div class="vc-bar"><span>Vista celular · 390 × 844 px</span><button type="button" data-vc="recargar">Recargar</button><button type="button" data-vc="cerrar">Cerrar (Esc)</button></div><div class="vc-tel"><iframe title="Maqueta en vista celular"></iframe></div>';
+    var tel=ov.querySelector(".vc-tel"),fr=ov.querySelector("iframe");fr.src=url();
+    function ajustar(){var h=844+28,s=Math.min(1,(innerHeight-90)/h,(innerWidth-32)/(390+28));tel.style.transform="scale("+s+")";tel.style.marginBottom=(-(1-s)*h)+"px"}
+    ajustar();addEventListener("resize",ajustar);
+    function cerrar(){removeEventListener("resize",ajustar);removeEventListener("keydown",tecla,true);removeEventListener("message",msj);ov.remove();b.focus()}
+    function tecla(e){if(e.key==="Escape"){e.stopPropagation();e.preventDefault();cerrar()}}
+    function msj(e){if(e.source===fr.contentWindow&&e.data==="vista-celular:cerrar")cerrar()}
+    addEventListener("keydown",tecla,true);addEventListener("message",msj);
+    ov.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-vc]");if(a){a.getAttribute("data-vc")==="cerrar"?cerrar():(fr.src=url())}else if(e.target===ov)cerrar()});
+    document.body.appendChild(ov);ov.querySelector('[data-vc="cerrar"]').focus();
+  }
+  var b=document.createElement("button");b.type="button";b.className="vc-btn";b.title="Ver cómo se ve la maqueta en un teléfono (390 × 844 px)";
+  b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10.5" y1="18" x2="13.5" y2="18"/></svg>Vista celular';
+  b.addEventListener("click",abrir);
+  function poner(){
+    if(window.self!==window.top)return; /* dentro de otro visor (p. ej. claude.ai): no se ofrece */
+    var t0=Date.now();
+    (function intentar(){var h=document.querySelector("[data-vista-celular-host]");
+      if(h){h.insertBefore(b,h.firstChild);return}
+      if(Date.now()-t0<3000){setTimeout(intentar,150);return}
+      b.classList.add("vc-flot");document.body.appendChild(b)})();
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",poner);else poner();
+})();
+</script>
   </body>
 </html>
