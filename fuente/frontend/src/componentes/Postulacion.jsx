@@ -1,14 +1,34 @@
 import { useState } from 'react'
 import { Clock } from 'lucide-react'
-import { responderOferta, retirarPostulacion } from '../datos/servicio.js'
-import { rangoFechas, sumarDias } from '../lib/fechas.js'
+import { listarCasas, responderOferta, retirarPostulacion } from '../datos/servicio.js'
+import { fechaCorta, rangoFechas, sumarDias } from '../lib/fechas.js'
 import { plural } from '../lib/formato.js'
 import { PARAMETROS } from '../lib/reglas.js'
-import { ESTADOS_POSTULACION, HORAS_OFERTA } from '../lib/sorteo.js'
+import { ESTADOS_POSTULACION, HORAS_OFERTA, calendariosDe, nochesTurno } from '../lib/sorteo.js'
 import { rutaFoto } from './fotos.js'
 import { Boton } from './ui.jsx'
 
-export const salidaTurno = (turno) => sumarDias(turno, PARAMETROS.noches_max_temporada_alta)
+/** Salida del turno de una postulación (las nuevas la guardan; las antiguas se calculan). */
+export const salidaTurno = (p) => p.salida ?? sumarDias(p.turno, PARAMETROS.noches_turno_temporada_alta)
+
+/** Turnos de la temporada en una frase por calendario (Memo 6188/2026: general y cabañas de Puyehue). */
+export function ResumenCalendarios({ temporada }) {
+  const cal = calendariosDe(temporada, listarCasas())
+  const libres = (n) => (n === 1 ? '1 noche libre' : `${n} noches libres`)
+  return (
+    <span>
+      Turnos de {nochesTurno(temporada)} noches.{' '}
+      {cal.map((c) =>
+        c.turnos.length ? (
+          <span key={c.clave}>
+            {c.clave === 'general' ? (cal.length > 1 ? 'Casas en general' : 'Todas las casas') : c.casas.map((x) => x.nombre).join(' y ')}: {plural(c.turnos.length, 'turno', 'turnos')} del {fechaCorta(c.turnos[0].entrada)} al{' '}
+            {fechaCorta(c.turnos[c.turnos.length - 1].salida, true)}, con {libres(c.libres)} entre turnos.{' '}
+          </span>
+        ) : null,
+      )}
+    </span>
+  )
+}
 
 export function EstadoPostulacion({ estado }) {
   const e = ESTADOS_POSTULACION[estado]
@@ -23,7 +43,7 @@ const fechaHora = (iso) => {
 /** Estado de la postulación del solicitante, con las acciones que correspondan. */
 export function TarjetaPostulacion({ postulacion: p, sorteo, onReserva }) {
   const [confirmarRetiro, setConfirmarRetiro] = useState(false)
-  const salida = salidaTurno(p.turno)
+  const salida = salidaTurno(p)
 
   const texto = {
     postulada: `El sorteo se realiza al cierre de la postulación. Le avisaremos el resultado por correo a ${p.contacto.correo}.`,

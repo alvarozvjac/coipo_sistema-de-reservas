@@ -51,6 +51,11 @@ aprobación trazable de quien decide.
   resultado no registrado → P9.
 - 2026-11-04 · Reunión programada con Bienestar para revisar la propuesta (borrador de
   invitación con los cambios del 02-11, preparado el 2026-11-02).
+- 2026-11-06 · Jefatura del Departamento de Bienestar del Personal · Memorándum N°
+  6188/2026 (Cero Papel) · Llamado a postular a las casas en vacaciones de verano 2027,
+  con formulario Google. Álvaro Zegers lo entrega como evidencia del proceso actual e
+  indica que verano e invierno se operan igual. Documento interno: no se guarda en este
+  repositorio público (su lista de distribución tiene nombres de funcionarios).
 
 ## Decisiones
 
@@ -70,6 +75,13 @@ Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/D
   cuando Oficina Central la habilita; pestaña «Temporadas» · Álvaro Zegers.
 - 2026-11-02 · El código fuente se versiona en `fuente/` de este repositorio · Álvaro
   Zegers.
+- 2026-11-06 · La maqueta sigue la práctica vigente del Memorándum 6188/2026 donde el
+  reglamento propuesto dice otra cosa: turnos de 6 noches en dos calendarios, tarifa en
+  dos tramos por grado, desistimiento sin costo hasta 10 días hábiles antes (después se
+  paga la estadía completa), 6 cuotas desde marzo en temporada alta, y las 22 casas del
+  llamado · Álvaro Zegers · detalle en `fuente/docs/DECISIONES.md`.
+- 2026-11-06 · El formulario de postulación de la maqueta deja de pedir correo, región,
+  RUT y nombre (salen del ingreso y la nómina) · Álvaro Zegers.
 - 2026-11-02 · Insumos en este repositorio público, con cargos en vez de nombres de
   Bienestar · Álvaro Zegers eligió el repositorio; el criterio de nombres es de esta
   documentación (regla 8 de la metodología).
@@ -137,6 +149,16 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   regional; 0 errores de consola. No comprobado en la URL pública: vista de teléfono (la
   ventana no se pudo achicar).
 
+- 2026-11-06 · local (`vite preview`), con la fecha del navegador fijada en el
+  02-11-2026 y `scrollTo` como en el Chrome actual · batería completa en escritorio
+  1366 × 900 y teléfono 390 × 844: 0 fallas. Prueba nueva (`e2e11`, 13 comprobaciones
+  por tamaño): tarifa por grado, plazo de desistimiento en días hábiles, postulación sin
+  datos de la nómina, 6 cuotas desde marzo en postulaciones y adjudicadas, formulario de
+  temporada con dos calendarios, 22 casas, sin desborde. Capturas de la postulación y del
+  formulario de temporada miradas: se corrigieron la frase de los turnos («entre el … –
+  …») y la fecha de inicio del verano en la tarjeta (mostraba el 5 y no el 2 de enero).
+  No comprobado: la URL pública con esta versión.
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la
@@ -154,6 +176,11 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - 2026-11-02 · CON001 · El código fuente de la maqueta quedó solo en copias locales
   cuando se borró la rama `veraneo` de `Sud-Austral/coipo_cabania`: versionar la fuente
   antes de publicar la página, que es solo el resultado compilado.
+- 2026-11-06 · CON001 · El documento con que la contraparte opera hoy (el llamado y su
+  formulario) traía reglas distintas del reglamento propuesto: pedirlo en el objetivo 1
+  habría evitado construir turnos de 7 noches de sábado a sábado.
+- 2026-11-06 · CON001 · Las pruebas deben fijar la fecha del navegador: tres de ellas
+  fallaron solo porque «un mes más» cayó en un mes con otra reserva de la misma persona.
 - 2026-11-03 · CON001 · Un navegador de pruebas más antiguo que el de las personas oculta
   defectos: la maqueta pasó 163 comprobaciones y se caía en el Chrome actual. Verificar
   contra la URL pública en un navegador real después de cada publicación (objetivo 5,

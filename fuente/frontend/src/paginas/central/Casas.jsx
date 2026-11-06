@@ -22,6 +22,7 @@ import {
 } from '../../datos/servicio.js'
 import { fechaCorta, hoyISO, rangoFechas, sumarDias } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
+import { TRAMOS, tarifaTramo } from '../../lib/reglas.js'
 import { COLUMNAS, TARIFA_MAX, TARIFA_MIN, descargarFormatoCSV, descargarFormatoExcel, leerArchivo, validarPlanilla } from '../../lib/planillaTarifas.js'
 import { Aviso, Boton, Campo, Tarjeta, claseEntrada, claseFiltro } from '../../componentes/ui.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
@@ -101,7 +102,7 @@ function Casas() {
             <tr>
               <th className="px-4 py-3 font-medium">Casa</th>
               <th className="px-4 py-3 text-right font-medium">Capacidad</th>
-              <th className="px-4 py-3 text-right font-medium">Tarifa afiliado / noche</th>
+              <th className="px-4 py-3 text-right font-medium">Tarifa / noche (grados 04–14 · 15–19)</th>
               <th className="px-4 py-3 font-medium">Inventario</th>
               <th className="px-4 py-3 font-medium">Estado</th>
               <th className="px-4 py-3 font-medium">
@@ -122,7 +123,9 @@ function Casas() {
                     </span>
                   </td>
                   <td className="px-4 py-2.5 text-right tabular-nums">{c.capacidad}</td>
-                  <td className="px-4 py-2.5 text-right tabular-nums">{pesos(c.tarifa_noche)}</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums">
+                    {pesos(c.tarifa_noche)} · {pesos(c.tarifa_noche_15_19)}
+                  </td>
                   <td className="px-4 py-2.5 text-sm">
                     {inv ? (
                       <span className="inline-flex items-center gap-1 text-tinta-700">
@@ -247,7 +250,7 @@ function DialogoReincorporar({ casa, onCerrar, onListo }) {
   return (
     <Dialogo titulo={`Reincorporar ${casa.nombre}`} onCerrar={onCerrar}>
       <p className="mt-2 text-[15px] text-tinta-700">
-        Volverá a aparecer en el buscador desde ahora, con su tarifa de {pesos(casa.tarifa_noche)} por noche. Revise que la encargada regional tenga el inventario al día.
+        Volverá a aparecer en el buscador desde ahora, con sus tarifas de {pesos(casa.tarifa_noche)} (grados 04 a 14) y {pesos(casa.tarifa_noche_15_19)} (grados 15 a 19) por noche. Revise que la encargada regional tenga el inventario al día.
       </p>
       {!inv && (
         <div className="mt-3">
@@ -293,7 +296,7 @@ function Tarifas() {
   return (
     <>
       <p className="max-w-3xl text-[15px] text-tinta-500">
-        Tarifas por noche y por casa, según la resolución anual (Art. 19). Los cambios rigen para las reservas nuevas; las reservas ya hechas mantienen su tarifa.
+        Tarifas por noche y por familia de cada casa, en dos tramos según el grado del trabajador/a: 04 a 14 y 15 a 19 (Memo 6188/2026). Jubilados/as y otros servicios pagan el tramo 04 a 14 [pendiente de confirmar]. Los cambios rigen para las reservas nuevas; las reservas ya hechas mantienen su tarifa.
       </p>
       {hecho && (
         <div className="mt-3">
@@ -301,7 +304,7 @@ function Tarifas() {
         </div>
       )}
       <Tarjeta className="mt-4 p-5">
-        <h2 className="font-semibold">Tarifa de afiliado por noche</h2>
+        <h2 className="font-semibold">Tarifas por noche según grado</h2>
         <p className="mt-1 text-sm text-tinta-500">¿Cómo quiere actualizarla?</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Forma de actualizar las tarifas">
           {[
@@ -343,42 +346,53 @@ function Digitar({ onListo }) {
   const [revisar, setRevisar] = useState(false)
   const casas = listarCasas({ incluirInactivas: true })
   const visibles = casas.filter((c) => !region || c.region === region)
-  const cambios = casas
-    .filter((c) => valores[c.id] !== undefined && valores[c.id] !== '' && Number(valores[c.id]) !== c.tarifa_noche)
-    .map((c) => ({ casa_id: c.id, casa: c.nombre, antes: c.tarifa_noche, nueva: Number(valores[c.id]) }))
+  const clave = (id, tramo) => `${id}|${tramo}`
+  const cambios = casas.flatMap((c) =>
+    ['a', 'b']
+      .filter((tr) => {
+        const v = valores[clave(c.id, tr)]
+        return v !== undefined && v !== '' && Number(v) !== tarifaTramo(c, tr)
+      })
+      .map((tr) => ({ casa_id: c.id, casa: c.nombre, tramo: tr, antes: tarifaTramo(c, tr), nueva: Number(valores[clave(c.id, tr)]) })),
+  )
   const fuera = cambios.filter((c) => !Number.isInteger(c.nueva) || c.nueva < TARIFA_MIN || c.nueva > TARIFA_MAX)
 
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-tinta-500">Escriba la nueva tarifa en las casas que cambian y guarde todo junto.</p>
+        <p className="text-sm text-tinta-500">Escriba la nueva tarifa en los tramos que cambian y guarde todo junto.</p>
         <FiltroRegion valor={region} onCambio={setRegion} />
       </div>
       <div className="mt-3 overflow-x-auto rounded-lg border border-borde">
-        <table className="w-full min-w-[560px] text-left text-[15px]">
+        <table className="w-full min-w-[640px] text-left text-[15px]">
           <thead className="border-b border-borde bg-stone-50 text-[13px] text-tinta-500">
             <tr>
               <th className="px-4 py-2.5 font-medium">Casa</th>
-              <th className="px-4 py-2.5 text-right font-medium">Tarifa vigente</th>
-              <th className="px-4 py-2.5 font-medium">Nueva tarifa</th>
+              <th className="px-4 py-2.5 font-medium">Grados 04 a 14</th>
+              <th className="px-4 py-2.5 font-medium">Grados 15 a 19</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-borde">
             {visibles.map((c) => {
-              const v = valores[c.id] ?? ''
-              const cambia = v !== '' && Number(v) !== c.tarifa_noche
+              const cambia = cambios.some((x) => x.casa_id === c.id)
               return (
                 <tr key={c.id} className={cambia ? 'bg-alerta-50/60' : ''}>
                   <td className="px-4 py-2">
                     <span className="font-medium">{c.nombre}</span>
                     <span className="block text-[13px] text-tinta-500">{nombreRegion(c.region)}</span>
                   </td>
-                  <td className="px-4 py-2 text-right tabular-nums">{pesos(c.tarifa_noche)}</td>
-                  <td className="px-4 py-2">
-                    <div className="w-40">
-                      <EntradaPesos value={v} onChange={(x) => setValores({ ...valores, [c.id]: x })} etiqueta={`Nueva tarifa de ${c.nombre}`} />
-                    </div>
-                  </td>
+                  {['a', 'b'].map((tr) => (
+                    <td key={tr} className="px-4 py-2">
+                      <span className="block text-[13px] tabular-nums text-tinta-500">Vigente {pesos(tarifaTramo(c, tr))}</span>
+                      <div className="mt-1 w-36">
+                        <EntradaPesos
+                          value={valores[clave(c.id, tr)] ?? ''}
+                          onChange={(x) => setValores({ ...valores, [clave(c.id, tr)]: x })}
+                          etiqueta={`Nueva tarifa de ${c.nombre}, ${TRAMOS[tr].toLowerCase()}`}
+                        />
+                      </div>
+                    </td>
+                  ))}
                 </tr>
               )
             })}
@@ -388,12 +402,12 @@ function Digitar({ onListo }) {
       {fuera.length > 0 && (
         <div className="mt-3">
           <Aviso tipo="error">
-            {fuera.map((c) => c.casa).join(', ')}: la tarifa debe ser un monto entero entre {pesos(TARIFA_MIN)} y {pesos(TARIFA_MAX)}.
+            {[...new Set(fuera.map((c) => c.casa))].join(', ')}: la tarifa debe ser un monto entero entre {pesos(TARIFA_MIN)} y {pesos(TARIFA_MAX)}.
           </Aviso>
         </div>
       )}
       <div className="mt-4 flex flex-wrap items-center justify-end gap-3">
-        <span className="text-sm text-tinta-500">{plural(cambios.length, 'casa con cambio', 'casas con cambio')}</span>
+        <span className="text-sm text-tinta-500">{plural(cambios.length, 'tarifa con cambio', 'tarifas con cambio')}</span>
         <Boton variante="secundario" disabled={!cambios.length} onClick={() => setValores({})}>
           Descartar
         </Boton>
@@ -413,7 +427,7 @@ function Digitar({ onListo }) {
                 const n = actualizarTarifasMasivo(cambios, { metodo: 'pantalla' }, usuario)
                 setValores({})
                 setRevisar(false)
-                onListo(`Se actualizó la tarifa de ${plural(n, 'casa', 'casas')}. Rige para las reservas nuevas.`)
+                onListo(`Se ${n === 1 ? 'actualizó 1 tarifa' : `actualizaron ${n} tarifas`}. Rige para las reservas nuevas.`)
               }}
             >
               Guardar {plural(cambios.length, 'tarifa', 'tarifas')}
@@ -460,7 +474,7 @@ function CargaPlanilla({ onListo }) {
   return (
     <ol className="space-y-5">
       <Paso n="1" titulo="Descargue el formato tipo">
-        <p className="text-sm text-tinta-500">Trae las {casas.length} casas con su ID y su tarifa vigente. Complete solo la columna «Nueva tarifa»; la hoja «Instrucciones» explica cada campo.</p>
+        <p className="text-sm text-tinta-500">Trae las {casas.length} casas con su ID y sus dos tarifas vigentes. Complete solo las columnas «Nueva grados 04-14» y «Nueva grados 15-19»; la hoja «Instrucciones» explica cada campo.</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <Boton variante="secundario" onClick={() => descargarFormatoExcel(casas, nombreRegion)}>
             <Download className="size-4" aria-hidden /> Formato Excel (.xlsx)
@@ -483,8 +497,12 @@ function CargaPlanilla({ onListo }) {
               <tr><td className="py-1.5 pr-3 font-medium">{COLUMNAS[0]}</td><td className="py-1.5 pr-3">Obligatoria: identifica la casa</td><td className="py-1.5">Número, sin cambiar</td></tr>
               <tr><td className="py-1.5 pr-3 font-medium">{COLUMNAS[1]}</td><td className="py-1.5 pr-3">Referencia</td><td className="py-1.5">Texto</td></tr>
               <tr><td className="py-1.5 pr-3 font-medium">{COLUMNAS[2]}</td><td className="py-1.5 pr-3">Referencia</td><td className="py-1.5">Texto</td></tr>
-              <tr><td className="py-1.5 pr-3 font-medium">{COLUMNAS[3]}</td><td className="py-1.5 pr-3">Referencia</td><td className="py-1.5">Pesos</td></tr>
-              <tr><td className="py-1.5 pr-3 font-medium">{COLUMNAS[4]}</td><td className="py-1.5 pr-3">La que se aplica; en blanco = sin cambio</td><td className="py-1.5">Pesos sin decimales, entre {pesos(TARIFA_MIN)} y {pesos(TARIFA_MAX)}</td></tr>
+              {[3, 4].map((i) => (
+                <tr key={i}><td className="py-1.5 pr-3 font-medium">{COLUMNAS[i]}</td><td className="py-1.5 pr-3">Referencia</td><td className="py-1.5">Pesos</td></tr>
+              ))}
+              {[5, 6].map((i) => (
+                <tr key={i}><td className="py-1.5 pr-3 font-medium">{COLUMNAS[i]}</td><td className="py-1.5 pr-3">La que se aplica; en blanco = sin cambio</td><td className="py-1.5">Pesos sin decimales, entre {pesos(TARIFA_MIN)} y {pesos(TARIFA_MAX)}</td></tr>
+              ))}
             </tbody>
           </table>
           <p className="mt-2 text-[13px] text-tinta-500">Excel (.xlsx) con la hoja «Tarifas», o CSV con separador punto y coma o coma. Máximo 2 MB.</p>
@@ -551,7 +569,7 @@ function CargaPlanilla({ onListo }) {
               onClick={() => {
                 const n = actualizarTarifasMasivo(resultado.cambios, { metodo: 'planilla', archivo: archivo.name }, usuario)
                 reiniciar()
-                onListo(`Planilla aplicada: se actualizó la tarifa de ${plural(n, 'casa', 'casas')}. Rige para las reservas nuevas.`)
+                onListo(`Planilla aplicada: se ${n === 1 ? 'actualizó 1 tarifa' : `actualizaron ${n} tarifas`}. Rige para las reservas nuevas.`)
               }}
             >
               Aplicar {plural(resultado.cambios.length, 'tarifa', 'tarifas')}
@@ -592,6 +610,7 @@ function TablaCambios({ cambios }) {
         <thead className="sticky top-0 border-b border-borde bg-stone-50 text-[13px] text-tinta-500">
           <tr>
             <th className="px-3 py-2 font-medium">Casa</th>
+            <th className="px-3 py-2 font-medium">Tramo</th>
             <th className="px-3 py-2 text-right font-medium">Vigente</th>
             <th className="px-3 py-2 text-right font-medium">Nueva</th>
             <th className="px-3 py-2 text-right font-medium">Variación</th>
@@ -601,8 +620,9 @@ function TablaCambios({ cambios }) {
           {cambios.map((c) => {
             const v = (c.nueva - c.antes) / c.antes
             return (
-              <tr key={c.casa_id}>
+              <tr key={`${c.casa_id}|${c.tramo}`}>
                 <td className="px-3 py-1.5">{c.casa}</td>
+                <td className="px-3 py-1.5 text-[13px] text-tinta-500">{TRAMOS[c.tramo ?? 'a']}</td>
                 <td className="px-3 py-1.5 text-right tabular-nums">{pesos(c.antes)}</td>
                 <td className="px-3 py-1.5 text-right font-semibold tabular-nums">{pesos(c.nueva)}</td>
                 <td className={`px-3 py-1.5 text-right tabular-nums ${Math.abs(v) > 0.3 ? 'text-alerta-700' : 'text-tinta-500'}`}>
@@ -629,12 +649,12 @@ function Historial() {
           <li key={i} className="py-2">
             <details>
               <summary className="cursor-pointer text-[15px]">
-                {fechaCorta(h.en.slice(0, 10), true)}, {h.en.slice(11, 16)} · {h.por} · {h.metodo === 'planilla' ? `planilla ${h.archivo}` : 'digitada en pantalla'} · {plural(h.cambios.length, 'casa', 'casas')}
+                {fechaCorta(h.en.slice(0, 10), true)}, {h.en.slice(11, 16)} · {h.por} · {h.metodo === 'planilla' ? `planilla ${h.archivo}` : 'digitada en pantalla'} · {plural(h.cambios.length, 'tarifa', 'tarifas')}
               </summary>
               <ul className="mt-2 space-y-0.5 pl-5 text-[13px] text-tinta-700">
                 {h.cambios.map((c) => (
-                  <li key={c.casa_id}>
-                    {obtenerCasa(c.casa_id)?.nombre}: {pesos(c.antes)} → {pesos(c.despues)}
+                  <li key={`${c.casa_id}|${c.tramo}`}>
+                    {obtenerCasa(c.casa_id)?.nombre} ({TRAMOS[c.tramo ?? 'a'].toLowerCase()}): {pesos(c.antes)} → {pesos(c.despues)}
                   </li>
                 ))}
               </ul>
@@ -654,7 +674,7 @@ function TarifasDiferenciadas() {
   return (
     <Tarjeta className="mt-5 p-5">
       <h2 className="font-semibold">Tarifa diferenciada</h2>
-      <p className="mt-1 text-sm text-tinta-500">Adicional por noche sobre la tarifa de afiliado. Afiliados activos y jubilados pagan la tarifa base.</p>
+      <p className="mt-1 text-sm text-tinta-500">Adicional por noche sobre la tarifa del tramo que corresponda. Afiliados activos y jubilados pagan la tarifa del tramo, sin adicional.</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
         <Campo etiqueta="Trabajador/a CONAF no afiliado/a">
           <EntradaPesos value={v.no_afiliado} onChange={(x) => (setV({ ...v, no_afiliado: x }), setOk(false))} />

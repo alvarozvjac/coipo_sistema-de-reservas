@@ -2,7 +2,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { Users } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
 import { listarCasas, postulacionAbierta, postulacionDe, sorteoVigente, useDatos } from '../../datos/servicio.js'
-import { puedePostular } from '../../lib/sorteo.js'
+import { inicioTemporada, puedePostular } from '../../lib/sorteo.js'
 import { fechaLarga, rangoFechas } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
 import { PARAMETROS, fraseTemporada, tarifaPara } from '../../lib/reglas.js'
@@ -119,7 +119,7 @@ function AvisoSorteo({ usuario }) {
           ? `Usted postuló al sorteo de ${fraseTemporada(s.temporada)}.`
           : s.estado === 'sorteado'
             ? `El sorteo de ${fraseTemporada(s.temporada)} ya se realizó: revise los turnos que quedaron vacantes.`
-            : `${s.nombre} (${rangoFechas(s.temporada.desde, s.temporada.hasta)}) se asigna por sorteo. Postule hasta el ${fechaLarga(s.postulacion.hasta)}.`}
+            : `${s.nombre} (${rangoFechas(inicioTemporada(s.temporada), s.temporada.hasta)}) se asigna por sorteo. Postule hasta el ${fechaLarga(s.postulacion.hasta)}.`}
       </p>
       <Link to={mia ? '/mis-reservas' : '/sorteo'} className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-verde-700 px-4 text-[15px] font-semibold text-white hover:bg-verde-800">
         {mia ? 'Ver mi postulación' : s.estado === 'sorteado' ? 'Ver vacantes' : 'Postular al sorteo'}

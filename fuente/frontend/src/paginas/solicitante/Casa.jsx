@@ -5,7 +5,7 @@ import { REGIONES } from '../../datos/casas.js'
 import { misReservas, obtenerCasa, ocupacionesDe, nochesLiberadas, useDatos } from '../../datos/servicio.js'
 import { rangoFechas } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
-import { CONDICIONES_USO, PARAMETROS, nochesNoDisponibles, noches, tarifaPara, validarFechas } from '../../lib/reglas.js'
+import { CONDICIONES_USO, PARAMETROS, TRAMOS, nochesNoDisponibles, noches, tarifaPara, tramoDe, validarFechas } from '../../lib/reglas.js'
 import { Calendario } from '../../componentes/Calendario.jsx'
 import { rutaFoto } from '../../componentes/fotos.js'
 import { Aviso, Boton, Tarjeta } from '../../componentes/ui.jsx'
@@ -132,7 +132,7 @@ export function Casa() {
           <Tarjeta className="p-5">
             <p>
               <span className="text-2xl font-bold text-tinta-900">{pesos(tarifa)}</span>
-              <span className="text-[15px] text-tinta-500"> por noche, toda la casa</span>
+              <span className="text-[15px] text-tinta-500"> por noche, toda la casa{usuario.grado ? ` · tarifa ${TRAMOS[tramoDe(usuario)].toLowerCase()}` : ''}</span>
             </p>
             <div className="mt-4 border-t border-borde pt-4">
               <Calendario noDisponibles={noDisponibles} entrada={entrada} salida={salida} onCambio={cambiarFechas} calidad={usuario.calidad} liberadas={liberadas} />

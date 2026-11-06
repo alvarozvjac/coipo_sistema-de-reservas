@@ -5,7 +5,7 @@ import { aceptarReserva, obtenerReserva, useDatos } from '../../datos/servicio.j
 import { INICIO, useSesion } from '../../componentes/Perfil.jsx'
 import { correoEncargada } from '../../datos/usuarios.js'
 import { CATEGORIAS_INVENTARIO } from '../../datos/inventarios.js'
-import { fechaCorta, fechaLarga } from '../../lib/fechas.js'
+import { fechaCorta, fechaLarga, nombreMes } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
 import { PARAMETROS, estadoReserva, glosaTransferencia, noches } from '../../lib/reglas.js'
 import { Aviso, Boton, Estado, Tarjeta } from '../../componentes/ui.jsx'
@@ -13,7 +13,7 @@ import { enVisor } from '../../lib/guardar.js'
 import { DatosCuenta } from '../../componentes/Transferencia.jsx'
 
 const PAGO = {
-  planilla: (f) => `Descuento por planilla en ${plural(f.cuotas, 'cuota', 'cuotas')}`,
+  planilla: (f) => `Descuento por planilla en ${plural(f.cuotas, 'cuota', 'cuotas')}${f.desde_mes ? ` desde ${nombreMes(f.desde_mes + '-01')}` : ''}`,
   transferencia: () => 'Transferencia, antes de llegar',
 }
 

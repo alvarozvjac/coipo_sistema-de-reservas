@@ -65,3 +65,17 @@ export function rangoFechas(entrada, salida) {
   if (entrada.slice(0, 4) === salida.slice(0, 4)) return `${fechaCorta(entrada)} – ${fechaCorta(salida, true)}`
   return `${fechaCorta(entrada, true)} – ${fechaCorta(salida, true)}`
 }
+
+/**
+ * Fecha que queda `n` días hábiles (lunes a viernes) antes de `iso`.
+ * No descuenta feriados [PENDIENTE: calendario de feriados con Bienestar].
+ */
+export function restarDiasHabiles(iso, n) {
+  let d = iso
+  let k = 0
+  while (k < n) {
+    d = sumarDias(d, -1)
+    if (diaSemana(d) < 5) k++
+  }
+  return d
+}

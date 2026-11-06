@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { CheckCircle2, Ticket } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
 import { condicionSorteo, demanda, elegirSorteo, estadoTemporada, listarTemporadas, sorteoDe, listarCasas, postulacionAbierta, postulacionDe, postular, sorteoVigente, turnosVacantes, useDatos } from '../../datos/servicio.js'
-import { fechaCorta, fechaLarga, rangoFechas } from '../../lib/fechas.js'
+import { fechaCorta, fechaLarga, nombreMes, rangoFechas } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
-import { PARAMETROS, formasDePago, tarifaPara } from '../../lib/reglas.js'
-import { DIAS_SEMANA, HORAS_OFERTA, puedePostular } from '../../lib/sorteo.js'
+import { PARAMETROS, TRAMOS, formasDePago, tarifaPara, tramoDe } from '../../lib/reglas.js'
+import { HORAS_OFERTA, codigoTurno, inicioTemporada, nochesTurno, nombreDia, puedePostular } from '../../lib/sorteo.js'
 import { rutaFoto } from '../../componentes/fotos.js'
-import { TarjetaPostulacion, salidaTurno } from '../../componentes/Postulacion.jsx'
+import { ResumenCalendarios, TarjetaPostulacion, salidaTurno } from '../../componentes/Postulacion.jsx'
 import { Aviso, Boton, Campo, Tarjeta, claseEntrada } from '../../componentes/ui.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
 
@@ -33,21 +33,17 @@ export function Sorteo() {
       </>
     )
 
-  const primerTurno = s.turnos[0]
-  const ultimoTurno = s.turnos[s.turnos.length - 1]
-
   return (
     <>
       <h1 className="text-2xl font-bold text-tinta-900 sm:text-[28px]">Temporadas</h1>
       <ListaTemporadas actual={s.id} />
       <h2 className="mt-8 text-xl font-bold text-tinta-900">Sorteo · {s.nombre}</h2>
       <p className="mt-1 max-w-3xl text-[15px] text-tinta-500">
-        En temporada alta las casas no se reservan directo: se asignan por sorteo entre quienes postulan (Art. 6). Turnos de{' '}
-        {PARAMETROS.noches_max_temporada_alta} noches, de {DIAS_SEMANA[s.temporada.dia_cambio ?? 5]} a {DIAS_SEMANA[s.temporada.dia_cambio ?? 5]}, entre el {fechaCorta(primerTurno.entrada)} y el {fechaCorta(ultimoTurno.salida, true)}.
+        En temporada alta las casas no se reservan directo: se asignan por sorteo entre quienes postulan (Art. 6). <ResumenCalendarios temporada={s.temporada} />
       </p>
 
       <ul className="mt-4 grid gap-2 text-[15px] text-tinta-700 sm:grid-cols-3">
-        <Regla t="Una opción" d="Postula a una casa y un turno. Se adjudica un solo período por temporada." />
+        <Regla t="Una opción" d="Postula a una casa y un turno. Se adjudica un solo período por temporada y no se puede ceder a terceros." />
         <Regla t="Prioridad" d={`Tiene prioridad quien no tuvo casa en ${condicion.anterior?.toLowerCase() ?? 'la temporada alta anterior'}.`} />
         <Regla t="Lista de espera" d={`Si alguien desiste, el cupo se ofrece por correo en orden; hay ${HORAS_OFERTA} horas para aceptar.`} />
       </ul>
@@ -102,7 +98,7 @@ function Exito({ codigo, postulacion }) {
       </p>
       {postulacion && (
         <p className="mt-3 text-[15px]">
-          {postulacion.casa.nombre} · {rangoFechas(postulacion.turno, salidaTurno(postulacion.turno))}
+          {postulacion.casa.nombre} · {rangoFechas(postulacion.turno, salidaTurno(postulacion))}
         </p>
       )}
       <p className="mt-3 text-[15px] text-tinta-700">El sorteo se realiza al cierre de la postulación. Puede ver el estado o retirar su postulación en Mis reservas.</p>
@@ -121,10 +117,10 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
   const [personas, setPersonas] = useState(1)
   const formas = formasDePago(usuario)
   const [pago, setPago] = useState(formas.length === 1 ? formas[0] : '')
-  const [cuotas, setCuotas] = useState(1)
   const [autoriza, setAutoriza] = useState(false)
   const [correo, setCorreo] = useState(usuario.correo)
   const [telefono, setTelefono] = useState(usuario.telefono ?? '')
+  const [editarContacto, setEditarContacto] = useState(false)
   const [acepta, setAcepta] = useState(false)
   const [intento, setIntento] = useState(false)
   const [error, setError] = useState(null)
@@ -132,8 +128,13 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
   const casa = casas.find((c) => String(c.id) === casaId)
   const dem = demanda()
   const visibles = casas.filter((c) => !region || c.region === region)
+  const turnos = casa ? s.turnosCasa(casa.id) : []
+  const elegido = turnos.find((t) => t.entrada === turno)
+  const nochesN = nochesTurno(s.temporada)
   const tarifa = casa ? tarifaPara(casa, usuario) : 0
-  const total = tarifa * PARAMETROS.noches_max_temporada_alta
+  const total = tarifa * nochesN
+  const cuotas = s.temporada.cuotas ?? PARAMETROS.cuotas_temporada_alta
+  const desdeMes = s.temporada.primera_cuota ? nombreMes(s.temporada.primera_cuota + '-01') : null
 
   const errores = {
     casa: !casa && 'Elija una casa.',
@@ -153,7 +154,7 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
       casa_id: casa.id,
       turno,
       personas,
-      forma_pago: pago === 'planilla' ? { tipo: 'planilla', cuotas, autorizacion: true } : { tipo: 'transferencia', anticipado: true },
+      forma_pago: pago === 'planilla' ? { tipo: 'planilla', autorizacion: true } : { tipo: 'transferencia', anticipado: true },
       contacto: { correo, telefono },
     })
     if (r.error) setError(r.error)
@@ -176,6 +177,10 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
               ? `Usted tiene prioridad: no tuvo casa en ${condicion.anterior.toLowerCase()}.`
               : `Usted participa sin prioridad porque tuvo casa en ${condicion.anterior.toLowerCase()} (Art. 6 a).`}
         </Aviso>
+
+        <p className="text-[15px] text-tinta-700">
+          Postula como <strong>{usuario.nombre}</strong> · RUT {usuario.rut} · {nombreRegion(usuario.region)}. Estos datos salen de la nómina: no tiene que escribirlos.
+        </p>
 
         <Tarjeta className="p-5">
           <h2 className="text-lg font-semibold">1. Casa</h2>
@@ -222,13 +227,13 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
         <Tarjeta className="p-5">
           <h2 className="text-lg font-semibold">2. Turno</h2>
           <p className="mt-1 text-[13px] text-tinta-500">
-            Llegada el {DIAS_SEMANA[s.temporada.dia_cambio ?? 5]} desde las {PARAMETROS.hora_ingreso} y salida el {DIAS_SEMANA[s.temporada.dia_cambio ?? 5]} siguiente hasta las {PARAMETROS.hora_salida}. Se muestra cuántas personas ya postularon a cada turno.
+            {nochesN} noches: llegada desde las {PARAMETROS.hora_ingreso} y salida hasta las {PARAMETROS.hora_salida}. Los turnos de esta casa parten el día que se indica. Se muestra cuántas personas ya postularon a cada turno.
           </p>
           {!casa ? (
             <p className="mt-3 text-[15px] text-tinta-500">Elija primero una casa.</p>
           ) : (
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4" role="radiogroup" aria-label="Turno">
-              {s.turnos.map((t) => {
+              {turnos.map((t) => {
                 const n = dem[`${casa.id}|${t.entrada}`] ?? 0
                 const activo = turno === t.entrada
                 return (
@@ -240,7 +245,9 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
                     onClick={() => setTurno(t.entrada)}
                     className={`rounded-lg p-3 text-left ring-inset ${activo ? 'bg-verde-50 ring-2 ring-verde-600' : 'bg-white ring-1 ring-borde hover:bg-stone-50'}`}
                   >
-                    <span className="block text-[13px] text-tinta-500">Turno {t.numero}</span>
+                    <span className="block text-[13px] text-tinta-500">
+                      {codigoTurno(t)} · {nombreDia(t.entrada)} a {nombreDia(t.salida)}
+                    </span>
                     <span className="block font-semibold">{rangoFechas(t.entrada, t.salida)}</span>
                     <span className={`block text-[13px] ${n ? 'text-alerta-700' : 'text-verde-700'}`}>{n ? plural(n, 'postulante', 'postulantes') : 'Sin postulantes'}</span>
                   </button>
@@ -253,17 +260,30 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
 
         <Tarjeta className="p-5">
           <h2 className="text-lg font-semibold">3. Personas y contacto</h2>
-          <div className="mt-3 grid gap-3 sm:grid-cols-[140px_1fr_1fr]">
-            <Campo etiqueta="Personas" ayuda={casa ? `Máximo ${casa.capacidad}` : undefined}>
+          <div className="mt-3 grid gap-3 sm:grid-cols-[140px_1fr]">
+            <Campo etiqueta="Personas" ayuda={casa ? `Máximo ${casa.capacidad}, con usted` : 'Con usted'}>
               <input type="number" min="1" max={casa?.capacidad ?? 10} className={claseEntrada} value={personas} onChange={(e) => setPersonas(Number(e.target.value))} />
             </Campo>
-            <Campo etiqueta="Correo" ayuda="Aquí le avisaremos el resultado.">
-              <input type="email" className={claseEntrada} value={correo} onChange={(e) => setCorreo(e.target.value)} autoComplete="email" />
-            </Campo>
-            <Campo etiqueta="Teléfono">
-              <input type="tel" className={claseEntrada} value={telefono} onChange={(e) => setTelefono(e.target.value)} autoComplete="tel" />
-            </Campo>
+            {!editarContacto && (
+              <div className="text-[15px] sm:pt-7">
+                Le avisaremos el resultado a <strong>{correo}</strong>
+                {telefono ? ` · ${telefono}` : ''}.{' '}
+                <button type="button" className="font-medium text-verde-700 hover:underline" onClick={() => setEditarContacto(true)}>
+                  Cambiar
+                </button>
+              </div>
+            )}
           </div>
+          {editarContacto && (
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <Campo etiqueta="Correo" ayuda="Aquí le avisaremos el resultado.">
+                <input type="email" className={claseEntrada} value={correo} onChange={(e) => setCorreo(e.target.value)} autoComplete="email" />
+              </Campo>
+              <Campo etiqueta="Teléfono">
+                <input type="tel" className={claseEntrada} value={telefono} onChange={(e) => setTelefono(e.target.value)} autoComplete="tel" />
+              </Campo>
+            </div>
+          )}
           {err('personas')}
           {err('contacto')}
           <p className="mt-3 text-[13px] text-tinta-500">Si se adjudica el turno, podrá indicar los nombres de quienes viajan antes de llegar (Art. 14).</p>
@@ -273,27 +293,19 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
           <h2 className="text-lg font-semibold">4. Pago, si se adjudica</h2>
           <div className="mt-3 grid gap-3" role="radiogroup" aria-label="Forma de pago">
             {formas.includes('planilla') && (
-              <Opcion activa={pago === 'planilla'} onClick={() => setPago('planilla')} titulo="Descuento por planilla" detalle="Se descuenta de su remuneración.">
+              <Opcion
+                activa={pago === 'planilla'}
+                onClick={() => setPago('planilla')}
+                titulo="Descuento por planilla"
+                detalle={`En ${plural(cuotas, 'cuota', 'cuotas')}${desdeMes ? `, a partir de ${desdeMes}` : ''}.`}
+              >
                 {pago === 'planilla' && (
                   <div onClick={(e) => e.stopPropagation()}>
-                    <div className="mt-3 flex flex-wrap gap-2" role="radiogroup" aria-label="Número de cuotas">
-                      {Array.from({ length: PARAMETROS.cuotas_maximas_planilla }, (_, i) => i + 1).map((c) => (
-                        <button
-                          key={c}
-                          type="button"
-                          role="radio"
-                          aria-checked={cuotas === c}
-                          onClick={() => setCuotas(c)}
-                          className={`rounded-lg px-3 py-2 text-sm ring-1 ring-inset ${cuotas === c ? 'bg-verde-700 font-semibold text-white ring-verde-700' : 'bg-white text-tinta-700 ring-borde hover:bg-stone-50'}`}
-                        >
-                          {plural(c, 'cuota', 'cuotas')}
-                        </button>
-                      ))}
-                    </div>
                     <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-lg bg-white p-3 ring-1 ring-borde">
                       <input type="checkbox" className="mt-0.5 size-5 accent-verde-700" checked={autoriza} onChange={(e) => setAutoriza(e.target.checked)} />
                       <span className="text-[15px]">
-                        Si me adjudico el turno, autorizo el descuento por planilla del total de la estadía{casa ? ` (${pesos(total)})` : ''} en {plural(cuotas, 'cuota', 'cuotas')}.
+                        Si me adjudico el turno, autorizo el descuento por planilla del total de la estadía{casa ? ` (${pesos(total)})` : ''} en {plural(cuotas, 'cuota', 'cuotas')}
+                        {desdeMes ? ` desde ${desdeMes}` : ''}.
                       </span>
                     </label>
                   </div>
@@ -316,7 +328,7 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
           <label className="flex cursor-pointer items-start gap-3">
             <input type="checkbox" className="mt-0.5 size-5 accent-verde-700" checked={acepta} onChange={(e) => setAcepta(e.target.checked)} />
             <span className="text-[15px]">
-              Conozco y acepto el Reglamento General de Uso de Casas de Veraneo o Descanso. Entiendo que si me adjudico el turno y desisto sin aviso o no me presento, pierdo la posibilidad en el sorteo de la temporada alta siguiente (Art. 10 d).
+              Conozco y acepto el Reglamento General de Uso de Casas de Veraneo o Descanso. Entiendo que la casa es para mí y mi familia directa, que si me adjudico el turno puedo desistir sin costo hasta {PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles antes de la llegada y que después pago la estadía completa; y que si desisto fuera de plazo o no me presento, pierdo la posibilidad en el sorteo de la temporada alta siguiente (Art. 10 d).
             </span>
           </label>
           {err('acepta')}
@@ -343,7 +355,7 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
             <dl className="mt-3 space-y-2 text-[15px]">
               <div>
                 <dt className="text-[13px] text-tinta-500">Turno</dt>
-                <dd>{turno ? rangoFechas(turno, salidaTurno(turno)) : '—'}</dd>
+                <dd>{elegido ? `${codigoTurno(elegido)} · ${rangoFechas(elegido.entrada, elegido.salida)}` : '—'}</dd>
               </div>
               <div>
                 <dt className="text-[13px] text-tinta-500">Personas</dt>
@@ -358,7 +370,7 @@ function Formulario({ sorteo: s, usuario, condicion, onListo }) {
             </dl>
             {casa && (
               <p className="mt-1 text-[13px] text-tinta-500">
-                {PARAMETROS.noches_max_temporada_alta} noches × {pesos(tarifa)}
+                {nochesN} noches × {pesos(tarifa)} · tarifa {usuario.grado ? TRAMOS[tramoDe(usuario)].toLowerCase() : TRAMOS.a.toLowerCase()}
               </p>
             )}
             <p className="mt-3 text-[13px] text-tinta-500">
@@ -453,7 +465,7 @@ function ListaTemporadas({ actual }) {
           <>
             <p className="text-[13px] font-semibold uppercase tracking-wide text-tinta-500">{t.tipo === 'invierno' ? 'Invierno' : 'Verano'}</p>
             <p className="mt-0.5 font-semibold text-tinta-900">{t.nombre}</p>
-            <p className="text-[15px] text-tinta-700">{rangoFechas(t.desde, t.hasta)}</p>
+            <p className="text-[15px] text-tinta-700">{rangoFechas(inicioTemporada(t), t.hasta)}</p>
             <p className={`mt-1 text-[13px] ${e === 'postulacion' ? 'font-semibold text-verde-800' : 'text-tinta-500'}`}>
               {ESTADO_TEMPORADA[e]}
               {e === 'postulacion' && ` hasta el ${fechaCorta(s.postulacion.hasta, true)}`}

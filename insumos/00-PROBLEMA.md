@@ -70,7 +70,10 @@ maqueta vigente, según la metodología UIA del tramo previo a la fábrica (obje
 | Pide la reserva | Afiliado/a | Correo a la encargada | [PENDIENTE] | No ve la disponibilidad; no hay comprobante | VERIFICADO (solicitud) |
 | Revisa y responde | Encargada regional | Correo y planilla de reservas de su región | «Tiempos de respuesta variables» | Depende de la casilla de una persona | VERIFICADO (solicitud, 3.1) |
 | Registra la reserva | Encargada regional | Planilla de reservas (casas de veraneo y de huéspedes) | [PENDIENTE] | Registros locales no integrados | VERIFICADO (correo 24-07-2026) |
-| Temporada alta | Bienestar | [PENDIENTE: cómo se asigna hoy; el reglamento propone sorteo] | [PENDIENTE] | Sensación de asignación arbitraria | INFERIDO (correo 02-10-2026 y Art. 6 del reglamento propuesto) |
+| Temporada alta: llamado | Jefatura del Departamento de Bienestar del Personal | Memorándum por Cero Papel a todo el personal, con casas, tarifas por grado (04–14 y 15–19) y turnos de 6 noches | Postulación de 2 semanas (verano 2027: 09 al 22-11) | — | VERIFICADO (Memo 6188/2026, 06-11-2026) |
+| Temporada alta: postulación | Trabajador/a | Formulario Google: correo, región, RUT y nombre escritos a mano, una casa y un turno | [PENDIENTE] | Datos tecleados; si se equivoca debe llenarlo de nuevo y Bienestar elimina el anterior; quien elige una casa del calendario general debe responder también una fecha de las cabañas de Puyehue | VERIFICADO (formulario y comprobante de una postulación, 06-11-2026) |
+| Temporada alta: sorteo y resultado | Bienestar | Sorteo por videoconferencia con los postulantes; resultado comunicado a todos dos días después | 1 día de sorteo | [PENDIENTE: cómo se registra el resultado] | VERIFICADO (Memo 6188/2026) |
+| Temporada alta: desistimiento y pago | Trabajador/a y Bienestar | Correo a reservas.bienestar@conaf.cl hasta 10 días hábiles antes; descuento por planilla en 6 cuotas desde marzo | — | [PENDIENTE] | VERIFICADO (Memo 6188/2026) |
 | Descuento por planilla | Oficina Central | Consolidación manual → Remuneraciones | [PENDIENTE] | Error, duplicidad, demora | VERIFICADO (solicitud, punto 1) |
 
 ## Escala

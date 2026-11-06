@@ -31,10 +31,10 @@ import { CASAS } from './casas.js'
 import { inventarioInicial } from './inventarios.js'
 import { NOMINA } from './usuarios.js'
 import { diasEntre, hoyISO, mesDe, primerDiaMes, sumarDias, sumarMeses } from '../lib/fechas.js'
-import { ADICIONAL_TARIFA, PARAMETROS, TEMPORADAS_ALTAS, cargoDesistimiento, formasDePago, glosaTransferencia, noches, porConfirmar, temporadaAltaDe } from '../lib/reglas.js'
-import { HORAS_OFERTA, puedePostular, sortear, turnosDe } from '../lib/sorteo.js'
+import { ADICIONAL_TARIFA, PARAMETROS, TEMPORADAS_ALTAS, cargoDesistimiento, formasDePago, glosaTransferencia, noches, porConfirmar, tarifaPara, tarifaTramo, temporadaAltaDe, tramoDe } from '../lib/reglas.js'
+import { HORAS_OFERTA, calendarioTemporada, inicioTemporada, nochesTurno, puedePostular, sortear, turnosDe } from '../lib/sorteo.js'
 
-const CLAVE = 'reserva_veraneo_v12'
+const CLAVE = 'reserva_veraneo_v13'
 const ADICIONAL_BASE = { ...ADICIONAL_TARIFA }
 
 const ahora = () => new Date().toISOString().slice(0, 19)
@@ -79,6 +79,7 @@ function crearPersonas(cantidad, azar) {
       region: REGIONES_PERSONAL[i % REGIONES_PERSONAL.length],
       calidad,
       plazo_fijo: calidad === 'afiliado' && azar() < 0.1,
+      ...(['afiliado', 'no_afiliado'].includes(calidad) && { grado: 4 + ((i * 7) % 16) }),
       correo: calidad === 'jubilado' ? `${correoBase}@gmail.com` : calidad === 'otro_servicio' ? `${correoBase}@servicio.gob.cl` : `${correoBase}@conaf.cl`,
       telefono: `+56 9 ${5000 + ((i * 37) % 4999)} ${1000 + ((i * 53) % 8999)}`,
     })
@@ -89,14 +90,14 @@ function crearPersonas(cantidad, azar) {
 /* ---------- Semillas ---------- */
 
 /** Demanda relativa de cada casa (1 = normal): define cuánto se usa en la demostración. */
-const DEMANDA = { 2: 1.6, 6: 1.7, 10: 1.5, 5: 1.4, 22: 1.4, 3: 1.2, 8: 1.2, 11: 1.1, 19: 1.2, 26: 1.1, 7: 1.0, 15: 1.0, 21: 1.0, 30: 0.9, 1: 0.5, 29: 0.4, 28: 0.5, 16: 0.6, 13: 0.7, 34: 0.7 }
-const tarifaSegun = (casa, calidad) => casa.tarifa_noche + (ADICIONAL_BASE[calidad] ?? 0)
+const DEMANDA = { 2: 1.6, 6: 1.7, 10: 1.5, 5: 1.4, 22: 1.4, 23: 1.3, 3: 1.2, 8: 1.2, 11: 1.1, 20: 1.0, 25: 1.0, 7: 1.0, 15: 1.0, 21: 1.0, 1: 0.5, 24: 0.7, 13: 0.7, 34: 0.7 }
+const tarifaSegun = (casa, titular) => tarifaTramo(casa, tramoDe(titular)) + (ADICIONAL_BASE[titular.calidad] ?? 0)
 
 function nuevaReserva(codigo, casaId, entrada, nochesN, titular, extra = {}) {
   const casa = casaBase(casaId)
   const salida = sumarDias(entrada, nochesN)
   const personas = Math.min(casa.capacidad, 2 + (codigo.charCodeAt(codigo.length - 1) % 4))
-  const tarifa = tarifaSegun(casa, titular.calidad)
+  const tarifa = tarifaSegun(casa, titular)
   const anticipado = ['jubilado', 'otro_servicio'].includes(titular.calidad)
   return {
     codigo,
@@ -120,20 +121,28 @@ function nuevaReserva(codigo, casaId, entrada, nochesN, titular, extra = {}) {
   }
 }
 
+/** Cabañas 02 y 10 de P.N. Puyehue: calendario propio de sábado a viernes (Memo 6188/2026). */
+const CABANAS_PUYEHUE = [22, 23]
+
 /**
- * Temporadas altas de la demostración. Verano 2027: 8 turnos de sábado a
- * sábado, con postulación abierta; invierno 2027: programada.
+ * Temporadas altas de la demostración. Verano 2027 como el Memorándum
+ * N° 6188/2026: turnos de 6 noches; las casas en general del martes 5 de enero
+ * al 1 de abril, con 2 noches libres entre turnos (11 turnos), y las cabañas de
+ * Puyehue del sábado 2 de enero al 2 de abril, con 1 noche libre (13 turnos);
+ * 6 cuotas desde marzo. Postulación abierta. Invierno 2027: programada, con
+ * fechas y cuotas referenciales.
  */
 function temporadasIniciales(hoy) {
+  const comun = { noches: 6, cuotas: 6, creada_por: 'Patricia Herrera Muñoz' }
   return [
-    { id: 'V2027', tipo: 'verano', nombre: 'Temporada de verano 2027', desde: '2027-01-02', hasta: '2027-02-27', dia_cambio: 5, postulacion: { desde: sumarDias(hoy, -12), hasta: sumarDias(hoy, 18) }, creada_por: 'Patricia Herrera Muñoz', creada_en: sumarDias(hoy, -20) + 'T10:00:00' },
-    { id: 'I2027', tipo: 'invierno', nombre: 'Vacaciones de invierno 2027', desde: '2027-07-10', hasta: '2027-07-24', dia_cambio: 5, postulacion: { desde: '2027-05-03', hasta: '2027-05-21' }, creada_por: 'Patricia Herrera Muñoz', creada_en: sumarDias(hoy, -20) + 'T10:05:00' },
+    { ...comun, id: 'V2027', tipo: 'verano', nombre: 'Temporada de verano 2027', desde: '2027-01-05', hasta: '2027-04-02', libres: 2, especial: { casas: CABANAS_PUYEHUE, desde: '2027-01-02', libres: 1 }, primera_cuota: '2027-03', postulacion: { desde: sumarDias(hoy, -12), hasta: sumarDias(hoy, 18) }, creada_en: sumarDias(hoy, -20) + 'T10:00:00' },
+    { ...comun, id: 'I2027', tipo: 'invierno', nombre: 'Vacaciones de invierno 2027', desde: '2027-07-10', hasta: '2027-07-24', libres: 2, especial: { casas: CABANAS_PUYEHUE, desde: '2027-07-10', libres: 1 }, primera_cuota: '2027-09', postulacion: { desde: '2027-05-03', hasta: '2027-05-21' }, creada_en: sumarDias(hoy, -20) + 'T10:05:00' },
   ]
 }
 
 /** Copia las temporadas vigentes a las reglas, que cierran esas noches a la reserva directa. */
 function sincronizarTemporadas(lista) {
-  TEMPORADAS_ALTAS.splice(0, TEMPORADAS_ALTAS.length, ...lista.map((t) => ({ id: t.id, tipo: t.tipo, desde: t.desde, hasta: t.hasta, dia_cambio: t.dia_cambio })))
+  TEMPORADAS_ALTAS.splice(0, TEMPORADAS_ALTAS.length, ...lista.map((t) => ({ id: t.id, tipo: t.tipo, desde: inicioTemporada(t), hasta: t.hasta })))
 }
 
 function semillas(hoy) {
@@ -141,7 +150,7 @@ function semillas(hoy) {
   sincronizarTemporadas(temporadas)
   const azar = aleatorio(20261020)
   const personas = crearPersonas(210, azar)
-  const maria = { id: 1, nombre: 'María Fuentes Rojas', rut: '13.457.902-1', rol: 'Técnica administrativa', region: '05', calidad: 'afiliado', correo: 'maria.fuentes@conaf.cl', telefono: '+56 9 6123 4587' }
+  const maria = { id: 1, nombre: 'María Fuentes Rojas', rut: '13.457.902-1', rol: 'Técnica administrativa', region: '05', calidad: 'afiliado', grado: 16, correo: 'maria.fuentes@conaf.cl', telefono: '+56 9 6123 4587' }
   const hernan = { id: 3, nombre: 'Hernán Soto Valenzuela', rut: '6.884.215-8', rol: 'Afiliado jubilado', region: '08', calidad: 'jubilado', correo: 'hsoto.valenzuela@gmail.com', telefono: '+56 9 8455 1290' }
   const externo = { nombre: 'Rodrigo Pérez Leiva', rut: rutFicticio(14552310), rol: 'Funcionario de Servicio Agrícola y Ganadero', region: '05', calidad: 'otro_servicio', correo: 'rodrigo.perez@sag.gob.cl', telefono: '+56 9 7712 4410' }
   const jubilada = { ...personas[3], nombre: 'Nora Castillo Vergara', calidad: 'jubilado', rol: 'Afiliada jubilada', correo: 'nora.castillo@gmail.com', region: '05' }
@@ -156,7 +165,7 @@ function semillas(hoy) {
   // Reservas de los usuarios de demostración.
   const lista = [
     nuevaReserva('R-2026-0118', 6, sumarDias(hoy, -70), 4, maria, conf(95)),
-    nuevaReserva('R-2026-0187', 19, sumarDias(hoy, 26), 3, maria, { ...conf(10), forma_pago: { tipo: 'planilla', cuotas: 2, autorizacion: true } }),
+    nuevaReserva('R-2026-0187', 20, sumarDias(hoy, 26), 3, maria, { ...conf(10), forma_pago: { tipo: 'planilla', cuotas: 2, autorizacion: true } }),
     pagado(nuevaReserva('R-2026-0142', 15, sumarDias(hoy, -40), 3, hernan, conf(60)), 45),
   ]
 
@@ -171,10 +180,10 @@ function semillas(hoy) {
     nuevaReserva('R-2026-0195', 8, sumarDias(hoy, 30), 4, jubilada, { ...auto(hoy + 'T08:12:00') }),
     // Confirmadas con pago anticipado pendiente de registrar.
     nuevaReserva('R-2026-0181', 2, sumarDias(hoy, 4), 3, { ...personas[6], calidad: 'jubilado', rol: 'Afiliado jubilado' }, conf(9)),
-    nuevaReserva('R-2026-0183', 26, sumarDias(hoy, 8), 4, { ...personas[7], calidad: 'otro_servicio', rol: 'Funcionario/a de INDAP' }, conf(5)),
+    nuevaReserva('R-2026-0183', 25, sumarDias(hoy, 8), 4, { ...personas[7], calidad: 'otro_servicio', rol: 'Funcionario/a de INDAP' }, conf(5)),
     // Otras reservas recientes de otras regiones.
     nuevaReserva('R-2026-0158', 22, sumarDias(hoy, 9), 3, { ...personas[8], calidad: 'afiliado', plazo_fijo: false }, { ...auto(sumarDias(hoy, -6) + 'T09:20:00') }),
-    nuevaReserva('R-2026-0162', 30, sumarDias(hoy, 18), 4, { ...personas[9], calidad: 'no_afiliado' }, { ...auto(sumarDias(hoy, -4) + 'T15:10:00') }),
+    nuevaReserva('R-2026-0162', 21, sumarDias(hoy, 18), 4, { ...personas[9], calidad: 'no_afiliado' }, { ...auto(sumarDias(hoy, -4) + 'T15:10:00') }),
     nuevaReserva('R-2026-0185', 10, sumarDias(hoy, 7), 2, { ...personas[10], calidad: 'afiliado', plazo_fijo: false }, { ...auto(sumarDias(hoy, -1) + 'T18:45:00') }),
   )
 
@@ -245,9 +254,9 @@ function semillaSorteo(hoy, personas, reservas, hernan, temporada) {
   const invierno = (r) => r.entrada >= '2026-07-06' && r.entrada <= '2026-07-26'
   const tuvieron = new Set(reservas.filter((r) => invierno(r) && r.estado !== 'desistida').map((r) => r.titular_id))
   const perdieron = new Set(reservas.filter((r) => invierno(r) && r.estado === 'desistida' && r.cargo_desistimiento > 0).map((r) => r.titular_id))
-  const turnos = turnosDe(temporada)
   const azar = aleatorio(2027)
-  const pesoTurno = [0.7, 1.1, 1.4, 1.5, 1.6, 1.5, 1.2, 0.8]
+  // Más demanda en enero y febrero que en marzo.
+  const pesoTurno = (t) => ({ '01': 1.4, '02': 1.5 })[t.entrada.slice(5, 7)] ?? 0.6
   const casas = CASAS.map((c) => ({ id: c.id, peso: (DEMANDA[c.id] ?? 0.85) ** 2 }))
   const elegir = (items, peso) => {
     const total = items.reduce((t, x) => t + peso(x), 0)
@@ -259,7 +268,7 @@ function semillaSorteo(hoy, personas, reservas, hernan, temporada) {
   const s = {
     id: temporada.id,
     nombre: temporada.nombre,
-    temporada: { desde: temporada.desde, hasta: temporada.hasta, dia_cambio: temporada.dia_cambio },
+    temporada: calendarioTemporada(temporada),
     anterior: { nombre: 'Vacaciones de invierno 2026', adjudicados: [...tuvieron].filter(Boolean), perdieron: [...perdieron].filter(Boolean) },
     postulacion: { ...temporada.postulacion },
     estado: 'postulacion',
@@ -269,16 +278,18 @@ function semillaSorteo(hoy, personas, reservas, hernan, temporada) {
   const candidatos = personas.filter((p) => puedePostular(p))
   const agregar = (titular, casaId, turno, dia) => {
     const casa = casaBase(casaId)
+    const t = turnosDe(s.temporada, casaId).find((x) => x.entrada === turno)
     s.correlativo += 1
     const formas = formasDePago(titular)
     s.postulaciones.push({
       codigo: `P-V27-${String(s.correlativo).padStart(4, '0')}`,
       usuario_id: titular.id,
-      titular: { nombre: titular.nombre, rut: titular.rut, rol: titular.rol, region: titular.region, calidad: titular.calidad, plazo_fijo: Boolean(titular.plazo_fijo), correo: titular.correo, telefono: titular.telefono },
+      titular: { nombre: titular.nombre, rut: titular.rut, rol: titular.rol, region: titular.region, calidad: titular.calidad, grado: titular.grado, plazo_fijo: Boolean(titular.plazo_fijo), correo: titular.correo, telefono: titular.telefono },
       casa_id: casaId,
       turno,
+      salida: t.salida,
       personas: Math.min(casa.capacidad, 2 + Math.floor(azar() * 4)),
-      forma_pago: formas[0] === 'planilla' ? { tipo: 'planilla', cuotas: 1 + Math.floor(azar() * 3), autorizacion: true } : { tipo: 'transferencia', anticipado: true },
+      forma_pago: formas[0] === 'planilla' ? pagoTemporada(s.temporada) : { tipo: 'transferencia', anticipado: true },
       contacto: { correo: titular.correo, telefono: titular.telefono },
       prioridad: !tuvieron.has(titular.id),
       pierde_posibilidad: perdieron.has(titular.id),
@@ -293,13 +304,20 @@ function semillaSorteo(hoy, personas, reservas, hernan, temporada) {
     const p = candidatos[Math.floor(azar() * candidatos.length)]
     if (usados.has(p.id) || perdieron.has(p.id)) continue
     usados.add(p.id)
-    agregar(p, elegir(casas, (c) => c.peso).id, elegir(turnos, (t) => pesoTurno[t.numero - 1] ?? 1).entrada, Math.floor(azar() * dias))
+    const casaId = elegir(casas, (c) => c.peso).id
+    agregar(p, casaId, elegir(turnosDe(s.temporada, casaId), pesoTurno).entrada, Math.floor(azar() * dias))
   }
   // Hernán (jubilado de demostración) ya postuló.
-  agregar(hernan, 15, turnos[4].entrada, dias - 1)
+  agregar(hernan, 15, turnosDe(s.temporada, 15)[4].entrada, dias - 1)
   s.postulaciones.sort((a, b) => (a.creada_en < b.creada_en ? -1 : 1))
   return s
 }
+
+/**
+ * Descuento por planilla de un turno de temporada alta: en las cuotas que fija
+ * la temporada, desde el mes de la primera (Memo 6188/2026: 6 cuotas desde marzo).
+ */
+export const pagoTemporada = (temporada) => ({ tipo: 'planilla', cuotas: temporada.cuotas ?? PARAMETROS.cuotas_temporada_alta, desde_mes: temporada.primera_cuota ?? null, autorizacion: true })
 
 /** Generador determinista: mismos datos en cada carga. */
 function aleatorio(semilla) {
@@ -365,7 +383,11 @@ export function useDatos() {
 
 /* ---------- Casas, tarifas y bloqueos ---------- */
 
-const conAjustes = (c) => ({ ...c, tarifa_noche: estado.tarifas[c.id] ?? c.tarifa_noche, activa: !estado.inactivas.includes(c.id) })
+/** Tarifas vigentes de una casa: las de la resolución o las cargadas por Oficina Central ({ a: grados 04–14, b: grados 15–19 }). */
+const conAjustes = (c) => {
+  const t = estado.tarifas[c.id] ?? {}
+  return { ...c, tarifa_noche: t.a ?? c.tarifa_noche, tarifa_noche_15_19: t.b ?? c.tarifa_noche_15_19, activa: !estado.inactivas.includes(c.id) }
+}
 
 /** Casas activas (para el solicitante) o todas (para la Oficina Central). */
 export const listarCasas = ({ incluirInactivas = false } = {}) => CASAS.map(conAjustes).filter((c) => incluirInactivas || c.activa)
@@ -375,8 +397,9 @@ export function obtenerCasa(id) {
   return c ? conAjustes(c) : null
 }
 
-export function actualizarCasa(id, { tarifa_noche, activa }) {
-  if (tarifa_noche !== undefined) estado.tarifas[id] = Number(tarifa_noche)
+export function actualizarCasa(id, { tarifa_noche, tarifa_noche_15_19, activa }) {
+  if (tarifa_noche !== undefined) estado.tarifas[id] = { ...estado.tarifas[id], a: Number(tarifa_noche) }
+  if (tarifa_noche_15_19 !== undefined) estado.tarifas[id] = { ...estado.tarifas[id], b: Number(tarifa_noche_15_19) }
   if (activa !== undefined) estado.inactivas = activa ? estado.inactivas.filter((x) => x !== id) : [...new Set([...estado.inactivas, id])]
   guardar()
 }
@@ -456,7 +479,7 @@ export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocu
   const r = {
     codigo,
     titular_id: usuario.id,
-    titular: { nombre: usuario.nombre, rut: usuario.rut, rol: usuario.rol, region: usuario.region, calidad: usuario.calidad, correo: contacto.correo, telefono: contacto.telefono },
+    titular: { nombre: usuario.nombre, rut: usuario.rut, rol: usuario.rol, region: usuario.region, calidad: usuario.calidad, grado: usuario.grado, correo: contacto.correo, telefono: contacto.telefono },
     casa_id: casa.id,
     entrada,
     salida,
@@ -550,22 +573,26 @@ export function registrarPago(codigo, { comprobante }, actor) {
 /**
  * Líneas de la nómina de descuentos de un período (AAAA-MM). Cada estadía
  * finalizada con planilla se descuenta en cuotas a partir del mes siguiente
- * a la salida; los cargos por desistimiento, en el mes siguiente al aviso.
+ * a la salida; un turno de temporada alta, desde el mes que fija la temporada
+ * (Memo 6188/2026: 6 cuotas desde marzo); los cargos por desistimiento, en el
+ * mes siguiente al aviso.
  */
 export function nominaPlanilla(periodo) {
   const lineas = []
   for (const r of estado.reservas) {
     if (r.forma_pago.tipo !== 'planilla') continue
-    if (r.estado === 'confirmada' && r.salida <= hoyISO()) {
+    const desdeMes = r.forma_pago.desde_mes
+    if (r.estado === 'confirmada' && (desdeMes || r.salida <= hoyISO())) {
       const cuotas = r.forma_pago.cuotas ?? 1
       for (let k = 1; k <= cuotas; k++) {
-        if (mesDe(sumarMeses(r.salida, k)) === periodo) {
+        const mes = desdeMes ? mesDe(sumarMeses(desdeMes + '-01', k - 1)) : mesDe(sumarMeses(r.salida, k))
+        if (mes === periodo) {
           lineas.push({ reserva: r.codigo, titular: r.titular, casa: casaBase(r.casa_id).nombre, concepto: `Estadía ${r.entrada} a ${r.salida}`, cuota: `${k} de ${cuotas}`, monto: Math.round(r.total / cuotas) })
         }
       }
     }
     if (r.estado === 'desistida' && r.cargo_desistimiento > 0 && mesDe(sumarMeses(r.desistida_en, 1)) === periodo) {
-      lineas.push({ reserva: r.codigo, titular: r.titular, casa: casaBase(r.casa_id).nombre, concepto: 'Cargo por desistimiento (Art. 10)', cuota: '1 de 1', monto: r.cargo_desistimiento })
+      lineas.push({ reserva: r.codigo, titular: r.titular, casa: casaBase(r.casa_id).nombre, concepto: 'Desistimiento fuera de plazo: estadía completa', cuota: '1 de 1', monto: r.cargo_desistimiento })
     }
   }
   return lineas.sort((a, b) => a.titular.nombre.localeCompare(b.titular.nombre))
@@ -700,7 +727,7 @@ export function abrirPostulacion(temporadaId, actor, hoy = hoyISO()) {
   estado.sorteos.push({
     id: t.id,
     nombre: t.nombre,
-    temporada: { desde: t.desde, hasta: t.hasta, dia_cambio: t.dia_cambio },
+    temporada: calendarioTemporada(t),
     anterior,
     postulacion: { desde: hoy, hasta: t.postulacion.hasta },
     estado: 'postulacion',
@@ -720,7 +747,7 @@ export function sorteoVigente() {
   if (!s) return null
   const t = estado.temporadas.find((x) => x.id === s.id)
   const temporada = { ...s.temporada, tipo: t?.tipo ?? 'verano' }
-  return { ...s, temporada, turnos: turnosDe(temporada) }
+  return { ...s, temporada, turnos: turnosDe(temporada), turnosCasa: (casaId) => turnosDe(temporada, casaId) }
 }
 
 export const postulacionAbierta = (hoy = hoyISO()) => {
@@ -762,16 +789,19 @@ export function postular({ usuario, casa_id, turno, personas, forma_pago, contac
   if (postulacionDe(usuario.id)) return { error: 'Ya tiene una postulación en este sorteo: se postula a un solo turno (Art. 6 b).' }
   const casa = obtenerCasa(casa_id)
   if (!casa || personas > casa.capacidad) return { error: 'La casa no admite esa cantidad de personas.' }
+  const t = turnosDe(s.temporada, casa.id).find((x) => x.entrada === turno)
+  if (!t) return { error: 'Ese turno no existe para la casa elegida.' }
   s.correlativo += 1
   const codigo = `P-${s.id.slice(0, 1)}${s.id.slice(3, 5)}-${String(s.correlativo).padStart(4, '0')}`
   s.postulaciones.push({
     codigo,
     usuario_id: usuario.id,
-    titular: { nombre: usuario.nombre, rut: usuario.rut, rol: usuario.rol, region: usuario.region, calidad: usuario.calidad, plazo_fijo: Boolean(usuario.plazo_fijo), correo: contacto.correo, telefono: contacto.telefono },
+    titular: { nombre: usuario.nombre, rut: usuario.rut, rol: usuario.rol, region: usuario.region, calidad: usuario.calidad, grado: usuario.grado, plazo_fijo: Boolean(usuario.plazo_fijo), correo: contacto.correo, telefono: contacto.telefono },
     casa_id,
     turno,
+    salida: t.salida,
     personas,
-    forma_pago,
+    forma_pago: forma_pago.tipo === 'planilla' ? pagoTemporada(s.temporada) : forma_pago,
     contacto,
     prioridad: condicionSorteo(usuario.id).prioridad,
     pierde_posibilidad: condicionSorteo(usuario.id).pierde_posibilidad,
@@ -794,8 +824,9 @@ export function retirarPostulacion(codigo) {
 /** Crea la reserva confirmada de una postulación adjudicada. */
 function reservaDesdePostulacion(p, via) {
   const casa = obtenerCasa(p.casa_id)
-  const salida = sumarDias(p.turno, PARAMETROS.noches_max_temporada_alta)
-  const tarifa = casa.tarifa_noche + (ADICIONAL_TARIFA[p.titular.calidad] ?? 0)
+  const s = (estado.sorteos ?? []).find((x) => x.postulaciones.includes(p))
+  const salida = p.salida ?? sumarDias(p.turno, nochesTurno(s?.temporada))
+  const tarifa = tarifaPara(casa, p.titular)
   const codigo = nuevoCodigo()
   const r = {
     codigo,
@@ -865,7 +896,7 @@ export function realizarSorteo(actor) {
 
 /** Ofrece el cupo liberado a la siguiente persona de la lista de espera (Art. 6 d). */
 function ofrecerSiguiente(casaId, turno) {
-  const s = (estado.sorteos ?? []).find((x) => x.estado === 'sorteado' && turno >= x.temporada.desde && turno < x.temporada.hasta)
+  const s = (estado.sorteos ?? []).find((x) => x.estado === 'sorteado' && turno >= inicioTemporada(x.temporada) && turno < x.temporada.hasta)
   if (!s) return
   const siguiente = s.postulaciones
     .filter((p) => p.casa_id === casaId && p.turno === turno && p.estado === 'espera')
@@ -921,7 +952,7 @@ export function turnosVacantes(todas = false) {
 function vacantesDe(s) {
   const lista = []
   for (const casa of listarCasas()) {
-    for (const t of turnosDe(s.temporada)) {
+    for (const t of turnosDe(s.temporada, casa.id)) {
       const tomado = estado.reservas.some((r) => r.casa_id === casa.id && r.origen === 'sorteo' && r.entrada === t.entrada && ocupa(r))
       const esperando = s.postulaciones.some((p) => p.casa_id === casa.id && p.turno === t.entrada && ['espera', 'ofertada'].includes(p.estado))
       if (!tomado && !esperando) lista.push({ casa, ...t })
@@ -999,7 +1030,7 @@ export function edicionTemporada(t) {
  */
 export function guardarTemporada(datos, actor, hoy = hoyISO()) {
   const previa = datos.id ? estado.temporadas.find((t) => t.id === datos.id) : null
-  const t = { ...previa, ...datos, dia_cambio: Number(datos.dia_cambio) }
+  const t = normalizarTemporada({ ...previa, ...datos })
   const errores = validarTemporada(t, previa, hoy)
   if (errores.length) return { error: errores[0], errores }
   if (previa) {
@@ -1012,7 +1043,7 @@ export function guardarTemporada(datos, actor, hoy = hoyISO()) {
   const so = sorteoDe(final.id)
   if (so) {
     so.nombre = final.nombre
-    so.temporada = { desde: final.desde, hasta: final.hasta, dia_cambio: final.dia_cambio }
+    so.temporada = calendarioTemporada(final)
     so.postulacion = { ...so.postulacion, hasta: final.postulacion.hasta }
   }
   sincronizarTemporadas(estado.temporadas)
@@ -1025,30 +1056,41 @@ export function validarTemporada(t, previa, hoy = hoyISO()) {
   if (!t.nombre?.trim()) e.push('Escriba el nombre de la temporada.')
   if (!t.desde || !t.hasta) e.push('Indique la llegada del primer turno y la salida del último.')
   else {
-    if (t.hasta <= t.desde) e.push('La salida del último turno debe ser posterior a la llegada del primero.')
-    if (diaSemanaDe(t.desde) !== t.dia_cambio) e.push('La llegada del primer turno debe caer en el día de cambio de turno elegido.')
-    const turnos = turnosDe(t)
-    if (!turnos.length) e.push('Entre esas fechas no cabe ningún turno de 7 noches.')
-    else if (turnos[turnos.length - 1].salida !== t.hasta) e.push(`Las fechas no completan turnos enteros: la salida del último turno debería ser el ${turnos[turnos.length - 1].salida.split('-').reverse().join('-')}.`)
-    if (!previa && t.desde <= hoy) e.push('La temporada debe comenzar después de hoy.')
-    const cruce = estado.temporadas.find((o) => o.id !== t.id && t.desde < o.hasta && o.desde < t.hasta)
+    if (t.hasta <= t.desde) e.push('El fin de la temporada debe ser posterior a la llegada del primer turno.')
+    if (!(t.noches >= 1 && t.noches <= 14)) e.push('Los turnos deben tener entre 1 y 14 noches.')
+    if (!(t.libres >= 0 && t.libres <= 7)) e.push('Las noches libres entre turnos deben estar entre 0 y 7.')
+    if (!turnosDe(t).length) e.push(`Entre la llegada del primer turno y el fin de la temporada no cabe un turno de ${t.noches} noches.`)
+    if (t.especial) {
+      if (!t.especial.desde) e.push('Indique la llegada del primer turno del calendario especial.')
+      else if (!turnosDe(t, t.especial.casas[0]).length) e.push(`En el calendario especial no cabe un turno de ${t.noches} noches antes del fin de la temporada.`)
+      if (!(t.especial.libres >= 0 && t.especial.libres <= 7)) e.push('Las noches libres del calendario especial deben estar entre 0 y 7.')
+    }
+    if (!(t.cuotas >= 1 && t.cuotas <= 12)) e.push('Indique entre 1 y 12 cuotas de descuento por planilla.')
+    if (!t.primera_cuota) e.push('Indique el mes de la primera cuota.')
+    if (!previa && inicioTemporada(t) <= hoy) e.push('La temporada debe comenzar después de hoy.')
+    const cruce = estado.temporadas.find((o) => o.id !== t.id && inicioTemporada(t) < o.hasta && inicioTemporada(o) < t.hasta)
     if (cruce) e.push(`Se cruza con ${cruce.nombre}.`)
   }
   if (!t.postulacion?.desde || !t.postulacion?.hasta) e.push('Indique el plazo de postulación.')
   else {
     if (t.postulacion.hasta < t.postulacion.desde) e.push('El cierre de la postulación debe ser posterior a su apertura.')
-    if (t.desde && t.postulacion.hasta >= t.desde) e.push('La postulación debe cerrar antes de que comience la temporada.')
+    if (t.desde && t.postulacion.hasta >= inicioTemporada(t)) e.push('La postulación debe cerrar antes de que comience la temporada.')
   }
   if (previa) {
     const modo = edicionTemporada(previa)
     if (modo === 'cerrada') e.push('El sorteo de esta temporada ya se realizó: no se puede modificar.')
-    if (modo === 'solo_cierre' && (t.desde !== previa.desde || t.hasta !== previa.hasta || t.dia_cambio !== previa.dia_cambio || t.postulacion.desde !== previa.postulacion.desde))
+    if (modo === 'solo_cierre' && (JSON.stringify(calendarioTemporada(t)) !== JSON.stringify(calendarioTemporada(previa)) || t.postulacion.desde !== previa.postulacion.desde))
       e.push('Ya hay postulaciones: solo se puede cambiar el cierre de la postulación.')
   }
   return e
 }
 
-const diaSemanaDe = (iso) => (new Date(iso + 'T00:00:00Z').getUTCDay() + 6) % 7
+/** Números como números y calendario especial vacío como null. */
+function normalizarTemporada(t) {
+  const n = (v, def) => (v === '' || v === undefined || v === null ? def : Number(v))
+  const especial = t.especial?.casas?.length ? { casas: t.especial.casas.map(Number), desde: t.especial.desde ?? '', libres: n(t.especial.libres, 1) } : null
+  return { ...t, noches: n(t.noches, PARAMETROS.noches_turno_temporada_alta), libres: n(t.libres, 0), especial, cuotas: n(t.cuotas, PARAMETROS.cuotas_temporada_alta), primera_cuota: t.primera_cuota || '' }
+}
 
 /* ---------- Tarifas: edición y carga masiva ---------- */
 
@@ -1059,10 +1101,12 @@ const diaSemanaDe = (iso) => (new Date(iso + 'T00:00:00Z').getUTCDay() + 6) % 7
 export function actualizarTarifasMasivo(cambios, { metodo, archivo }, actor) {
   const detalle = []
   for (const c of cambios) {
-    const antes = obtenerCasa(c.casa_id).tarifa_noche
+    const tramo = c.tramo ?? 'a'
+    const casa = obtenerCasa(c.casa_id)
+    const antes = tarifaTramo(casa, tramo)
     if (antes === c.nueva) continue
-    estado.tarifas[c.casa_id] = c.nueva
-    detalle.push({ casa_id: c.casa_id, antes, despues: c.nueva })
+    estado.tarifas[c.casa_id] = { ...estado.tarifas[c.casa_id], [tramo]: c.nueva }
+    detalle.push({ casa_id: c.casa_id, tramo, antes, despues: c.nueva })
   }
   if (!detalle.length) return 0
   estado.historial_tarifas.unshift({ en: ahora(), por: actor.nombre, metodo, archivo: archivo ?? null, cambios: detalle })

@@ -4,10 +4,10 @@ import { demanda, desistirReserva, listarCasas, obtenerReserva, postulaciones, r
 import { fechaCorta, fechaLarga, rangoFechas } from '../../lib/fechas.js'
 import { plural } from '../../lib/formato.js'
 import { CALIDADES } from '../../lib/reglas.js'
-import { DIAS_SEMANA, HORAS_OFERTA } from '../../lib/sorteo.js'
+import { HORAS_OFERTA, codigoTurno } from '../../lib/sorteo.js'
 import { Temporadas } from './Temporadas.jsx'
 import { descargarCSV } from '../../lib/csv.js'
-import { EstadoPostulacion, salidaTurno } from '../../componentes/Postulacion.jsx'
+import { EstadoPostulacion, ResumenCalendarios, salidaTurno } from '../../componentes/Postulacion.jsx'
 import { Indicador, Panel } from '../../componentes/graficos.jsx'
 import { Aviso, Boton, claseFiltro } from '../../componentes/ui.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
@@ -19,7 +19,6 @@ export function SorteoCentral() {
   useDatos()
   const s = sorteoVigente()
   const lista = postulaciones().filter((p) => p.estado !== 'retirada')
-  const dia = DIAS_SEMANA[s?.temporada.dia_cambio ?? 5]
   return (
     <>
       <h1 className="text-2xl font-bold">Temporadas altas y sorteo</h1>
@@ -29,13 +28,13 @@ export function SorteoCentral() {
       {!s ? (
         <p className="mt-10">No hay un sorteo en curso.</p>
       ) : (
-        <SorteoEnCurso s={s} lista={lista} dia={dia} />
+        <SorteoEnCurso s={s} lista={lista} />
       )}
     </>
   )
 }
 
-function SorteoEnCurso({ s, lista, dia }) {
+function SorteoEnCurso({ s, lista }) {
   return (
     <div className="mt-10 border-t border-borde pt-8">
       <div className="flex flex-wrap items-center gap-3">
@@ -45,7 +44,7 @@ function SorteoEnCurso({ s, lista, dia }) {
         </span>
       </div>
       <p className="mt-1 max-w-3xl text-[15px] text-tinta-500">
-        {s.turnos.length} turnos de {dia} a {dia} ({rangoFechas(s.turnos[0].entrada, s.turnos[s.turnos.length - 1].salida)}) en {plural(listarCasas().length, 'casa', 'casas')}. Postulación del{' '}
+        <ResumenCalendarios temporada={s.temporada} /> Postulación del{' '}
         {fechaCorta(s.postulacion.desde)} al {fechaCorta(s.postulacion.hasta, true)}. {s.anterior ? `Prioridad para quien no tuvo casa en ${s.anterior.nombre.toLowerCase()} (Art. 6 a).` : 'Sin sorteo anterior realizado: todos postulan con prioridad (Art. 6 a).'}
       </p>
       {s.estado === 'sorteado' ? <Resultados sorteo={s} lista={lista} /> : <Postulacion sorteo={s} lista={lista} />}
@@ -61,11 +60,12 @@ function Postulacion({ sorteo: s, lista }) {
   const casas = listarCasas()
   const dem = demanda()
   const conPrioridad = lista.filter((p) => p.prioridad).length
-  const ofrecidos = casas.length * s.turnos.length
+  const ofrecidos = casas.reduce((n, c) => n + s.turnosCasa(c.id).length, 0)
   const conDemanda = Object.keys(dem).length
+  const columnas = Math.max(...casas.map((c) => s.turnosCasa(c.id).length))
 
   const filas = casas
-    .map((c) => ({ casa: c, valores: s.turnos.map((t) => dem[`${c.id}|${t.entrada}`] ?? 0) }))
+    .map((c) => ({ casa: c, turnos: s.turnosCasa(c.id), valores: s.turnosCasa(c.id).map((t) => dem[`${c.id}|${t.entrada}`] ?? 0) }))
     .map((f) => ({ ...f, total: f.valores.reduce((a, b) => a + b, 0) }))
     .sort((a, b) => b.total - a.total)
   const max = Math.max(1, ...filas.flatMap((f) => f.valores))
@@ -74,7 +74,7 @@ function Postulacion({ sorteo: s, lista }) {
     <>
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Indicador etiqueta="Postulaciones" valor={lista.length} detalle={`${conPrioridad} con prioridad`} />
-        <Indicador etiqueta="Turnos ofrecidos" valor={ofrecidos} detalle={`${s.turnos.length} turnos × ${casas.length} casas`} />
+        <Indicador etiqueta="Turnos ofrecidos" valor={ofrecidos} detalle={`En ${plural(casas.length, 'casa', 'casas')}`} />
         <Indicador etiqueta="Turnos con postulantes" valor={conDemanda} detalle={`${ofrecidos - conDemanda} sin postulantes por ahora`} />
         <Indicador etiqueta="Postulantes por cupo" valor={(lista.length / Math.max(1, conDemanda)).toLocaleString('es-CL', { maximumFractionDigits: 1 })} detalle="En los turnos con demanda" />
       </div>
@@ -92,15 +92,15 @@ function Postulacion({ sorteo: s, lista }) {
       </div>
 
       <div className="mt-5">
-        <Panel titulo="Postulantes por casa y turno" subtitulo="Cada celda indica cuántas personas postularon a ese turno. Más intenso = más demanda.">
+        <Panel titulo="Postulantes por casa y turno" subtitulo="Cada celda indica cuántas personas postularon a ese turno (S01, S02…, como en el llamado; las fechas de cada turno dependen del calendario de la casa). Más intenso = más demanda.">
           <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <table className="w-full min-w-[640px] text-[13px]">
               <thead>
                 <tr className="text-left text-tinta-500">
                   <th className="py-2 pr-3 font-medium">Casa</th>
-                  {s.turnos.map((t) => (
-                    <th key={t.entrada} className="px-1 py-2 text-center font-medium">
-                      {fechaCorta(t.entrada)}
+                  {Array.from({ length: columnas }, (_, i) => (
+                    <th key={i} className="px-1 py-2 text-center font-medium">
+                      {codigoTurno({ numero: i + 1 })}
                     </th>
                   ))}
                   <th className="py-2 pl-3 text-right font-medium">Total</th>
@@ -113,15 +113,17 @@ function Postulacion({ sorteo: s, lista }) {
                       <span className="block font-medium text-tinta-900">{f.casa.nombre}</span>
                       <span className="text-tinta-500">{nombreRegion(f.casa.region)}</span>
                     </td>
-                    {f.valores.map((v, i) => (
+                    {Array.from({ length: columnas }, (_, i) => f.valores[i]).map((v, i) => (
                       <td key={i} className="px-1 py-1.5 text-center">
+                        {v === undefined ? null : (
                         <span
                           className={`grid h-8 place-items-center rounded tabular-nums ${v ? 'font-semibold' : 'text-tinta-400'} ${v / max > 0.6 ? 'text-white' : 'text-tinta-900'}`}
                           style={{ background: v ? `color-mix(in srgb, var(--color-verde-700) ${Math.round(15 + (v / max) * 85)}%, white)` : '#f5f5f4' }}
-                          title={`${f.casa.nombre}, turno del ${fechaCorta(s.turnos[i].entrada)}: ${plural(v, 'postulante', 'postulantes')}`}
+                          title={`${f.casa.nombre}, ${codigoTurno(f.turnos[i])} (${rangoFechas(f.turnos[i].entrada, f.turnos[i].salida)}): ${plural(v, 'postulante', 'postulantes')}`}
                         >
                           {v || '·'}
                         </span>
+                        )}
                       </td>
                     ))}
                     <td className="py-1.5 pl-3 text-right font-semibold tabular-nums">{f.total}</td>
@@ -181,7 +183,7 @@ function Resultados({ sorteo: s, lista }) {
     descargarCSV(
       `sorteo-${s.id}-resultados.csv`,
       ['Postulación', 'RUT', 'Nombre', 'Calidad', 'Región postulante', 'Casa', 'Turno', 'Prioridad', 'Resultado', 'Lugar en espera', 'Reserva'],
-      lista.map((p) => [p.codigo, p.titular.rut, p.titular.nombre, CALIDADES[p.titular.calidad], nombreRegion(p.titular.region), p.casa.nombre, rangoFechas(p.turno, salidaTurno(p.turno)), p.prioridad ? 'Sí' : 'No', p.estado, p.posicion ?? '', p.reserva ?? '']),
+      lista.map((p) => [p.codigo, p.titular.rut, p.titular.nombre, CALIDADES[p.titular.calidad], nombreRegion(p.titular.region), p.casa.nombre, rangoFechas(p.turno, salidaTurno(p)), p.prioridad ? 'Sí' : 'No', p.estado, p.posicion ?? '', p.reserva ?? '']),
     )
   }
 
@@ -261,7 +263,7 @@ function Adjudicados({ lista }) {
             <li key={p.codigo} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center">
               <div className="min-w-0 flex-1">
                 <p className="font-medium">
-                  {p.casa.nombre} · {rangoFechas(p.turno, salidaTurno(p.turno))}
+                  {p.casa.nombre} · {rangoFechas(p.turno, salidaTurno(p))}
                 </p>
                 <p className="text-[13px] text-tinta-500">
                   {p.titular.nombre} · {CALIDADES[p.titular.calidad]} · {p.prioridad ? 'con prioridad' : 'sin prioridad'} · {p.reserva}
@@ -287,7 +289,7 @@ function Adjudicados({ lista }) {
       {desistir && (
         <Dialogo titulo="Registrar desistimiento" onCerrar={() => setDesistir(null)}>
           <p className="mt-2 text-[15px] text-tinta-700">
-            {desistir.titular.nombre} avisa que no usará {desistir.casa.nombre} del {rangoFechas(desistir.turno, salidaTurno(desistir.turno))}. Se aplica el cargo del Art. 10 si corresponde y el turno se ofrece a la
+            {desistir.titular.nombre} avisa que no usará {desistir.casa.nombre} del {rangoFechas(desistir.turno, salidaTurno(desistir))}. Si avisa hasta 10 días hábiles antes de la llegada no tiene costo; después paga la estadía completa, y el turno se ofrece a la
             siguiente persona de la lista de espera, que tendrá {HORAS_OFERTA} horas para aceptar.
           </p>
           <div className="mt-6 flex justify-end gap-3">
@@ -328,7 +330,7 @@ function Espera({ lista }) {
         {grupos.map((g) => (
           <section key={`${g.casa.id}|${g.turno}`} className="rounded-xl border border-borde bg-white p-4">
             <h3 className="font-semibold">
-              {g.casa.nombre} · {rangoFechas(g.turno, salidaTurno(g.turno))}
+              {g.casa.nombre} · {rangoFechas(g.turno, salidaTurno(g))}
             </h3>
             <ol className="mt-2 space-y-2">
               {g.personas
@@ -409,7 +411,7 @@ function TablaPostulaciones({ lista, titulo }) {
             descargarCSV(
               'sorteo-postulaciones.csv',
               ['Postulación', 'Fecha', 'RUT', 'Nombre', 'Calidad', 'Casa', 'Turno', 'Personas', 'Prioridad', 'Forma de pago'],
-              ordenadas.map((p) => [p.codigo, p.creada_en.replace('T', ' '), p.titular.rut, p.titular.nombre, CALIDADES[p.titular.calidad], p.casa.nombre, rangoFechas(p.turno, salidaTurno(p.turno)), p.personas, p.prioridad ? 'Sí' : 'No', p.forma_pago.tipo]),
+              ordenadas.map((p) => [p.codigo, p.creada_en.replace('T', ' '), p.titular.rut, p.titular.nombre, CALIDADES[p.titular.calidad], p.casa.nombre, rangoFechas(p.turno, salidaTurno(p)), p.personas, p.prioridad ? 'Sí' : 'No', p.forma_pago.tipo]),
             )
           }
         >
@@ -425,7 +427,7 @@ function TablaPostulaciones({ lista, titulo }) {
               {p.titular.nombre} <span className="text-tinta-500">· {CALIDADES[p.titular.calidad]}</span>
             </span>
             <span className="text-[15px] sm:w-72">
-              {p.casa.nombre} · {rangoFechas(p.turno, salidaTurno(p.turno))}
+              {p.casa.nombre} · {rangoFechas(p.turno, salidaTurno(p))}
             </span>
             <span className="w-28 text-[13px] text-tinta-500">{p.prioridad ? 'Con prioridad' : 'Sin prioridad'}</span>
           </li>

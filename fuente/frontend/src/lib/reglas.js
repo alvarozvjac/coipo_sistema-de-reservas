@@ -1,22 +1,27 @@
 /**
  * Reglas del Reglamento General de Uso de Casas de Veraneo o Descanso
  * (propuesta de actualización, octubre 2026) y decisiones de Bienestar/UIA.
+ * Desde el 06-11-2026 los turnos, las tarifas por grado, el desistimiento y
+ * las cuotas de temporada alta siguen la práctica vigente del Memorándum
+ * N° 6188/2026 (llamado a postular, verano 2027), por decisión de Álvaro
+ * Zegers: donde el reglamento propuesto dice otra cosa, se anota.
  *
  * Todo lo que el reglamento deja como número está en PARAMETROS: en la
  * versión con base de datos, el perfil Administración Oficina Central los edita.
  */
 
-import { diasEntre, fechaCorta, hoyISO, mesDe, nombreMes, sumarDias } from './fechas.js'
+import { diasEntre, fechaCorta, hoyISO, mesDe, nombreMes, restarDiasHabiles, sumarDias } from './fechas.js'
 
 export const PARAMETROS = {
   anticipacion_maxima_dias: 90, // no está en el reglamento de oct-2026; se mantiene como parámetro (decisión 20-10-2026)
   anticipacion_maxima_otro_servicio_dias: 15, // Art. 9: solo cupos que siguen libres cerca de la fecha (decisión 20-10-2026)
-  aviso_desistimiento_sin_costo_dias: 7, // Art. 10 a)
+  aviso_desistimiento_dias_habiles: 10, // Memo 6188/2026 (el reglamento propuesto dice 7 días corridos, Art. 10 a)
   aviso_retiro_anticipado_dias: 2, // Art. 10 e)
   dias_aseo_entre_reservas: 1, // decisión de Bienestar
   reservas_por_mes: 1, // Art. 7
-  noches_max_temporada_alta: 7, // Art. 6 b)
-  cuotas_maximas_planilla: 3, // decisión de Bienestar (Anexo A pide el número de cuotas)
+  noches_turno_temporada_alta: 6, // Memo 6188/2026 (el reglamento propuesto dice máximo 7, Art. 6 b); cada temporada puede fijar otro
+  cuotas_temporada_alta: 6, // Memo 6188/2026: 6 cuotas; cada temporada fija el mes de la primera
+  cuotas_maximas_planilla: 3, // reserva directa: decisión de Bienestar (Anexo A pide el número de cuotas)
   hora_ingreso: '15:00', // Art. 12
   hora_salida: '12:00', // Art. 12
   plazo_observaciones_horas: 12, // Art. 13
@@ -76,7 +81,15 @@ export const DATOS_TRANSFERENCIA = {
 /** Glosa que identifica el pago: casa y código de la reserva. */
 export const glosaTransferencia = (casa, codigo) => `Pago casa ${casa.nombre} ${codigo}`
 
-export const tarifaPara = (casa, u) => casa.tarifa_noche + (ADICIONAL_TARIFA[u.calidad] ?? 0)
+/**
+ * Tramos de tarifa según el grado del trabajador/a (Memo 6188/2026). Quien no
+ * tiene grado en la nómina (jubilados/as, otros servicios) paga el tramo 04–14
+ * [PENDIENTE: confirmar con Bienestar].
+ */
+export const TRAMOS = { a: 'Grados 04 a 14', b: 'Grados 15 a 19' }
+export const tramoDe = (u) => (Number(u?.grado) >= 15 ? 'b' : 'a')
+export const tarifaTramo = (casa, tramo) => (tramo === 'b' ? (casa.tarifa_noche_15_19 ?? casa.tarifa_noche) : casa.tarifa_noche)
+export const tarifaPara = (casa, u) => tarifaTramo(casa, tramoDe(u)) + (ADICIONAL_TARIFA[u.calidad] ?? 0)
 
 export const PARENTESCOS = [
   { valor: 'conyuge', etiqueta: 'Cónyuge o conviviente civil' },
@@ -175,9 +188,16 @@ export function validarFechas({ entrada, salida, noDisponibles, reservasUsuario 
 
 export const noches = (entrada, salida) => (entrada && salida ? Math.max(0, diasEntre(entrada, salida)) : 0)
 
-/** Cargo por desistir hoy (Art. 10): sin costo con 7 o más días corridos de aviso; si no, una noche. */
+/** Último día para desistir sin costo: 10 días hábiles antes de la llegada (Memo 6188/2026). */
+export const limiteDesistimiento = (entrada) => restarDiasHabiles(entrada, PARAMETROS.aviso_desistimiento_dias_habiles)
+
+/**
+ * Cargo por desistir hoy: sin costo hasta 10 días hábiles antes de la llegada;
+ * después se paga el valor total de la estadía (Memo 6188/2026; el reglamento
+ * propuesto cobraba una noche con menos de 7 días corridos, Art. 10 a).
+ */
 export function cargoDesistimiento(reserva, hoy = hoyISO()) {
-  return diasEntre(hoy, reserva.entrada) >= PARAMETROS.aviso_desistimiento_sin_costo_dias ? 0 : reserva.tarifa_noche
+  return hoy <= limiteDesistimiento(reserva.entrada) ? 0 : reserva.total
 }
 
 /**

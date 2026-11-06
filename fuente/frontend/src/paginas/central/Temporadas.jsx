@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { CalendarPlus, Eye, Pencil, Unlock } from 'lucide-react'
-import { abrirPostulacion, edicionTemporada, elegirSorteo, estadoTemporada, guardarTemporada, listarTemporadas, sorteoDe, sorteoVigente, useDatos } from '../../datos/servicio.js'
-import { diaSemana, fechaCorta, hoyISO, rangoFechas, sumarDias } from '../../lib/fechas.js'
+import { abrirPostulacion, edicionTemporada, elegirSorteo, estadoTemporada, guardarTemporada, listarCasas, listarTemporadas, sorteoDe, sorteoVigente, useDatos } from '../../datos/servicio.js'
+import { fechaCorta, hoyISO, rangoFechas } from '../../lib/fechas.js'
 import { plural } from '../../lib/formato.js'
 import { PARAMETROS } from '../../lib/reglas.js'
-import { DIAS_SEMANA, turnosDe } from '../../lib/sorteo.js'
+import { calendariosDe, codigoTurno, inicioTemporada, nochesTurno, nombreDia } from '../../lib/sorteo.js'
+import { ResumenCalendarios } from '../../componentes/Postulacion.jsx'
 import { Aviso, Boton, Campo, Tarjeta, claseEntrada } from '../../componentes/ui.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
 import { Dialogo } from '../encargada/comun.jsx'
@@ -33,7 +34,7 @@ export function Temporadas() {
             Temporadas altas
           </h2>
           <p className="mt-1 max-w-3xl text-sm text-tinta-500">
-            Las fechas de cada temporada se asignan por sorteo en turnos de {PARAMETROS.noches_max_temporada_alta} noches y quedan cerradas a la reserva directa desde que se guarda (Art. 6). La postulación se abre solo cuando Oficina Central la habilita. Las vacantes que queden después del sorteo se pueden reservar directo.
+            Las fechas de cada temporada se asignan por sorteo en turnos fijos (verano 2027: {PARAMETROS.noches_turno_temporada_alta} noches, con un calendario general y otro para las cabañas de Puyehue) y quedan cerradas a la reserva directa desde que se guarda (Art. 6). La postulación se abre solo cuando Oficina Central la habilita. Las vacantes que queden después del sorteo se pueden reservar directo.
           </p>
         </div>
         <Boton onClick={() => setEditar({})}>
@@ -63,13 +64,14 @@ export function Temporadas() {
             {lista.map((t) => {
               const e = ESTADOS[estadoTemporada(t)]
               const modo = edicionTemporada(t)
-              const turnos = turnosDe(t)
+              const cal = calendariosDe(t, listarCasas())
               return (
                 <tr key={t.id} className={t.id === enFoco ? 'bg-verde-50/60' : ''}>
                   <td className="px-4 py-2.5 font-medium">{t.nombre}</td>
-                  <td className="px-4 py-2.5">{rangoFechas(t.desde, t.hasta)}</td>
+                  <td className="px-4 py-2.5">{rangoFechas(inicioTemporada(t), t.hasta)}</td>
                   <td className="px-4 py-2.5 text-sm">
-                    {turnos.length} · {DIAS_SEMANA[t.dia_cambio]} a {DIAS_SEMANA[t.dia_cambio]}
+                    {nochesTurno(t)} noches ·{' '}
+                    {cal.map((c) => `${c.turnos.length}${cal.length > 1 ? (c.clave === 'general' ? ' generales' : ` en ${plural(c.casas.length, 'casa', 'casas')}`) : ''}`).join(' y ')}
                   </td>
                   <td className="px-4 py-2.5 text-sm">
                     {sorteoDe(t.id) ? `Abierta el ${fechaCorta(sorteoDe(t.id).postulacion.desde)} · cierra el ${fechaCorta(sorteoDe(t.id).postulacion.hasta, true)}` : `Cierra el ${fechaCorta(t.postulacion.hasta, true)}`}
@@ -108,12 +110,24 @@ export function Temporadas() {
 
 function FormTemporada({ previa, onCerrar, onListo }) {
   const { usuario } = useSesion()
+  const casas = listarCasas({ incluirInactivas: true })
   const modo = previa ? edicionTemporada(previa) : 'completa'
   const soloCierre = modo === 'solo_cierre'
   const [d, setD] = useState(
     previa
-      ? { ...previa, postulacion: { ...previa.postulacion } }
-      : { tipo: 'verano', nombre: '', desde: '', hasta: '', dia_cambio: 5, postulacion: { desde: '', hasta: '' } },
+      ? { ...previa, postulacion: { ...previa.postulacion }, especial: previa.especial ? { ...previa.especial, casas: [...previa.especial.casas] } : null }
+      : {
+          tipo: 'verano',
+          nombre: '',
+          noches: PARAMETROS.noches_turno_temporada_alta,
+          desde: '',
+          hasta: '',
+          libres: 2,
+          especial: null,
+          cuotas: PARAMETROS.cuotas_temporada_alta,
+          primera_cuota: '',
+          postulacion: { desde: '', hasta: '' },
+        },
   )
   const [errores, setErrores] = useState([])
   const cambiar = (c) => {
@@ -124,11 +138,15 @@ function FormTemporada({ previa, onCerrar, onListo }) {
     setD({ ...d, postulacion: { ...d.postulacion, ...c } })
     setErrores([])
   }
+  const cambiarEspecial = (c) => cambiar({ especial: { ...d.especial, ...c } })
+  const alternarCasa = (id) => {
+    const lista = d.especial.casas.includes(id) ? d.especial.casas.filter((x) => x !== id) : [...d.especial.casas, id]
+    cambiarEspecial({ casas: lista })
+  }
 
-  const fechasListas = d.desde && d.hasta && d.hasta > d.desde
-  const turnos = fechasListas && diaSemana(d.desde) === Number(d.dia_cambio) ? turnosDe({ ...d, dia_cambio: Number(d.dia_cambio) }) : []
-  const fin = turnos.length ? turnos[turnos.length - 1].salida : null
-  const sobran = fin && fin < d.hasta ? Math.round((new Date(d.hasta) - new Date(fin)) / 864e5) : 0
+  const vista = { ...d, noches: Number(d.noches), libres: Number(d.libres), especial: d.especial?.casas.length ? { ...d.especial, libres: Number(d.especial.libres) } : null }
+  const listas = d.desde && d.hasta && d.hasta > d.desde && Number(d.noches) > 0
+  const calendarios = listas ? calendariosDe(vista, casas) : []
 
   function guardar() {
     const r = guardarTemporada({ ...d, nombre: d.nombre.trim() }, usuario)
@@ -136,6 +154,10 @@ function FormTemporada({ previa, onCerrar, onListo }) {
     onListo(previa ? `Se guardaron los cambios de ${d.nombre}.` : `${d.nombre} quedó creada: sus fechas ya no se pueden reservar directo.`)
     onCerrar()
   }
+
+  const numero = (valor, alCambiar, props = {}) => (
+    <input type="number" className={claseEntrada} value={valor} disabled={soloCierre} onChange={(e) => alCambiar(e.target.value)} {...props} />
+  )
 
   return (
     <Dialogo titulo={previa ? `Editar ${previa.nombre}` : 'Nueva temporada alta'} onCerrar={onCerrar}>
@@ -146,12 +168,7 @@ function FormTemporada({ previa, onCerrar, onListo }) {
       )}
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <Campo etiqueta="Tipo">
-          <select
-            className={claseEntrada}
-            value={d.tipo}
-            disabled={Boolean(previa)}
-            onChange={(e) => cambiar({ tipo: e.target.value, nombre: d.nombre || '' })}
-          >
+          <select className={claseEntrada} value={d.tipo} disabled={Boolean(previa)} onChange={(e) => cambiar({ tipo: e.target.value })}>
             <option value="verano">Verano</option>
             <option value="invierno">Vacaciones de invierno</option>
           </select>
@@ -165,58 +182,92 @@ function FormTemporada({ previa, onCerrar, onListo }) {
             onChange={(e) => cambiar({ nombre: e.target.value })}
           />
         </Campo>
-        <Campo etiqueta="Día de cambio de turno">
-          <select className={claseEntrada} value={d.dia_cambio} disabled={soloCierre} onChange={(e) => cambiar({ dia_cambio: Number(e.target.value) })}>
-            {DIAS_SEMANA.map((n, i) => (
-              <option key={n} value={i}>
-                {n[0].toUpperCase() + n.slice(1)}
-              </option>
-            ))}
-          </select>
-        </Campo>
-        <div className="hidden sm:block" />
-        <Campo etiqueta="Llegada del primer turno" ayuda={`Debe ser ${DIAS_SEMANA[d.dia_cambio]}.`}>
-          <input type="date" className={claseEntrada} value={d.desde} disabled={soloCierre} onChange={(e) => cambiar({ desde: e.target.value, hasta: d.hasta || (e.target.value ? sumarDias(e.target.value, 56) : '') })} />
-        </Campo>
-        <Campo etiqueta="Salida del último turno">
+        <Campo etiqueta="Noches por turno">{numero(d.noches, (v) => cambiar({ noches: v }), { min: 1, max: 14 })}</Campo>
+        <Campo etiqueta="Fin de la temporada" ayuda="Última salida posible de un turno.">
           <input type="date" className={claseEntrada} value={d.hasta} disabled={soloCierre} onChange={(e) => cambiar({ hasta: e.target.value })} />
+        </Campo>
+      </div>
+
+      <fieldset className="mt-4 rounded-lg border border-borde p-3">
+        <legend className="px-1 text-[15px] font-semibold">Calendario general</legend>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Campo etiqueta="Llegada del primer turno">
+            <input type="date" className={claseEntrada} value={d.desde} disabled={soloCierre} onChange={(e) => cambiar({ desde: e.target.value })} />
+          </Campo>
+          <Campo etiqueta="Noches libres entre turnos" ayuda="Para aseo y cambio. Con 2, cada turno parte un día distinto de la semana.">
+            {numero(d.libres, (v) => cambiar({ libres: v }), { min: 0, max: 7 })}
+          </Campo>
+        </div>
+      </fieldset>
+
+      <fieldset className="mt-3 rounded-lg border border-borde p-3">
+        <legend className="px-1 text-[15px] font-semibold">Calendario especial</legend>
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            className="mt-0.5 size-5 accent-verde-700"
+            checked={Boolean(d.especial)}
+            disabled={soloCierre}
+            onChange={(e) => cambiar({ especial: e.target.checked ? { casas: [], desde: d.desde, libres: 1 } : null })}
+          />
+          <span className="text-[15px]">Algunas casas siguen otro calendario (por ejemplo, las cabañas de Puyehue, de sábado a viernes).</span>
+        </label>
+        {d.especial && (
+          <>
+            <div className="mt-3 grid max-h-40 gap-1 overflow-y-auto rounded-lg bg-stone-50 p-2 sm:grid-cols-2">
+              {casas.map((c) => (
+                <label key={c.id} className="flex cursor-pointer items-center gap-2 text-sm">
+                  <input type="checkbox" className="size-4 accent-verde-700" checked={d.especial.casas.includes(c.id)} disabled={soloCierre} onChange={() => alternarCasa(c.id)} />
+                  {c.nombre}
+                </label>
+              ))}
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <Campo etiqueta="Llegada del primer turno">
+                <input type="date" className={claseEntrada} value={d.especial.desde} disabled={soloCierre} onChange={(e) => cambiarEspecial({ desde: e.target.value })} />
+              </Campo>
+              <Campo etiqueta="Noches libres entre turnos">{numero(d.especial.libres, (v) => cambiarEspecial({ libres: v }), { min: 0, max: 7 })}</Campo>
+            </div>
+          </>
+        )}
+      </fieldset>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <Campo etiqueta="Cuotas de descuento por planilla" ayuda="Para quienes pagan por planilla un turno adjudicado.">
+          {numero(d.cuotas, (v) => cambiar({ cuotas: v }), { min: 1, max: 12 })}
+        </Campo>
+        <Campo etiqueta="Mes de la primera cuota">
+          <input type="month" className={claseEntrada} value={d.primera_cuota} disabled={soloCierre} onChange={(e) => cambiar({ primera_cuota: e.target.value })} />
         </Campo>
         <Campo etiqueta="Apertura prevista" ayuda="Se abre cuando Oficina Central la habilita.">
           <input type="date" className={claseEntrada} value={d.postulacion.desde} disabled={soloCierre} onChange={(e) => cambiarPost({ desde: e.target.value })} />
         </Campo>
-        <Campo etiqueta="Postulación hasta" ayuda="El sorteo se realiza ese día.">
+        <Campo etiqueta="Postulación hasta">
           <input type="date" className={claseEntrada} value={d.postulacion.hasta} onChange={(e) => cambiarPost({ hasta: e.target.value })} />
         </Campo>
       </div>
 
       <div className="mt-4 rounded-lg bg-stone-50 px-4 py-3">
         <h3 className="text-[15px] font-semibold">Turnos que se sortearán</h3>
-        {!fechasListas ? (
-          <p className="mt-1 text-sm text-tinta-500">Indique la llegada del primer turno y la salida del último para ver los turnos.</p>
-        ) : !turnos.length ? (
-          <p className="mt-1 text-sm text-alerta-700">
-            {diaSemana(d.desde) !== Number(d.dia_cambio)
-              ? `La llegada del primer turno no cae en ${DIAS_SEMANA[d.dia_cambio]}.`
-              : `Entre esas fechas no cabe un turno de ${PARAMETROS.noches_max_temporada_alta} noches.`}
-          </p>
+        {!listas ? (
+          <p className="mt-1 text-sm text-tinta-500">Indique las noches por turno, la llegada del primer turno y el fin de la temporada para ver los turnos.</p>
         ) : (
-          <>
-            <p className="mt-1 text-sm text-tinta-500">
-              {plural(turnos.length, 'turno', 'turnos')} de {PARAMETROS.noches_max_temporada_alta} noches, de {DIAS_SEMANA[d.dia_cambio]} a {DIAS_SEMANA[d.dia_cambio]}, en cada casa.
-            </p>
-            <ol className="mt-2 grid gap-x-4 gap-y-0.5 text-sm text-tinta-700 sm:grid-cols-2">
-              {turnos.map((t) => (
-                <li key={t.entrada}>
-                  Turno {t.numero}: {rangoFechas(t.entrada, t.salida)}
-                </li>
-              ))}
-            </ol>
-            {sobran > 0 && (
-              <p className="mt-2 text-sm text-alerta-700">
-                {plural(sobran, 'noche', 'noches')} al final ({rangoFechas(fin, d.hasta)}) no completan un turno: ajuste la salida al {fechaCorta(fin, true)} o alárguela hasta completar otro turno.
+          calendarios.map((c) => (
+            <div key={c.clave} className="mt-2">
+              <p className="text-sm font-medium text-tinta-900">
+                {c.clave === 'general' ? (calendarios.length > 1 ? 'Casas en general' : 'Todas las casas') : c.casas.map((x) => x.nombre).join(', ')}
+                {' · '}
+                {c.turnos.length ? plural(c.turnos.length, 'turno', 'turnos') : 'ningún turno cabe'}
               </p>
-            )}
-          </>
+              <ol className="mt-1 grid gap-x-4 gap-y-0.5 text-sm text-tinta-700 sm:grid-cols-2">
+                {c.turnos.map((x) => (
+                  <li key={x.entrada}>
+                    {codigoTurno(x)} · {nombreDia(x.entrada)} {fechaCorta(x.entrada)} al {nombreDia(x.salida)} {fechaCorta(x.salida)}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))
         )}
       </div>
 
@@ -249,7 +300,7 @@ function DialogoAbrir({ temporada: t, onCerrar, onListo }) {
   return (
     <Dialogo titulo={`Habilitar la postulación · ${t.nombre}`} onCerrar={onCerrar}>
       <p className="mt-2 text-[15px] text-tinta-700">
-        La postulación quedará abierta desde hoy hasta el {fechaCorta(t.postulacion.hasta, true)}. Funcionarios/as de CONAF activos/as y jubilados/as verán la temporada en «Temporadas» y podrán postular a una casa y un turno ({plural(turnosDe(t).length, 'turno', 'turnos')} de {DIAS_SEMANA[t.dia_cambio]} a {DIAS_SEMANA[t.dia_cambio]}, {rangoFechas(t.desde, t.hasta)}).
+        La postulación quedará abierta desde hoy hasta el {fechaCorta(t.postulacion.hasta, true)}. Funcionarios/as de CONAF activos/as y jubilados/as verán la temporada en «Temporadas» y podrán postular a una casa y un turno. <ResumenCalendarios temporada={t} />
       </p>
       <p className="mt-2 text-[15px] text-tinta-700">Tendrán prioridad quienes no tuvieron casa en el último sorteo realizado (Art. 6 a).</p>
       {(vencida || error) && (

@@ -7,6 +7,8 @@
  * y su perfil en el sistema. El usuario nunca elige su categoría.
  *
  * calidad: afiliado | jubilado | no_afiliado   (otro_servicio no está en nómina)
+ * grado:   grado del trabajador/a activo/a (04 a 19); define el
+ *          tramo de tarifa (Memo 6188/2026). Jubilados/as no tienen grado.
  * perfil:  solicitante | encargada | central | uia
  */
 
@@ -22,6 +24,7 @@ export const NOMINA = [
     unidad: 'Dirección Regional Valparaíso',
     calidad: 'afiliado',
     plazo_fijo: false,
+    grado: 16,
     perfil: 'solicitante',
     grupo_familiar: [
       { nombre: 'Rodrigo Salinas Pérez', edad: 44, parentesco: 'conyuge' },
@@ -40,6 +43,7 @@ export const NOMINA = [
     unidad: 'P.N. Conguillío, Dirección Regional Araucanía',
     calidad: 'afiliado',
     plazo_fijo: true,
+    grado: 18,
     perfil: 'solicitante',
     grupo_familiar: [{ nombre: 'Matías Ortiz Ortiz', edad: 6, parentesco: 'hijo' }],
   },
@@ -68,6 +72,7 @@ export const NOMINA = [
     unidad: 'Gerencia de Finanzas, Oficina Central',
     calidad: 'no_afiliado',
     plazo_fijo: false,
+    grado: 12,
     perfil: 'solicitante',
     grupo_familiar: [],
   },
@@ -82,6 +87,7 @@ export const NOMINA = [
     unidad: 'Bienestar, Región de Valparaíso',
     calidad: 'afiliado',
     plazo_fijo: false,
+    grado: 11,
     perfil: 'encargada',
     grupo_familiar: [],
   },
@@ -96,6 +102,7 @@ export const NOMINA = [
     unidad: 'Servicio de Bienestar, Oficina Central',
     calidad: 'afiliado',
     plazo_fijo: false,
+    grado: 7,
     perfil: 'central',
     grupo_familiar: [],
   },
@@ -110,6 +117,7 @@ export const NOMINA = [
     unidad: 'Unidad de Información y Análisis',
     calidad: 'no_afiliado',
     plazo_fijo: false,
+    grado: 9,
     perfil: 'uia',
     grupo_familiar: [],
   },

@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, Landmark, Plus, Trash2 } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
 import { crearReserva, misReservas, obtenerCasa, ocupacionesDe, nochesLiberadas, proximoCodigo, useDatos } from '../../datos/servicio.js'
-import { fechaCorta, fechaLarga, rangoFechas, sumarDias } from '../../lib/fechas.js'
+import { fechaCorta, fechaLarga, rangoFechas } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
 import {
   CALIDADES,
@@ -12,6 +12,7 @@ import {
   PARENTESCOS,
   formasDePago,
   glosaTransferencia,
+  limiteDesistimiento,
   nochesNoDisponibles,
   noches,
   tarifaPara,
@@ -103,7 +104,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
     setPago('transferencia')
     setCuadro(true)
   }
-  const limiteDesistir = sumarDias(entrada ?? '2026-01-01', -PARAMETROS.aviso_desistimiento_sin_costo_dias)
+  const limiteDesistir = limiteDesistimiento(entrada ?? '2026-01-01')
 
   function avanzar() {
     setIntento(true)
@@ -402,7 +403,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
                     <li>Si las fechas siguen disponibles, la reserva queda <strong>confirmada al instante</strong> y {asistida ? 'se envían' : 'le enviamos'} el comprobante y el acta de entrega por correo.</li>
                   )}
                   <li>
-                    Si desiste <strong>hasta el {fechaCorta(limiteDesistir, true)}</strong> no tiene costo. Después, o si no se presenta, se cobra una noche ({pesos(tarifa)}), salvo fuerza mayor acreditada (Art. 10).
+                    Si desiste <strong>hasta el {fechaCorta(limiteDesistir, true)}</strong> ({PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles antes de la llegada) no tiene costo. Después, o si no se presenta, se paga la estadía completa ({pesos(total)}), salvo fuerza mayor acreditada.
                   </li>
                 </ul>
                 <details className="mt-3 rounded-lg bg-stone-50 px-4 py-3">

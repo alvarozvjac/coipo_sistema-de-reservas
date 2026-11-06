@@ -1,30 +1,34 @@
 /**
- * Carga masiva de la tarifa de afiliado por noche (Oficina Central).
+ * Carga masiva de las tarifas por noche (Oficina Central), en los dos tramos
+ * por grado del trabajador/a: 04 a 14 y 15 a 19 (Memo 6188/2026).
  *
  * Formato tipo: una hoja «Tarifas» con una fila por casa y estas columnas, en
  * este orden. El sistema identifica cada casa por «ID casa»; las columnas
- * «Casa», «Región» y «Tarifa vigente» son solo de referencia. Se acepta el
+ * «Casa», «Región» y las tarifas vigentes son solo de referencia. Se acepta el
  * mismo formato en Excel (.xlsx) o CSV (separador «;» o «,», UTF-8).
  */
 
 import { guardarArchivo } from './guardar.js'
 import { hoyISO } from './fechas.js'
+import { TRAMOS, tarifaTramo } from './reglas.js'
 
-export const COLUMNAS = ['ID casa', 'Casa', 'Región', 'Tarifa vigente afiliado ($/noche)', 'Nueva tarifa afiliado ($/noche)']
+export const COLUMNAS = ['ID casa', 'Casa', 'Región', 'Vigente grados 04-14 ($/noche)', 'Vigente grados 15-19 ($/noche)', 'Nueva grados 04-14 ($/noche)', 'Nueva grados 15-19 ($/noche)']
+/** Columna de la tarifa nueva de cada tramo. */
+const COLUMNA_NUEVA = { a: 5, b: 6 }
 export const TARIFA_MIN = 5000
 export const TARIFA_MAX = 500000
 export const VARIACION_AVISO = 0.3
 export const TAMANO_MAX = 2 * 1024 * 1024
 
 const INSTRUCCIONES = [
-  'Formato tipo para actualizar la tarifa de afiliado por noche de cada casa de veraneo.',
+  'Formato tipo para actualizar la tarifa por noche y por familia de cada casa de veraneo, en sus dos tramos según el grado del trabajador/a.',
   '',
   '1. Trabaje en la hoja «Tarifas». No cambie el nombre de la hoja ni el de las columnas, ni su orden.',
   '2. No modifique la columna «ID casa»: es la que usa el sistema para reconocer cada casa.',
-  '3. Escriba la nueva tarifa en la columna «Nueva tarifa afiliado ($/noche)», en pesos, sin decimales (por ejemplo: 45000).',
-  `4. La tarifa debe estar entre $${TARIFA_MIN.toLocaleString('es-CL')} y $${TARIFA_MAX.toLocaleString('es-CL')} por noche.`,
-  '5. Si deja la nueva tarifa en blanco, esa casa mantiene su tarifa vigente.',
-  '6. Las columnas «Casa», «Región» y «Tarifa vigente» son de referencia; el sistema no las usa.',
+  '3. Escriba las nuevas tarifas en las columnas «Nueva grados 04-14» y «Nueva grados 15-19», en pesos, sin decimales (por ejemplo: 45000).',
+  `4. Cada tarifa debe estar entre $${TARIFA_MIN.toLocaleString('es-CL')} y $${TARIFA_MAX.toLocaleString('es-CL')} por noche.`,
+  '5. Si deja una tarifa nueva en blanco, ese tramo mantiene su tarifa vigente.',
+  '6. Las columnas «Casa», «Región» y las tarifas vigentes son de referencia; el sistema no las usa.',
   '7. Guarde como Excel (.xlsx) o CSV y súbalo en Casas y tarifas › Tarifas › Cargar planilla.',
   '8. Antes de aplicar, el sistema muestra los cambios y los errores por fila. Los cambios rigen para reservas nuevas.',
 ]
@@ -39,12 +43,14 @@ export async function descargarFormatoExcel(casas, nombreRegion) {
       { value: c.id, type: Number },
       { value: c.nombre, type: String },
       { value: nombreRegion(c.region), type: String },
-      { value: c.tarifa_noche, type: Number, format: '#,##0' },
+      { value: tarifaTramo(c, 'a'), type: Number, format: '#,##0' },
+      { value: tarifaTramo(c, 'b'), type: Number, format: '#,##0' },
+      { value: null, type: Number, format: '#,##0', backgroundColor: '#FFF8E1' },
       { value: null, type: Number, format: '#,##0', backgroundColor: '#FFF8E1' },
     ]),
   ]
   const blob = await writeExcelFile([
-    { sheet: 'Tarifas', data: tarifas, columns: [{ width: 9 }, { width: 30 }, { width: 18 }, { width: 22 }, { width: 22 }], stickyRowsCount: 1 },
+    { sheet: 'Tarifas', data: tarifas, columns: [{ width: 9 }, { width: 34 }, { width: 16 }, { width: 18 }, { width: 18 }, { width: 18 }, { width: 18 }], stickyRowsCount: 1 },
     { sheet: 'Instrucciones', data: INSTRUCCIONES.map((t) => [{ value: t, type: String }]), columns: [{ width: 110 }] },
   ]).toBlob()
   return guardarArchivo(`formato-tarifas-casas-veraneo-${hoyISO()}.xlsx`, blob)
@@ -56,7 +62,7 @@ export function descargarFormatoCSV(casas, nombreRegion) {
     const t = v == null ? '' : String(v)
     return /[;"\n]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t
   }
-  const filas = [COLUMNAS, ...casas.map((c) => [c.id, c.nombre, nombreRegion(c.region), c.tarifa_noche, ''])]
+  const filas = [COLUMNAS, ...casas.map((c) => [c.id, c.nombre, nombreRegion(c.region), tarifaTramo(c, 'a'), tarifaTramo(c, 'b'), '', ''])]
   const texto = filas.map((f) => f.map(celda).join(';')).join('\r\n')
   return guardarArchivo(`formato-tarifas-casas-veraneo-${hoyISO()}.csv`, new Blob(['﻿' + texto], { type: 'text/csv;charset=utf-8' }))
 }
@@ -136,7 +142,8 @@ const vacia = (fila) => fila.every((c) => c == null || String(c).trim() === '')
 /**
  * Valida las filas contra las casas del sistema. Devuelve:
  *   { valido, errores: [{ fila, mensaje }], advertencias: [{ fila, mensaje }],
- *     cambios: [{ casa_id, casa, antes, nueva, variacion }], sinCambio }
+ *     cambios: [{ casa_id, casa, tramo, antes, nueva, variacion }], sinCambio }
+ * `sinCambio` cuenta los tramos que quedan con su tarifa vigente.
  * `fila` es el número de fila tal como se ve en Excel (la cabecera es la 1).
  */
 export function validarPlanilla(filas, casas) {
@@ -170,17 +177,37 @@ export function validarPlanilla(filas, casas) {
     if (vistos.has(id)) return errores.push({ fila: n, mensaje: `La casa ${casa.nombre} (ID ${id}) ya aparece en la fila ${vistos.get(id)}.` })
     vistos.set(id, n)
     if (f[1] && normalizar(f[1]) !== normalizar(casa.nombre)) advertencias.push({ fila: n, mensaje: `El nombre «${f[1]}» no coincide con el del sistema («${casa.nombre}»); se usa el ID ${id}.` })
-    const bruto = f[4]
-    if (bruto == null || String(bruto).trim() === '') return (sinCambio += 1)
-    const nueva = aMonto(bruto)
-    if (!Number.isFinite(nueva) || !Number.isInteger(nueva)) return errores.push({ fila: n, mensaje: `${casa.nombre}: la nueva tarifa «${bruto}» no es un monto en pesos sin decimales.` })
-    if (nueva < TARIFA_MIN || nueva > TARIFA_MAX)
-      return errores.push({ fila: n, mensaje: `${casa.nombre}: la nueva tarifa ($${nueva.toLocaleString('es-CL')}) está fuera del rango permitido ($${TARIFA_MIN.toLocaleString('es-CL')} a $${TARIFA_MAX.toLocaleString('es-CL')}).` })
-    if (nueva === casa.tarifa_noche) return (sinCambio += 1)
-    const variacion = (nueva - casa.tarifa_noche) / casa.tarifa_noche
-    if (Math.abs(variacion) > VARIACION_AVISO) advertencias.push({ fila: n, mensaje: `${casa.nombre}: la tarifa cambia ${Math.round(variacion * 100)}%. Revise que el monto sea correcto.` })
-    cambios.push({ casa_id: id, casa: casa.nombre, region: casa.region, antes: casa.tarifa_noche, nueva, variacion })
+    const resultado = {}
+    for (const tramo of ['a', 'b']) {
+      const etiqueta = TRAMOS[tramo].toLowerCase()
+      const bruto = f[COLUMNA_NUEVA[tramo]]
+      const vigente = tarifaTramo(casa, tramo)
+      if (bruto == null || String(bruto).trim() === '') {
+        sinCambio += 1
+        resultado[tramo] = vigente
+        continue
+      }
+      const nueva = aMonto(bruto)
+      if (!Number.isFinite(nueva) || !Number.isInteger(nueva)) {
+        errores.push({ fila: n, mensaje: `${casa.nombre}, ${etiqueta}: la nueva tarifa «${bruto}» no es un monto en pesos sin decimales.` })
+        continue
+      }
+      if (nueva < TARIFA_MIN || nueva > TARIFA_MAX) {
+        errores.push({ fila: n, mensaje: `${casa.nombre}, ${etiqueta}: la nueva tarifa ($${nueva.toLocaleString('es-CL')}) está fuera del rango permitido ($${TARIFA_MIN.toLocaleString('es-CL')} a $${TARIFA_MAX.toLocaleString('es-CL')}).` })
+        continue
+      }
+      resultado[tramo] = nueva
+      if (nueva === vigente) {
+        sinCambio += 1
+        continue
+      }
+      const variacion = (nueva - vigente) / vigente
+      if (Math.abs(variacion) > VARIACION_AVISO) advertencias.push({ fila: n, mensaje: `${casa.nombre}, ${etiqueta}: la tarifa cambia ${Math.round(variacion * 100)}%. Revise que el monto sea correcto.` })
+      cambios.push({ casa_id: id, casa: casa.nombre, region: casa.region, tramo, antes: vigente, nueva, variacion })
+    }
+    if (resultado.a !== undefined && resultado.b !== undefined && resultado.b > resultado.a)
+      advertencias.push({ fila: n, mensaje: `${casa.nombre}: la tarifa de grados 15 a 19 queda mayor que la de grados 04 a 14. Revise que no estén invertidas.` })
   })
-  if (!errores.length && !cambios.length) errores.push({ fila: null, mensaje: 'La planilla no trae tarifas nuevas: la columna «Nueva tarifa afiliado» está vacía o repite las tarifas vigentes.' })
+  if (!errores.length && !cambios.length) errores.push({ fila: null, mensaje: 'La planilla no trae tarifas nuevas: las columnas «Nueva grados 04-14» y «Nueva grados 15-19» están vacías o repiten las tarifas vigentes.' })
   return { valido: errores.length === 0, errores, advertencias, cambios, sinCambio }
 }

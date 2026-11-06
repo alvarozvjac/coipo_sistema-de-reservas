@@ -235,6 +235,55 @@ Decisiones del 20-10-2026:
 En la maqueta, la postulación de verano 2027 está abierta con postulaciones ficticias, y
 Oficina Central puede adelantar el sorteo y simular el vencimiento de una oferta.
 
+## Práctica vigente del llamado a postular (decisión 06-11-2026)
+
+Fuente: Memorándum N° 6188/2026 de la Jefatura del Departamento de Bienestar del Personal
+(06-11-2026, «Llamado a postular uso de casas en vacaciones de verano 2027») y el
+formulario Google de postulación. Bienestar indica que verano e invierno se operan igual.
+Álvaro Zegers decidió llevar a la maqueta la práctica vigente donde el reglamento
+propuesto dice otra cosa:
+
+| Tema | Práctica vigente (aplicada) | Reglamento propuesto (oct-2026) |
+|---|---|---|
+| Turno | 6 noches | máximo 7 noches (Art. 6 b) |
+| Calendario | general: del martes 5 de enero al 1 de abril, 2 noches libres entre turnos (11 turnos, cada uno parte un día distinto); cabañas 02 y 10 de Puyehue: del sábado 2 de enero al 2 de abril, 1 noche libre (13 turnos, sábado a viernes) | — |
+| Tarifa | por noche y por familia, en dos tramos según grado: 04 a 14 y 15 a 19 | una tarifa por casa y categoría (Art. 19) |
+| Desistimiento | sin costo hasta 10 días hábiles antes de la llegada; después se paga la estadía completa | 7 días corridos; después una noche (Art. 10 a) |
+| Pago de temporada alta | descuento por planilla en 6 cuotas desde marzo 2027 | número de cuotas según Anexo A |
+| Casas | 22 casas en el llamado, con capacidad de 4 a 6 personas | — |
+
+Cómo quedó en la maqueta:
+
+- Cada temporada se define en Oficina Central con: noches por turno, fin de la temporada,
+  calendario general (llegada del primer turno y noches libres) y, si hace falta, un
+  calendario especial para algunas casas; además, cuotas y mes de la primera cuota.
+  Los turnos se muestran como en el llamado (S01, S02…).
+- Las casas son las 22 del memorándum, con sus nombres, capacidades y tarifas. Las ocho
+  que estaban en la maqueta y no aparecen en el llamado (El Belloto, Temuco, P.N.
+  Conguillío, Puerto Montt 1 Pelluco, Coyhaique, La Junta, Cochrane y Punta Arenas) se
+  sacaron.
+- La nómina de prueba tiene el grado de cada trabajador/a activo/a; jubilados/as y otros
+  servicios pagan el tramo 04 a 14. El adicional de no afiliados y otros servicios se
+  suma al tramo.
+- La carga masiva de tarifas trae dos columnas nuevas (una por tramo) y avisa si la
+  tarifa 15 a 19 queda mayor que la 04 a 14.
+- El desistimiento cuenta los días hábiles de lunes a viernes, sin descontar feriados.
+- La reserva directa fuera de temporada mantiene hasta 3 cuotas desde el mes siguiente a
+  la salida.
+- El formulario de postulación ya no pide correo, región, RUT ni nombre (salen del
+  ingreso y de la nómina; el contacto se puede cambiar). Sigue pidiendo casa, turno,
+  personas (para validar la capacidad), forma de pago y aceptación del reglamento. Una
+  persona postula una vez; si se equivoca, retira la postulación y vuelve a postular,
+  sin depuración manual.
+
+Observaciones al formulario Google actual (para Bienestar):
+
+- Quien elige una casa del calendario general también debe responder la fecha de las
+  cabañas de Puyehue: el comprobante de una postulación real (06-11-2026) trae las dos
+  fechas. VERIFICADO con ese comprobante.
+- La opción S01 del calendario general tiene un destino distinto al de los demás turnos
+  (VERIFICADO en la configuración; su efecto no se comprobó).
+
 ## Perfiles (4)
 
 1. **Solicitante**: afiliado activo, afiliado jubilado, trabajador CONAF no afiliado o
@@ -301,9 +350,14 @@ Todos los números están en `frontend/src/lib/reglas.js` (`PARAMETROS` y `ADICI
   permite que Oficina Central las configure).
 - Rango de tarifas aceptado en la carga masiva ($5.000 a $500.000) y umbral de aviso de
   variación (30%).
-- Turnos de sábado a sábado sin día de aseo entre turnos (el resto del año se deja un día).
-- Qué noches sueltas de temporada alta quedan fuera de turnos (verano 2027: 1 de enero y
-  27 de febrero) y cómo se ofrecen.
+- Si la práctica del Memorándum 6188/2026 (turnos de 6 noches, tarifa por grado,
+  desistimiento con 10 días hábiles, 6 cuotas desde marzo) reemplaza lo que dice el
+  reglamento propuesto, o al revés.
+- Qué tramo de tarifa pagan jubilados/as y funcionarios/as de otros servicios (hoy 04 a 14).
+- Calendario de feriados para contar los días hábiles del desistimiento.
+- Si las ocho casas que no aparecen en el llamado de verano siguen en la red el resto del
+  año.
+- Mes de la primera cuota y fechas del sorteo de invierno 2027 (hoy referenciales).
 - Plazo de 48 horas para aceptar un cupo de la lista de espera.
 - Si la prioridad del Art. 6 a) considera la temporada de invierno anterior para el verano
   (así está en la maqueta) o solo la temporada equivalente del año anterior.

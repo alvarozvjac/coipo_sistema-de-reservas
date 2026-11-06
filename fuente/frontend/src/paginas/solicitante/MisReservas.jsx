@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { desistirReserva, misReservas, postulacionesDe, useDatos } from '../../datos/servicio.js'
 import { TarjetaPostulacion } from '../../componentes/Postulacion.jsx'
-import { diasEntre, hoyISO, rangoFechas } from '../../lib/fechas.js'
+import { diasEntre, fechaCorta, hoyISO, rangoFechas } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
-import { PARAMETROS, cargoDesistimiento, estadoReserva, noches } from '../../lib/reglas.js'
+import { PARAMETROS, cargoDesistimiento, estadoReserva, limiteDesistimiento, noches } from '../../lib/reglas.js'
 import { rutaFoto } from '../../componentes/fotos.js'
 import { Boton, Estado } from '../../componentes/ui.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
@@ -112,8 +112,8 @@ function DialogoDesistir({ reserva, onCerrar }) {
         </p>
         <p className={`mt-4 rounded-lg px-4 py-3 text-[15px] ${cargo ? 'bg-alerta-50 text-alerta-700' : 'bg-verde-50 text-verde-800'}`}>
           {cargo
-              ? `Faltan menos de ${PARAMETROS.aviso_desistimiento_sin_costo_dias} días corridos: se cobrará una noche (${pesos(cargo)}). Si es por fuerza mayor acreditada (enfermedad, duelo, catástrofe o requerimiento laboral urgente), envíe el respaldo a Bienestar y no tendrá costo.`
-              : 'Avisa con 7 o más días corridos: no tiene costo.'}
+              ? `El plazo para desistir sin costo venció el ${fechaCorta(limiteDesistimiento(reserva.entrada), true)} (${PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles antes de la llegada): se cobrará la estadía completa (${pesos(cargo)}). Si es por fuerza mayor acreditada (enfermedad, duelo, catástrofe o requerimiento laboral urgente), envíe el respaldo a Bienestar.`
+              : `Avisa dentro del plazo (hasta el ${fechaCorta(limiteDesistimiento(reserva.entrada), true)}, ${PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles antes de la llegada): no tiene costo.`}
         </p>
         <div className="mt-6 flex justify-end gap-3">
           <Boton variante="secundario" onClick={onCerrar} autoFocus>

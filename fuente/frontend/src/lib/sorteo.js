@@ -1,8 +1,15 @@
 /**
  * Sorteo de temporada alta (Art. 6 del reglamento).
  *
+ * Turnos (decisión 06-11-2026, práctica del Memorándum N° 6188/2026):
+ * - Turnos fijos de 6 noches. Cada temporada tiene un calendario general y,
+ *   si hace falta, uno especial para algunas casas (verano 2027: cabañas 02 y
+ *   10 de Puyehue, de sábado a viernes). Cada calendario se define por la
+ *   llegada del primer turno y las noches libres entre turnos (aseo y cambio):
+ *   2 en el general, que por eso parte cada turno un día distinto de la semana,
+ *   y 1 en el de Puyehue.
+ *
  * Decisiones de Bienestar/UIA (20-10-2026):
- * - Turnos fijos por casa de 7 noches, de sábado a sábado (Art. 6 b: máximo 7 noches).
  * - Cada postulante indica una sola opción (casa y turno) y se adjudica un solo período.
  * - Postulan funcionarios/as de CONAF activos/as y jubilados/as. Otros servicios
  *   públicos no postulan: solo toman vacantes después del sorteo (Art. 9).
@@ -13,30 +20,55 @@
  *   persona, que tiene 48 horas para aceptar (Art. 6 d).
  */
 
-import { diaSemana, sumarDias } from './fechas.js'
+import { sumarDias } from './fechas.js'
 import { PARAMETROS } from './reglas.js'
 
 export const HORAS_OFERTA = 48
-/** Días de la semana para el cambio de turno (lunes = 0). */
+/** Días de la semana (lunes = 0). */
 export const DIAS_SEMANA = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']
-const SABADO = 5
+
+export const nochesTurno = (temporada) => Number(temporada?.noches) || PARAMETROS.noches_turno_temporada_alta
+
+/** ¿La casa sigue el calendario especial de la temporada? */
+export const enCalendarioEspecial = (temporada, casaId) => Boolean(temporada?.especial?.casas?.includes(casaId))
+
+/** Calendario de una casa en la temporada: { desde, libres }. */
+export function calendarioDe(temporada, casaId) {
+  if (enCalendarioEspecial(temporada, casaId)) return { desde: temporada.especial.desde, libres: Number(temporada.especial.libres) || 0 }
+  return { desde: temporada.desde, libres: Number(temporada.libres) || 0 }
+}
 
 /**
- * Turnos de una temporada: de `dia_cambio` a `dia_cambio` (sábado si no se
- * indica), de 7 noches, entre la llegada del primer turno y la salida del último.
+ * Turnos de una casa en la temporada: desde la llegada del primer turno de su
+ * calendario, turnos de `noches` noches separados por `libres` noches, sin
+ * pasar del fin de la temporada (`hasta`). Sin casa, el calendario general.
  */
-export function turnosDe(temporada) {
-  const n = PARAMETROS.noches_max_temporada_alta
-  const dia = temporada.dia_cambio ?? SABADO
-  let d = temporada.desde
-  while (diaSemana(d) !== dia) d = sumarDias(d, 1)
+export function turnosDe(temporada, casaId) {
+  const n = nochesTurno(temporada)
+  const { desde, libres } = calendarioDe(temporada, casaId)
   const lista = []
-  while (sumarDias(d, n) <= temporada.hasta) {
+  if (!desde || !temporada?.hasta) return lista
+  let d = desde
+  while (sumarDias(d, n) <= temporada.hasta && lista.length < 60) {
     lista.push({ entrada: d, salida: sumarDias(d, n), numero: lista.length + 1 })
-    d = sumarDias(d, n)
+    d = sumarDias(d, n + libres)
   }
   return lista
 }
+
+/** Primera noche de la temporada, considerando los dos calendarios. */
+export const inicioTemporada = (t) => (t.especial?.casas?.length && t.especial.desde && t.especial.desde < t.desde ? t.especial.desde : t.desde)
+
+/** Campos de calendario que se copian de la temporada al sorteo. */
+export const calendarioTemporada = (t) => ({
+  desde: t.desde,
+  hasta: t.hasta,
+  noches: nochesTurno(t),
+  libres: Number(t.libres) || 0,
+  especial: t.especial?.casas?.length ? { casas: [...t.especial.casas], desde: t.especial.desde, libres: Number(t.especial.libres) || 0 } : null,
+  cuotas: Number(t.cuotas) || PARAMETROS.cuotas_temporada_alta,
+  primera_cuota: t.primera_cuota ?? null,
+})
 
 /** Quién puede postular (decisión 20-10-2026). */
 export const puedePostular = (u) => u?.calidad !== 'otro_servicio'
@@ -99,3 +131,22 @@ export const ESTADOS_POSTULACION = {
   sin_cupo: { etiqueta: 'Sin cupo', clase: 'bg-stone-200 text-tinta-700' },
   retirada: { etiqueta: 'Retirada', clase: 'bg-stone-100 text-tinta-500' },
 }
+
+/**
+ * Los calendarios de una temporada, con sus casas y turnos, para mostrarlos:
+ * [{ clave: 'general' | 'especial', casas, desde, libres, turnos }].
+ */
+export function calendariosDe(temporada, casas) {
+  const lista = []
+  const especiales = casas.filter((c) => enCalendarioEspecial(temporada, c.id))
+  const generales = casas.filter((c) => !enCalendarioEspecial(temporada, c.id))
+  if (generales.length) lista.push({ clave: 'general', casas: generales, ...calendarioDe(temporada), turnos: turnosDe(temporada) })
+  if (especiales.length) lista.push({ clave: 'especial', casas: especiales, ...calendarioDe(temporada, especiales[0].id), turnos: turnosDe(temporada, especiales[0].id) })
+  return lista
+}
+
+/** Código del turno como en el llamado: S01, S02… */
+export const codigoTurno = (t) => `S${String(t.numero).padStart(2, '0')}`
+
+/** «martes 5 ene al lunes 11 ene» con días de la semana, para listar turnos escalonados. */
+export const nombreDia = (iso) => DIAS_SEMANA[(new Date(iso + 'T00:00:00Z').getUTCDay() + 6) % 7]
