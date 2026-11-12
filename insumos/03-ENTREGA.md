@@ -28,8 +28,14 @@ son simulados.
 
 Servicio de Bienestar, que depende de la Gerencia de Desarrollo de las Personas
 [VERIFICAR: dependencia, con la Jefatura del Servicio de Bienestar] → banner
-`5_banner_DESARROLLO_PERSONAS` de `identidad/` (INFERIDO). La maqueta usa hoy una franja
-CONAF · UIA propia, no el banner de la gerencia.
+`5_banner_DESARROLLO_PERSONAS` de `identidad/` (INFERIDO). Desde el 2026-11-12 la maqueta
+usa ese banner oficial, con el título «Sistema de Gestión de Reservas» en el formato de
+Gestión de Flota.
+
+Lo que el estándar no trajo: el banner oficial llega hasta la gerencia y Bienestar pidió que
+diga también «Departamento de Bienestar». La maqueta lo superpone en el mismo tipo de letra
+(`.rotulo-depto`); [PENDIENTE: una variante oficial del banner con el departamento, o la regla
+para rotular departamentos, a Luis Monsalve].
 
 ## Instrumentos de datos candidatos
 
