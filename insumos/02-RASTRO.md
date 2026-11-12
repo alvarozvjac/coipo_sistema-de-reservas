@@ -183,7 +183,11 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   adaptadas sin los pasos del afiliado, pasan; las pruebas del afiliado de la versión
   anterior quedan obsoletas. Capturas del ingreso, del inicio de la encargada en teléfono
   y de las reservas nacionales miradas. Manual de usuario (PDF y documento) rehecho
-  para los encargados, con capturas nuevas. Aún no publicada.
+  para los encargados, con capturas nuevas.
+- 2026-11-12 · pública @ `051a2f3` · el SHA-256 de lo servido coincide con el commit (página
+  y manual); en el Chrome del usuario: ingreso del encargado nacional, panel con «Registrar
+  postulación» y «Registrar reserva», Administración y reservas de todo el país; 0 errores
+  de consola.
 
 ## Validación
 
