@@ -73,7 +73,11 @@ Bienestar si el sorteo de temporada alta debe estar en la primera puesta en marc
 | Registrar postulación | Encargada, encargado nacional | Registrar, ver o retirar la postulación de una persona; registrar su respuesta a un cupo | C9, C18 |
 | Inventario | Encargada regional | Actualizar el inventario que va en la ficha | C10 |
 | Cobros | Encargado nacional | Registrar pagos, informar la nómina | C6, C11 |
-| Configuración (Casas, Tarifas, Bloqueos de fechas, Administración) | Encargado nacional | Retirar casas, actualizar tarifas, bloquear fechas; administración del sistema (en construcción) | C12, C13, C14 |
+| Configuración › Casas, Tarifas, Bloqueos de fechas | Encargado nacional | Retirar casas, actualizar tarifas, bloquear fechas | C12, C13, C14 |
+| Configuración › Usuarios y encargadas | Encargado nacional | Saber quién entra y quién aprueba en cada región (se cambia en el IAM) | C26 |
+| Configuración › Parámetros | Encargado nacional | Cambiar un parámetro del reglamento desde una fecha y con respaldo | C27 |
+| Configuración › Plantillas de correo | Encargado nacional | Ajustar lo que recibe la persona | C28 |
+| Configuración › Actividad | Encargado nacional | Saber quién hizo qué y cuándo | C29 |
 | Temporadas (temporadas altas y sorteo de cada una) | Encargado nacional | Definir temporadas, habilitar la postulación, realizar el sorteo, registrar respuestas a ofertas | C15, C16, C18 |
 | Dashboard | Encargado nacional | Decidir sobre tarifas, mantenciones y oferta | C17 |
 
@@ -183,6 +187,24 @@ correspondencia está en `02-RASTRO.md`.
   reserva por confirmar en diciembre, cuando la encargada escribe su RUT en el registro,
   entonces antes del formulario ve «Ya tiene una reserva en diciembre 2026» y «transferencia
   sin registrar», y la lista de sus reservas de los últimos 12 meses.
+
+- **C26 · Usuarios y encargadas (decisión 12-11-2026).** Dado el IAM con `cnunez`
+  (encargada de Valparaíso), `pherrera` (nacional) y `mfuentes` (sin rol), cuando el
+  nacional abre la pestaña, entonces ve a los tres con su rol y que `mfuentes` no entra, que
+  Valparaíso aprueba su encargada y Atacama el encargado nacional, y no hay botones para
+  editar roles.
+- **C27 · Parámetros con vigencia (decisión 12-11-2026).** Dado «Aviso para desistir sin
+  costo» en 10 días hábiles, cuando el nacional lo cambia a 7 desde el 01-12-2026 sin
+  respaldo, entonces no se guarda; con respaldo, queda programado y hasta esa fecha rige 10;
+  al anularlo queda tachado en el historial. Un cambio de la hora de ingreso a 16:00 desde
+  hoy rige de inmediato y sale en la plantilla de la ficha.
+- **C28 · Plantillas de correo (decisión 12-11-2026).** Dado el asunto de la ficha con
+  `{nombr}`, cuando el nacional intenta guardar, entonces ve «No existe la variable {nombr}»
+  y el botón queda deshabilitado; con un asunto válido se guarda y el historial de una
+  reserva muestra el correo con el asunto nuevo.
+- **C29 · Actividad (decisión 12-11-2026).** Dado que el nacional cambió un parámetro y una
+  plantilla, cuando abre Actividad, entonces ve ambas acciones a su nombre; al filtrar por
+  «Reservas» desaparecen, y «Descargar CSV» entrega el archivo.
 
 ## Instrumentos de datos candidatos para la fábrica
 

@@ -266,6 +266,18 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   Reservas; consola sin errores. No recorrí en la URL pública el registro completo ni el
   teléfono (sí en local).
 
+### Configuración del encargado nacional (12-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 12-11-2026 16:25; respuestas: las cuatro secciones, roles en el IAM,
+  parámetros con fecha de vigencia. Decisiones en `fuente/docs/DECISIONES.md`.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844: e2e17 (Configuración) 25
+  comprobaciones, e2e16 24, e2e15 26, e2e14 60, 0 fallas; e2e4 17/0 y e2e9 26/0.
+- axe-core 4.10.2: 0 infracciones WCAG 2.2 AA en 19 pantallas (incluidas las cuatro
+  pestañas nuevas), claro y oscuro.
+- Defecto visto en el teléfono y corregido: el texto oculto de la cabecera de la tabla de
+  parámetros ensanchaba la página a 628 px, y el diálogo de cambio quedaba fuera de la
+  pantalla (la prueba no podía pulsar «Guardar cambio»).
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la

@@ -436,6 +436,43 @@ Fuente: Álvaro Zegers (UIA), 12-11-2026, eligiendo entre mejoras propuestas.
 - Deuda técnica declarada: `Reservar.jsx` conserva el modo de tres pasos sin uso; se limpia
   en la próxima iteración.
 
+## Configuración del encargado nacional (decisión 12-11-2026, tarde)
+
+Fuente: Álvaro Zegers (UIA), 12-11-2026: «construye el perfil configuración».
+
+Configuración tiene siete pestañas: Casas, Tarifas, Bloqueos de fechas, Usuarios y
+encargadas, Parámetros, Plantillas de correo y Actividad. La pestaña va en la dirección
+(`?pestana=`). Reemplaza a «Administración (en construcción)»; `/central/administracion`
+lleva a Usuarios y encargadas.
+
+- **Usuarios y encargadas**: quién entra, con qué rol del IAM, perfil y región, y quién
+  aprueba en cada región (la encargada, o el encargado nacional si la región no tiene
+  encargada). **Se ven aquí y se editan en el COIPO IAM**: la aplicación no guarda permisos
+  propios.
+- **Parámetros del reglamento**: anticipación (general y otros servicios), aviso de
+  desistimiento, aviso de retiro anticipado, días de aseo, cuotas por planilla, plazo de
+  observaciones del inventario, horas de ingreso y salida, y noches y cuotas por defecto de
+  las temporadas nuevas. Cada cambio pide **desde cuándo rige** (hoy o una fecha futura) y
+  su respaldo (resolución, memo o acuerdo); queda en un historial con el valor anterior; un
+  cambio programado se puede anular antes de que rija. Las reservas ya registradas no
+  cambian. INFERIDO: desde la fecha de vigencia, el valor nuevo se aplica a todo registro,
+  aunque la estadía sea posterior; si Bienestar quiere que rija según la fecha de la
+  estadía, hay que decirlo [PENDIENTE: Bienestar].
+- **Plantillas de correo**: ficha de la reserva, datos para transferir, no aprobada,
+  desistimiento y anulación por Bienestar. Asunto y cuerpo con variables entre llaves
+  (`{nombre}`, `{codigo}`, `{casa}`, `{fechas}`, `{monto}`, `{glosa}`, `{motivo}`,
+  `{registrada_por}`, `{hora_ingreso}`, `{plazo_observaciones}`); una variable mal escrita no se puede guardar; vista
+  previa con una reserva de ejemplo; se puede restaurar el texto original. El historial de
+  cada reserva muestra el correo tal como habría salido. En la maqueta no se envía nada.
+- **Actividad**: quién hizo qué y cuándo (reservas registradas, aprobadas o no, desistimientos,
+  pagos y devoluciones, bloqueos, tarifas, casas retiradas o reincorporadas, direcciones,
+  inventarios, temporadas y sorteos, nómina, no atendidas, parámetros y plantillas), con
+  búsqueda, filtros por área y persona, y descarga CSV. No es una bitácora aparte: se arma con
+  el «quién y cuándo» que cada acción ya deja, así no puede desviarse de los datos. Las
+  tarifas diferenciadas (Art. 19) aún no dejan quién las cambió, y no aparecen.
+- [PENDIENTE: Bienestar] Quién aprueba en las regiones sin encargada (hoy el nacional) y
+  cuántos días se conserva el registro de actividad.
+
 ## Perfiles (2 desde el 12-11-2026)
 
 Los asigna el rol del COIPO IAM (sección «Ingreso con el COIPO IAM»).

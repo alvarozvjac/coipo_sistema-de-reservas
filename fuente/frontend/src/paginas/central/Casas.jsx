@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { AlertTriangle, CheckCircle2, Download, FileSpreadsheet, Keyboard, Lock, RotateCcw, Trash2, Upload } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
 import {
@@ -19,7 +18,6 @@ import {
   retirarCasa,
   tarifasDiferenciadas,
   ultimoRetiro,
-  useDatos,
 } from '../../datos/servicio.js'
 import { fechaCorta, hoyISO, rangoFechas, sumarDias } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
@@ -29,50 +27,10 @@ import { Aviso, Boton, Campo, Tarjeta, claseEntrada, claseFiltro } from '../../c
 import { useSesion } from '../../componentes/Perfil.jsx'
 import { Dialogo, nombreRegion } from '../encargada/comun.jsx'
 import { DialogoDirecciones } from './DireccionesCasa.jsx'
-import { Administracion } from './Administracion.jsx'
-
-const PESTANAS = [
-  ['casas', 'Casas'],
-  ['tarifas', 'Tarifas'],
-  ['bloqueos', 'Bloqueos de fechas'],
-  ['administracion', 'Administración'],
-]
-
-/** Configuración del encargado nacional (decisión 12-11-2026): casas, tarifas, bloqueos y administración. */
-export function CasasTarifas() {
-  useDatos()
-  const [params] = useSearchParams()
-  const [pestana, setPestana] = useState(PESTANAS.some(([k]) => k === params.get('pestana')) ? params.get('pestana') : 'casas')
-  return (
-    <>
-      <h1 className="text-2xl font-bold">Configuración</h1>
-      <div className="mt-4 flex gap-1 overflow-x-auto border-b border-borde" role="tablist">
-        {PESTANAS.map(([k, t]) => (
-          <button
-            key={k}
-            type="button"
-            role="tab"
-            aria-selected={pestana === k}
-            onClick={() => setPestana(k)}
-            className={`-mb-px shrink-0 border-b-2 px-3 py-2.5 text-[15px] font-medium ${pestana === k ? 'border-verde-700 text-verde-800' : 'border-transparent text-tinta-500 hover:text-tinta-900'}`}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
-      <div className="mt-5">
-        {pestana === 'casas' && <Casas />}
-        {pestana === 'tarifas' && <Tarifas />}
-        {pestana === 'bloqueos' && <Bloqueos />}
-        {pestana === 'administracion' && <Administracion />}
-      </div>
-    </>
-  )
-}
 
 /* ---------- Casas: en servicio o retiradas ---------- */
 
-function Casas() {
+export function Casas() {
   const [region, setRegion] = useState('')
   const [retirar, setRetirar] = useState(null)
   const [reincorporar, setReincorporar] = useState(null)
@@ -306,7 +264,7 @@ function FiltroRegion({ valor, onCambio }) {
 
 /* ---------- Tarifas: digitar o cargar planilla ---------- */
 
-function Tarifas() {
+export function Tarifas() {
   const [modo, setModo] = useState('digitar')
   const [hecho, setHecho] = useState(null)
   return (
@@ -722,7 +680,7 @@ function EntradaPesos({ value, onChange, etiqueta }) {
   )
 }
 
-function Bloqueos() {
+export function Bloqueos() {
   const { usuario } = useSesion()
   const hoy = hoyISO()
   const casas = listarCasas({ incluirInactivas: true })

@@ -16,7 +16,8 @@ import { Reservas } from './paginas/gestion/Reservas.jsx'
 import { InventarioEncargada } from './paginas/encargada/Inventario.jsx'
 import { InicioCentral } from './paginas/central/Inicio.jsx'
 import { Cobros } from './paginas/central/Cobros.jsx'
-import { CasasTarifas } from './paginas/central/Casas.jsx'
+import { Configuracion } from './paginas/central/Configuracion.jsx'
+import { aplicarParametros } from './datos/configuracion.js'
 import { Dashboard } from './paginas/central/Dashboard.jsx'
 
 /** Exige sesión y, si se indica, un perfil. Sin sesión lleva al ingreso. */
@@ -53,6 +54,7 @@ function IrAReservas({ nueva = false }) {
 const Enrutador = import.meta.env.MODE === 'pagina' ? MemoryRouter : BrowserRouter
 
 aplicarTema(temaGuardado())
+aplicarParametros()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -75,12 +77,12 @@ createRoot(document.getElementById('root')).render(
             <Route path="encargada/inventario" element={<Requiere perfil="encargada"><InventarioEncargada /></Requiere>} />
             <Route path="central" element={<Requiere perfil="central"><InicioCentral /></Requiere>} />
             <Route path="central/cobros" element={<Requiere perfil="central"><Cobros /></Requiere>} />
-            <Route path="central/configuracion" element={<Requiere perfil="central"><CasasTarifas /></Requiere>} />
+            <Route path="central/configuracion" element={<Requiere perfil="central"><Configuracion /></Requiere>} />
             <Route path="central/casas" element={<Navigate to="/central/configuracion" replace />} />
             <Route path="central/reservas" element={<Requiere perfil="central"><Reservas /></Requiere>} />
             <Route path="central/dashboard" element={<Requiere perfil="central"><Dashboard /></Requiere>} />
             <Route path="central/sorteo" element={<Requiere perfil="central"><SorteoCentral /></Requiere>} />
-            <Route path="central/administracion" element={<Navigate to="/central/configuracion?pestana=administracion" replace />} />
+            <Route path="central/administracion" element={<Navigate to="/central/configuracion?pestana=usuarios" replace />} />
             <Route path="gestion/reservar" element={<IrAReservas nueva />} />
             <Route path="gestion/disponibilidad" element={<IrAReservas />} />
             <Route path="gestion/reserva/:codigo" element={gestion(<Comprobante />)} />

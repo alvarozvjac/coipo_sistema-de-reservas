@@ -1,5 +1,6 @@
 import { FileDown } from 'lucide-react'
 import { puedeAprobar } from '../../datos/servicio.js'
+import { PLANTILLAS_BASE, correoDe } from '../../datos/configuracion.js'
 import { fechaCorta, rangoFechas } from '../../lib/fechas.js'
 import { pesos } from '../../lib/formato.js'
 import { CALIDADES, PARENTESCOS, VIAS } from '../../lib/reglas.js'
@@ -97,14 +98,9 @@ export function DetalleReserva({ reserva: r, gestor, onCerrar, onListo }) {
                 : (r.confirmada_por ?? 'confirmada')}
         </li>
         {(r.notificaciones ?? []).map((n, i) =>
-          n.tipo === 'ficha' ? (
-            <li key={i} className="flex flex-wrap items-center gap-x-2">
-              <span>
-                {fechaCorta(n.en.slice(0, 10), true)}: se envió la ficha de la reserva a {r.contacto?.correo ?? 'su correo'}
-              </span>
-              <button type="button" onClick={() => descargar(r, n.ficha)} className="inline-flex min-h-8 items-center gap-1 rounded px-1 font-medium text-verde-700 hover:bg-verde-50 hover:underline">
-                <FileDown className="size-4" aria-hidden /> {n.ficha}.pdf
-              </button>
+          PLANTILLAS_BASE[n.tipo] ? (
+            <li key={i}>
+              <Correo reserva={r} n={n} />
             </li>
           ) : n.tipo === 'solicitud' ? (
             <li key={i}>
@@ -134,5 +130,27 @@ function D({ t, v }) {
       <dt className="text-[13px] text-tinta-500">{t}</dt>
       <dd className="break-words">{v}</dd>
     </div>
+  )
+}
+
+/** Un aviso enviado, con el correo tal como lo habría recibido la persona (plantilla vigente). */
+function Correo({ reserva: r, n }) {
+  const c = correoDe(n.tipo, r)
+  return (
+    <details>
+      <summary className="cursor-pointer">
+        {fechaCorta(n.en.slice(0, 10), true)}: se envió «{PLANTILLAS_BASE[n.tipo].nombre.toLowerCase()}» a {c.para}
+        {n.ficha && ` (${n.ficha}.pdf)`}
+      </summary>
+      <div className="mt-1 rounded-lg border border-borde bg-fondo p-3 text-[14px]">
+        <p className="font-semibold">{c.asunto}</p>
+        <p className="mt-1 whitespace-pre-line">{c.cuerpo}</p>
+        {n.ficha && (
+          <button type="button" onClick={() => descargar(r, n.ficha)} className="mt-2 inline-flex min-h-8 items-center gap-1 rounded px-1 font-medium text-verde-700 hover:bg-verde-50 hover:underline">
+            <FileDown className="size-4" aria-hidden /> {n.ficha}.pdf
+          </button>
+        )}
+      </div>
+    </details>
   )
 }

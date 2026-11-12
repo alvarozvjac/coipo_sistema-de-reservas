@@ -7,7 +7,8 @@
  * Zegers: donde el reglamento propuesto dice otra cosa, se anota.
  *
  * Todo lo que el reglamento deja como número está en PARAMETROS: en la
- * versión con base de datos, el encargado nacional los edita en Administración.
+ * Desde el 12-11-2026 el encargado nacional cambia los editables en
+ * Configuración › Parámetros, con fecha de vigencia (datos/configuracion.js).
  */
 
 import { diasEntre, fechaCorta, hoyISO, mesDe, nombreMes, restarDiasHabiles, sumarDias } from './fechas.js'

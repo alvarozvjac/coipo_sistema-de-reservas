@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import { Banner } from './Banner.jsx'
 import { BotonTema } from './BotonTema.jsx'
+import { aplicarParametros } from '../datos/configuracion.js'
 import { reiniciarDemo } from '../datos/servicio.js'
 import { INICIO, PERFIL_ETIQUETA, useSesion } from './Perfil.jsx'
 
@@ -98,7 +99,12 @@ export function Plantilla() {
             <a href={MANUAL} target="_blank" rel="noreferrer" className="rounded px-2 py-1 font-medium text-verde-700 hover:bg-verde-50">
               Manual de usuario (PDF)
             </a>
-            <button type="button" onClick={reiniciarDemo} className="rounded px-2 py-1 font-medium text-verde-700 hover:bg-verde-50">
+            <button
+              type="button"
+              onClick={() => {
+                reiniciarDemo()
+                aplicarParametros()
+              }} className="rounded px-2 py-1 font-medium text-verde-700 hover:bg-verde-50">
               Reiniciar datos de prueba
             </button>
             <BotonTema />
