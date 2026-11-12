@@ -203,6 +203,10 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   `.gitignore`); con `adopta: interfaz` en una copia, `j13` OK en 3 comprobaciones y `j16`
   AVISA `COD-1` × 3. Banner medido a 390, 768, 1024, 1366 y 1920 px. Capturas del
   ingreso, del IAM, del rechazo sin rol y del tema oscuro miradas.
+- 2026-11-12 · pública @ `24ff480` · el SHA-256 de lo servido coincide con el commit; en el
+  Chrome del usuario: ingreso con el COIPO IAM simulado (cuenta `cnunez`) hasta el inicio de
+  la Región de Valparaíso, cambio de tema hasta oscuro (fondo `#1a1f1c`) y vuelta a
+  Sistema; 0 errores de consola.
 
 ## Validación
 
