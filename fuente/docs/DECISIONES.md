@@ -284,15 +284,50 @@ Observaciones al formulario Google actual (para Bienestar):
 - La opción S01 del calendario general tiene un destino distinto al de los demás turnos
   (VERIFICADO en la configuración; su efecto no se comprobó).
 
-## Perfiles (4)
+## Primera etapa solo con encargados (decisión 12-11-2026)
 
-1. **Solicitante**: afiliado activo, afiliado jubilado, trabajador CONAF no afiliado o
-   funcionario de otro servicio público.
-2. **Encargada regional**: las casas de su región.
-3. **Administración Oficina Central**: vista nacional, cobros, tarifas, temporadas, sorteo.
-4. **Mantenimiento UIA**: usuarios, nóminas, parámetros técnicos y auditoría.
+Bienestar definió que la implementación parte solo con los encargados. Fuente: lo que
+Bienestar le planteó a la UIA, transmitido por Álvaro Zegers el 12-11-2026.
+
+- **Los afiliados/as no ingresan al sistema.** El ingreso queda solo para la encargada
+  regional y el encargado nacional; cualquier otro RUT recibe el aviso de pedir la reserva o
+  la postulación a la encargada de su región.
+- **«Oficina Central» pasa a llamarse encargado nacional** (perfil `central` en el código).
+- **El perfil Mantenimiento UIA se elimina**: sus funciones (usuarios, nóminas, parámetros,
+  estado del sistema) pasan al encargado nacional, en la pestaña «Administración», que en la
+  maqueta muestra solo lo que tendrá.
+- **Reservas:** la encargada regional y el encargado nacional las registran a nombre de la
+  persona (de la nómina o de otro servicio público), con «Registrar reserva».
+- **Postulaciones al sorteo:** también las registra el encargado («Registrar postulación»),
+  que puede retirarlas.
+- **La declaración del encargado reemplaza la aceptación de la persona.** Al registrar,
+  el encargado declara que la persona le pidió la reserva o la postulación y que conoce y
+  acepta el reglamento; con planilla, además, que la persona autorizó el descuento. La reserva
+  queda con `registrada_por` y `declaracion_encargado`; ya no hay «aceptación pendiente».
+- **Desistimientos y respuestas a la lista de espera:** los registra el encargado
+  (`desistimiento_registrado_por`); en Temporadas, el encargado nacional marca si la persona
+  acepta o no el cupo ofrecido.
+- Se eliminaron las pantallas del solicitante (buscar casas, ficha, mis reservas) y la clave
+  de sesión pasó a `reserva_veraneo_sesion_v3`, para que no se recupere una sesión de
+  afiliado guardada.
+- Lo que el reglamento pide al «solicitante» (Art. 5, 27, Anexo A) lo cumple ahora el
+  encargado en su nombre. [PENDIENTE: confirmar con Bienestar si eso basta o si se necesita
+  una firma o un correo de la persona.]
+
+## Perfiles (2 desde el 12-11-2026)
+
+1. **Encargada regional**: las casas de su región; registra reservas, postulaciones y
+   desistimientos.
+2. **Encargado nacional** (antes Administración Oficina Central): vista nacional, cobros,
+   tarifas, temporadas, sorteo y Administración (antes Mantenimiento UIA).
+
+Hasta el 12-11-2026 había además el perfil **Solicitante** (afiliados, jubilados, no
+afiliados y otros servicios públicos) y **Mantenimiento UIA**.
 
 ## Reglas aplicadas al solicitante
+
+Desde el 12-11-2026 las aplica el sistema cuando el encargado registra a nombre de la
+persona.
 
 | Regla | Aplicación | Fuente |
 |---|---|---|
@@ -312,7 +347,7 @@ Observaciones al formulario Google actual (para Bienestar):
 | Formas de pago | Funcionarios/as de CONAF: descuento por planilla (con autorización y hasta 3 cuotas). Plazo fijo: planilla o transferencia. Jubilados y otros servicios públicos: solo transferencia antes de llegar. No hay pago en dependencias de Bienestar. Si una transferencia no se registra, solo se alerta a Bienestar | Art. 21, decisión 20-10-2026 |
 | Datos de la transferencia | Corporación Nacional Forestal, RUT 61.313.000-4, Banco de Chile, cuenta corriente N° 500-04. Glosa: "Pago casa {nombre de la casa} {código}", por ejemplo "Pago casa Viña del Mar R-2026-0201". Se muestran en un cuadro al elegir la transferencia (hay que cerrarlo para continuar) y en el comprobante | Decisión 20-10-2026 |
 | Datos de la solicitud | Usuario responsable: nombre, RUT, rol, región, calidad. Acompañantes: solo nombre y edad (y relación) | Anexo A |
-| Aceptación del reglamento | Obligatoria al confirmar | Art. 27, Anexo A |
+| Aceptación del reglamento | Obligatoria al confirmar; desde el 12-11-2026, la declara el encargado que registra | Art. 27, Anexo A; decisión 12-11-2026 |
 | Anticipación máxima | 90 días, como parámetro editable (el reglamento de octubre no la fija) | Decisión 20-10-2026 |
 | Aseo | Un día libre entre reservas | Decisión de Bienestar |
 | Motivo de la estadía | No se pide (médico, laboral o personal); el reglamento no lo usa para asignar | Decisión 20-10-2026 |
@@ -347,7 +382,7 @@ Todos los números están en `frontend/src/lib/reglas.js` (`PARAMETROS` y `ADICI
 - Resolución anual de tarifas 2026 por casa y categoría, con capacidad máxima (Art. 14 y 19).
 - Planilla oficial de inmuebles y fotos reales.
 - Fechas oficiales de temporada alta y ventana de postulación al sorteo (la maqueta ya
-  permite que Oficina Central las configure).
+  permite que el encargado nacional las configure).
 - Rango de tarifas aceptado en la carga masiva ($5.000 a $500.000) y umbral de aviso de
   variación (30%).
 - Si la práctica del Memorándum 6188/2026 (turnos de 6 noches, tarifa por grado,
@@ -366,7 +401,9 @@ Todos los números están en `frontend/src/lib/reglas.js` (`PARAMETROS` y `ADICI
 - Qué hacer con una reserva por confirmar que no paga antes de llegar, y si debe haber un
   plazo para transferir después del cual se liberan las fechas (hoy quedan apartadas
   hasta la llegada).
-- Qué pasa si la persona no acepta el reglamento de una reserva asistida antes de llegar (hoy solo queda pendiente).
+- Si la declaración del encargado basta como aceptación del reglamento (Art. 27) y como
+  autorización del descuento por planilla, o se necesita la firma o el correo de la persona.
+- Cuándo entran los afiliados/as al sistema (segunda etapa).
 - Si se acepta que el usuario/a responsable no viaje (la maqueta lo permite con persona a cargo).
 - Casilla oficial de correo de cada encargada regional (hoy solo Valparaíso tiene una
   persona en la nómina de prueba; el resto usa una casilla genérica ficticia).

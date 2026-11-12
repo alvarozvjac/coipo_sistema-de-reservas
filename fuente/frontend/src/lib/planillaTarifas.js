@@ -1,5 +1,5 @@
 /**
- * Carga masiva de las tarifas por noche (Oficina Central), en los dos tramos
+ * Carga masiva de las tarifas por noche (encargado nacional), en los dos tramos
  * por grado del trabajador/a: 04 a 14 y 15 a 19 (Memo 6188/2026).
  *
  * Formato tipo: una hoja «Tarifas» con una fila por casa y estas columnas, en

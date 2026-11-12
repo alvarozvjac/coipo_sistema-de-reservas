@@ -1,13 +1,16 @@
+import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { CheckCircle2, Clock, FileDown, Printer } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
-import { aceptarReserva, obtenerReserva, useDatos } from '../../datos/servicio.js'
+import { desistirReserva, obtenerReserva, useDatos } from '../../datos/servicio.js'
 import { INICIO, useSesion } from '../../componentes/Perfil.jsx'
 import { correoEncargada } from '../../datos/usuarios.js'
 import { CATEGORIAS_INVENTARIO } from '../../datos/inventarios.js'
 import { fechaCorta, fechaLarga, nombreMes } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
-import { PARAMETROS, estadoReserva, glosaTransferencia, noches } from '../../lib/reglas.js'
+import { PARAMETROS, cargoDesistimiento, estadoReserva, glosaTransferencia, limiteDesistimiento, noches } from '../../lib/reglas.js'
+import { PERFIL_ETIQUETA } from '../../componentes/Perfil.jsx'
+import { Dialogo } from '../encargada/comun.jsx'
 import { Aviso, Boton, Estado, Tarjeta } from '../../componentes/ui.jsx'
 import { enVisor } from '../../lib/guardar.js'
 import { DatosCuenta } from '../../componentes/Transferencia.jsx'
@@ -17,8 +20,14 @@ const PAGO = {
   transferencia: () => 'Transferencia, antes de llegar',
 }
 
+/**
+ * Comprobante de una reserva, visto por el encargado que la registró o que la
+ * gestiona. Desde el 12-11-2026 aquí se registra también el desistimiento que
+ * la persona comunica a Bienestar.
+ */
 export function Comprobante() {
   useDatos()
+  const [desistir, setDesistir] = useState(false)
   const { codigo } = useParams()
   const [p] = useSearchParams()
   const r = obtenerReserva(codigo)
@@ -29,52 +38,27 @@ export function Comprobante() {
   const n = noches(r.entrada, r.salida)
   const region = REGIONES.find((x) => x.codigo === r.casa.region)?.nombre
   const { usuario } = useSesion()
-  const gestion = usuario.perfil !== 'solicitante'
-  const planilla = r.forma_pago.tipo === 'planilla'
+  const reservas = usuario.perfil === 'central' ? '/central/reservas' : '/encargada/reservas'
+  const puedeDesistir = ['confirmada', 'por_confirmar'].includes(estado)
 
   return (
     <div className="mx-auto max-w-2xl">
       {nueva && estado === 'por_confirmar' && (
         <div className="mb-6 text-center">
           <Clock className="mx-auto size-12 text-alerta-700" aria-hidden />
-          <h1 className="mt-3 text-2xl font-bold">{gestion ? `Reserva por confirmar a nombre de ${r.titular.nombre}` : 'Reserva por confirmar'}</h1>
+          <h1 className="mt-3 text-2xl font-bold">Reserva por confirmar a nombre de {r.titular.nombre}</h1>
           <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
-            {gestion
-              ? `Enviamos a ${r.contacto?.correo} los datos para transferir${r.aceptacion_pendiente ? ' y un enlace para aceptar el reglamento' : ''}. Las fechas quedan apartadas: cuando Bienestar compruebe el pago, la reserva quedará confirmada y se le enviarán el comprobante y el acta de entrega.`
-              : `Le enviamos a ${r.contacto?.correo ?? 'su correo'} los datos para transferir. Sus fechas quedan apartadas: cuando Bienestar compruebe el pago, la reserva quedará confirmada y le enviaremos el comprobante y el acta de entrega al mismo correo.`}
+            Se enviaron a {r.contacto?.correo} los datos para transferir. Las fechas quedan apartadas: cuando Bienestar compruebe el pago, la reserva queda confirmada y se envían el comprobante y el acta de entrega.
           </p>
         </div>
       )}
       {nueva && estado !== 'por_confirmar' && (
         <div className="mb-6 text-center">
           <CheckCircle2 className="mx-auto size-12 text-verde-600" aria-hidden />
-          <h1 className="mt-3 text-2xl font-bold">{gestion ? `Reserva confirmada a nombre de ${r.titular.nombre}` : '¡Reserva confirmada!'}</h1>
+          <h1 className="mt-3 text-2xl font-bold">Reserva confirmada a nombre de {r.titular.nombre}</h1>
           <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
-            {gestion
-              ? `Enviamos a ${r.contacto?.correo} el comprobante${r.actas?.length ? ', el acta de entrega' : ''} y un enlace para aceptar el reglamento${planilla ? ' y autorizar el descuento' : ''}. Avísele que lo revise.`
-              : `Le enviamos el comprobante${r.actas?.length ? ' y el acta de entrega' : ''} a ${r.contacto?.correo ?? 'su correo'}.`}
-            {r.forma_pago.anticipado ? (gestion ? ' Debe pagar por transferencia antes de llegar.' : ' Recuerde pagar antes de llegar.') : ''}
+            Se enviaron a {r.contacto?.correo} el comprobante{r.actas?.length ? ' y el acta de entrega' : ''}.{r.forma_pago.anticipado ? ' Debe pagar por transferencia antes de llegar.' : ''}
           </p>
-        </div>
-      )}
-
-      {r.aceptacion_pendiente && ['por_confirmar', 'confirmada', 'en_curso'].includes(estado) && (
-        <div className="no-imprimir mb-6">
-          {gestion ? (
-            <Aviso>
-              Pendiente: {r.titular.nombre} debe aceptar el reglamento{planilla ? ' y autorizar el descuento por planilla' : ''} con el enlace que recibió por correo.
-            </Aviso>
-          ) : (
-            <div className="rounded-xl border border-alerta-700/30 bg-alerta-50 p-4">
-              <p className="text-[15px] text-alerta-700">
-                {r.registrada_por.nombre} registró esta reserva a su pedido. Para dejarla en regla, confirme que conoce y acepta el Reglamento General de Uso de Casas de Veraneo o Descanso
-                {planilla ? ` y que autoriza el descuento por planilla de ${pesos(r.total)} en ${plural(r.forma_pago.cuotas, 'cuota', 'cuotas')}` : ''}.
-              </p>
-              <Boton className="mt-3" onClick={() => aceptarReserva(r.codigo)}>
-                {planilla ? 'Acepto el reglamento y autorizo el descuento' : 'Acepto el reglamento'}
-              </Boton>
-            </div>
-          )}
         </div>
       )}
 
@@ -93,7 +77,7 @@ export function Comprobante() {
           <Dato t="Llegada" v={fechaLarga(r.entrada)} d={`Desde las ${PARAMETROS.hora_ingreso}`} />
           <Dato t="Salida" v={fechaLarga(r.salida)} d={`Hasta las ${PARAMETROS.hora_salida}`} />
           {r.ocupantes.length > 0 && <Dato t="Personas" v={plural(r.ocupantes.length, 'persona', 'personas')} d={r.ocupantes.map((o) => o.nombre).join(', ')} />}
-          {r.registrada_por && <Dato t="Registrada por" v={r.registrada_por.nombre} d={`${r.registrada_por.perfil === 'central' ? 'Oficina Central' : 'Encargada regional'}, a pedido de ${r.titular.nombre}`} />}
+          {r.registrada_por && <Dato t="Registrada por" v={r.registrada_por.nombre} d={`${PERFIL_ETIQUETA[r.registrada_por.perfil] ?? 'Encargado/a'}, a pedido de ${r.titular.nombre}, que conoce y acepta el reglamento`} />}
           {r.titular_viaja === false && <Dato t="A cargo en la casa" v={r.a_cargo} d={`${r.titular.nombre} no viaja y sigue siendo el usuario/a responsable`} />}
           {r.perro_asistencia && <Dato t="Perro de asistencia" v="Sí (Ley 20.422)" d={r.perro_asistencia.credencial ? 'Credencial y certificado sanitario adjuntos' : undefined} />}
           <Dato
@@ -122,7 +106,7 @@ export function Comprobante() {
 
         {estado === 'desistida' && r.cargo_desistimiento !== undefined && (
           <p className="mt-4 rounded-lg bg-stone-50 px-4 py-3 text-[15px]">
-            Desistida el {fechaLarga(r.desistida_en)}. Cargo: {r.cargo_desistimiento ? pesos(r.cargo_desistimiento) : 'sin costo'}.
+            Desistida el {fechaLarga(r.desistida_en)}{r.desistimiento_registrado_por ? `, registrado por ${r.desistimiento_registrado_por}` : ''}. Cargo: {r.cargo_desistimiento ? pesos(r.cargo_desistimiento) : 'sin costo'}.
           </p>
         )}
       </Tarjeta>
@@ -131,7 +115,7 @@ export function Comprobante() {
         <>
           <Tarjeta className="no-imprimir mt-6 flex flex-wrap items-center justify-between gap-3 p-4">
             <p className="text-[15px]">
-              Le enviamos el <strong>acta de entrega</strong> a {r.actas.at(-1).enviada_a}. Llévela o téngala a mano al llegar.
+              Se envió el <strong>acta de entrega</strong> a {r.actas.at(-1).enviada_a}. La persona debe llevarla o tenerla a mano al llegar.
             </p>
             <Boton
               variante="secundario"
@@ -153,14 +137,60 @@ export function Comprobante() {
             <Printer className="size-4" aria-hidden /> Imprimir o guardar PDF
           </Boton>
         )}
-        {gestion ? <Boton a={INICIO[usuario.perfil]}>Volver al inicio</Boton> : <Boton a="/mis-reservas">Ver mis reservas</Boton>}
+        {puedeDesistir && (
+          <Boton variante="secundario" onClick={() => setDesistir(true)}>
+            Registrar desistimiento
+          </Boton>
+        )}
+        <Boton a={reservas}>Ver reservas</Boton>
       </div>
       <p className="no-imprimir mt-4 text-center text-sm">
-        <Link to={gestion ? '/gestion/reservar' : '/'} className="font-medium text-verde-700 hover:underline">
-          {gestion ? 'Reservar para otra persona' : 'Buscar otra casa'}
+        <Link to="/gestion/reservar" className="font-medium text-verde-700 hover:underline">
+          Registrar otra reserva
+        </Link>
+        {' · '}
+        <Link to={INICIO[usuario.perfil]} className="font-medium text-verde-700 hover:underline">
+          Volver al inicio
         </Link>
       </p>
+
+      {desistir && <DialogoDesistir reserva={r} gestor={usuario} onCerrar={() => setDesistir(false)} />}
     </div>
+  )
+}
+
+/** El encargado registra el desistimiento que la persona comunicó (Memo 6188/2026: 10 días hábiles). */
+function DialogoDesistir({ reserva: r, gestor, onCerrar }) {
+  const cargo = cargoDesistimiento(r)
+  const limite = limiteDesistimiento(r.entrada)
+  return (
+    <Dialogo titulo="¿Registrar el desistimiento?" onCerrar={onCerrar}>
+      <p className="mt-2 text-[15px] text-tinta-700">
+        {r.titular.nombre} desiste de {r.casa.nombre}, {fechaCorta(r.entrada)} al {fechaCorta(r.salida, true)}.
+      </p>
+      <div className="mt-3">
+        <Aviso tipo={cargo ? 'alerta' : 'info'}>
+          {cargo
+            ? `El plazo para desistir sin costo venció el ${fechaCorta(limite, true)} (${PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles antes de la llegada): se cobrará la estadía completa (${pesos(cargo)}). Si es por fuerza mayor acreditada, la persona debe enviar el respaldo a Bienestar.`
+            : `Avisa dentro del plazo (hasta el ${fechaCorta(limite, true)}, ${PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles antes de la llegada): no tiene costo.`}
+        </Aviso>
+      </div>
+      <p className="mt-3 text-[13px] text-tinta-500">Queda registrado que usted lo registró. Se avisa a la persona por correo{r.origen === 'sorteo' ? ' y el turno se ofrece a la lista de espera' : ''}.</p>
+      <div className="mt-6 flex justify-end gap-3">
+        <Boton variante="secundario" onClick={onCerrar}>
+          Volver
+        </Boton>
+        <Boton
+          variante="peligro"
+          onClick={() => {
+            desistirReserva(r.codigo, gestor)
+            onCerrar()
+          }}
+        >
+          Sí, registrar
+        </Boton>
+      </div>
+    </Dialogo>
   )
 }
 

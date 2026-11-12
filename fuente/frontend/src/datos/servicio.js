@@ -383,13 +383,13 @@ export function useDatos() {
 
 /* ---------- Casas, tarifas y bloqueos ---------- */
 
-/** Tarifas vigentes de una casa: las de la resolución o las cargadas por Oficina Central ({ a: grados 04–14, b: grados 15–19 }). */
+/** Tarifas vigentes de una casa: las de la resolución o las cargadas por el encargado nacional ({ a: grados 04–14, b: grados 15–19 }). */
 const conAjustes = (c) => {
   const t = estado.tarifas[c.id] ?? {}
   return { ...c, tarifa_noche: t.a ?? c.tarifa_noche, tarifa_noche_15_19: t.b ?? c.tarifa_noche_15_19, activa: !estado.inactivas.includes(c.id) }
 }
 
-/** Casas activas (para el solicitante) o todas (para la Oficina Central). */
+/** Casas activas (para registrar reservas) o todas (para el encargado nacional). */
 export const listarCasas = ({ incluirInactivas = false } = {}) => CASAS.map(conAjustes).filter((c) => incluirInactivas || c.activa)
 
 export function obtenerCasa(id) {
@@ -461,7 +461,8 @@ export const todasLasReservas = () => estado.reservas.map(conCasa)
 export const misReservas = (usuarioId) =>
   estado.reservas.filter((r) => r.titular_id === usuarioId).map(conCasa).sort((a, b) => (a.entrada < b.entrada ? 1 : -1))
 
-export const reservasRegion = (region) => estado.reservas.filter((r) => casaBase(r.casa_id)?.region === region).map(conCasa)
+/** Reservas de una región; sin región, las de todo el país (encargado nacional). */
+export const reservasRegion = (region) => estado.reservas.filter((r) => !region || casaBase(r.casa_id)?.region === region).map(conCasa)
 
 export const obtenerReserva = (codigo) => conCasa(estado.reservas.find((r) => r.codigo === codigo))
 
@@ -472,7 +473,13 @@ export const obtenerReserva = (codigo) => conCasa(estado.reservas.find((r) => r.
  * disponibilidad la hace el backend dentro de una transacción, para que dos
  * personas no tomen las mismas fechas a la vez.
  */
-export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocupantes, contacto, perro_asistencia, forma_pago, titular_viaja = true, a_cargo, registrada_por, aceptacion_pendiente }) {
+/**
+ * Desde el 12-11-2026 las reservas las registran los encargados (regional o
+ * nacional) a pedido de la persona: `registrada_por` es quien la registró, y
+ * su declaración (la persona la pidió, conoce el reglamento y, si paga por
+ * planilla, autorizó el descuento) reemplaza la aceptación de la persona.
+ */
+export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocupantes, contacto, perro_asistencia, forma_pago, titular_viaja = true, a_cargo, registrada_por }) {
   const choca = ocupacionesDe(casa.id).some((o) => entrada < o.salida && o.entrada < salida)
   if (choca) return null
   const codigo = nuevoCodigo()
@@ -491,8 +498,8 @@ export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocu
     a_cargo: a_cargo ?? usuario.nombre,
     perro_asistencia,
     forma_pago,
-    acepta_reglamento: !aceptacion_pendiente,
-    ...(registrada_por && { registrada_por, aceptacion_pendiente: true }),
+    acepta_reglamento: true,
+    ...(registrada_por && { registrada_por, declaracion_encargado: ahora() }),
     estado: 'confirmada',
     creada_en: ahora(),
     confirmada_por: AUTOMATICA,
@@ -500,12 +507,6 @@ export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocu
     notificaciones: [],
   }
   notificarCreacion(r)
-  if (registrada_por)
-    r.notificaciones.push({
-      tipo: 'aceptacion',
-      en: ahora(),
-      detalle: `Enlace para aceptar el reglamento${forma_pago.tipo === 'planilla' ? ' y autorizar el descuento' : ''} (reserva registrada por ${registrada_por.nombre})`,
-    })
   if (!porConfirmar(r)) enviarInventario(r)
   estado.reservas.push(r)
   guardar()
@@ -529,12 +530,15 @@ function nuevoCodigo() {
 /** Código que recibirá la próxima reserva (para la glosa de la transferencia). */
 export const proximoCodigo = () => `R-${hoyISO().slice(0, 4)}-${String(estado.correlativo + 1).padStart(4, '0')}`
 
-export function desistirReserva(codigo) {
+/** Desistimiento que la persona comunicó y un encargado registra (`gestor`, desde el 12-11-2026). */
+export function desistirReserva(codigo, gestor) {
   const r = estado.reservas.find((x) => x.codigo === codigo)
   if (!r) return
   r.cargo_desistimiento = cargoDesistimiento(r)
   r.estado = 'desistida'
   r.desistida_en = hoyISO()
+  if (gestor) r.desistimiento_registrado_por = gestor.nombre
+  r.notificaciones.push({ tipo: 'desistimiento', en: ahora(), detalle: r.cargo_desistimiento ? 'Desistimiento fuera de plazo: se cobra la estadía completa' : 'Desistimiento sin costo' })
   if (r.origen === 'sorteo') {
     // Art. 10 d): desistir tarde en temporada alta hace perder el sorteo siguiente.
     if (r.cargo_desistimiento > 0) r.pierde_sorteo_siguiente = true
@@ -705,7 +709,7 @@ function buscarPostulacion(codigo) {
 }
 
 /**
- * Oficina Central habilita la postulación de una temporada: crea su sorteo.
+ * El encargado nacional habilita la postulación de una temporada: crea su sorteo.
  * La postulación queda abierta desde hoy hasta el cierre definido en la
  * temporada. La prioridad (Art. 6 a) y la pérdida de posibilidad (Art. 10 d)
  * salen del último sorteo realizado.
@@ -782,11 +786,12 @@ export function condicionSorteo(usuarioId) {
 }
 
 /** Registra una postulación. Devuelve el código o un mensaje de error. */
-export function postular({ usuario, casa_id, turno, personas, forma_pago, contacto }) {
+/** La postulación la registra un encargado a pedido de la persona (`registrada_por`, desde el 12-11-2026). */
+export function postular({ usuario, casa_id, turno, personas, forma_pago, contacto, registrada_por }) {
   const s = sorteoActual()
   if (!postulacionAbierta()) return { error: 'La postulación no está abierta.' }
   if (!puedePostular(usuario)) return { error: 'Los funcionarios de otros servicios públicos no postulan al sorteo (Art. 9).' }
-  if (postulacionDe(usuario.id)) return { error: 'Ya tiene una postulación en este sorteo: se postula a un solo turno (Art. 6 b).' }
+  if (postulacionDe(usuario.id)) return { error: 'Esta persona ya tiene una postulación en este sorteo: se postula a un solo turno (Art. 6 b). Si quiere cambiarla, retire la anterior.' }
   const casa = obtenerCasa(casa_id)
   if (!casa || personas > casa.capacidad) return { error: 'La casa no admite esa cantidad de personas.' }
   const t = turnosDe(s.temporada, casa.id).find((x) => x.entrada === turno)
@@ -803,6 +808,7 @@ export function postular({ usuario, casa_id, turno, personas, forma_pago, contac
     personas,
     forma_pago: forma_pago.tipo === 'planilla' ? pagoTemporada(s.temporada) : forma_pago,
     contacto,
+    ...(registrada_por && { registrada_por }),
     prioridad: condicionSorteo(usuario.id).prioridad,
     pierde_posibilidad: condicionSorteo(usuario.id).pierde_posibilidad,
     estado: 'postulada',
@@ -928,7 +934,7 @@ export function responderOferta(codigo, acepta) {
   return reserva
 }
 
-/** Vence una oferta sin respuesta y pasa a la siguiente persona. En la maqueta, Oficina Central lo simula. */
+/** Vence una oferta sin respuesta y pasa a la siguiente persona. En la maqueta, el encargado nacional lo simula. */
 export function vencerOferta(codigo) {
   const { p } = buscarPostulacion(codigo)
   if (!p || p.estado !== 'ofertada') return
@@ -971,7 +977,7 @@ export function nochesLiberadas(casaId) {
   return set
 }
 
-/* ---------- Reserva asistida (encargada regional u Oficina Central) ---------- */
+/* ---------- Reserva asistida (encargada regional o encargado nacional) ---------- */
 
 const normalizar = (rut) => String(rut).replace(/[^0-9kK]/g, '').toUpperCase()
 let personasBase = null
@@ -990,19 +996,7 @@ export function buscarPersona(rut) {
   return p ? { ...p, perfil: 'solicitante', grupo_familiar: [] } : null
 }
 
-/** La persona acepta el reglamento (y autoriza el descuento) de una reserva registrada por otra persona. */
-export function aceptarReserva(codigo) {
-  const r = estado.reservas.find((x) => x.codigo === codigo)
-  if (!r || !r.aceptacion_pendiente) return
-  r.aceptacion_pendiente = false
-  r.acepta_reglamento = true
-  r.aceptada_en = ahora()
-  if (r.forma_pago.tipo === 'planilla') r.forma_pago = { ...r.forma_pago, autorizacion: true }
-  r.notificaciones.push({ tipo: 'aceptacion', en: ahora(), detalle: 'La persona aceptó el reglamento' + (r.forma_pago.tipo === 'planilla' ? ' y autorizó el descuento' : '') })
-  guardar()
-}
-
-/* ---------- Temporadas altas (Oficina Central, Art. 6) ---------- */
+/* ---------- Temporadas altas (encargado nacional, Art. 6) ---------- */
 
 export const listarTemporadas = () => [...estado.temporadas].sort((a, b) => (a.desde < b.desde ? -1 : 1))
 

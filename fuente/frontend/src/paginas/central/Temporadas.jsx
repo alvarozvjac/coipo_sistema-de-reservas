@@ -18,7 +18,7 @@ const ESTADOS = {
   terminada: { etiqueta: 'Terminada', clase: 'bg-stone-100 text-tinta-500' },
 }
 
-/** Temporadas altas: Oficina Central define las fechas que se asignan por sorteo y quedan cerradas a la reserva directa. */
+/** Temporadas altas: el encargado nacional define las fechas que se asignan por sorteo y quedan cerradas a la reserva directa. */
 export function Temporadas() {
   useDatos()
   const [editar, setEditar] = useState(null)
@@ -34,7 +34,7 @@ export function Temporadas() {
             Temporadas altas
           </h2>
           <p className="mt-1 max-w-3xl text-sm text-tinta-500">
-            Las fechas de cada temporada se asignan por sorteo en turnos fijos (verano 2027: {PARAMETROS.noches_turno_temporada_alta} noches, con un calendario general y otro para las cabañas de Puyehue) y quedan cerradas a la reserva directa desde que se guarda (Art. 6). La postulación se abre solo cuando Oficina Central la habilita. Las vacantes que queden después del sorteo se pueden reservar directo.
+            Las fechas de cada temporada se asignan por sorteo en turnos fijos (verano 2027: {PARAMETROS.noches_turno_temporada_alta} noches, con un calendario general y otro para las cabañas de Puyehue) y quedan cerradas a la reserva directa desde que se guarda (Art. 6). La postulación se abre solo cuando el encargado nacional la habilita. Las vacantes que queden después del sorteo se pueden reservar directo.
           </p>
         </div>
         <Boton onClick={() => setEditar({})}>
@@ -239,7 +239,7 @@ function FormTemporada({ previa, onCerrar, onListo }) {
         <Campo etiqueta="Mes de la primera cuota">
           <input type="month" className={claseEntrada} value={d.primera_cuota} disabled={soloCierre} onChange={(e) => cambiar({ primera_cuota: e.target.value })} />
         </Campo>
-        <Campo etiqueta="Apertura prevista" ayuda="Se abre cuando Oficina Central la habilita.">
+        <Campo etiqueta="Apertura prevista" ayuda="Se abre cuando el encargado nacional la habilita.">
           <input type="date" className={claseEntrada} value={d.postulacion.desde} disabled={soloCierre} onChange={(e) => cambiarPost({ desde: e.target.value })} />
         </Campo>
         <Campo etiqueta="Postulación hasta">
@@ -292,7 +292,7 @@ function FormTemporada({ previa, onCerrar, onListo }) {
   )
 }
 
-/** Oficina Central habilita la postulación: desde ese momento la temporada aparece para postular. */
+/** El encargado nacional habilita la postulación: desde ese momento la temporada aparece para postular. */
 function DialogoAbrir({ temporada: t, onCerrar, onListo }) {
   const { usuario } = useSesion()
   const [error, setError] = useState(null)

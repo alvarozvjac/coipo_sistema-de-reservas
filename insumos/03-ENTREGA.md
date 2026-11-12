@@ -9,10 +9,12 @@ https://alvarozvjac.github.io/coipo_sistema-de-reservas/ · Aprobó: [PENDIENTE,
 
 ## En una frase, qué hace
 
-Permite que funcionarios/as de CONAF, jubilados/as y funcionarios/as de otros servicios
-públicos reserven en línea las 30 casas de veraneo de Bienestar según la disponibilidad y
-el reglamento, y que las encargadas regionales y Oficina Central gestionen ocupación,
-inventario, cobros, tarifas, casas y los sorteos de temporada alta.
+Permite que las encargadas regionales y el encargado nacional de Bienestar registren las
+reservas y las postulaciones al sorteo de las 22 casas de veraneo a nombre de
+funcionarios/as de CONAF, jubilados/as y funcionarios/as de otros servicios públicos,
+según la disponibilidad y el reglamento, y que gestionen ocupación, inventario, cobros,
+tarifas, casas y los sorteos de temporada alta (primera etapa, decisión del 12-11-2026:
+los afiliados/as no ingresan).
 
 ## En una frase, qué NO hace
 

@@ -1,13 +1,14 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-import { porId } from '../datos/usuarios.js'
+import { PERFILES_CON_INGRESO, porId } from '../datos/usuarios.js'
 
-const CLAVE = 'reserva_veraneo_sesion_v2'
+const CLAVE = 'reserva_veraneo_sesion_v3'
 const Contexto = createContext(null)
 
 /**
- * Sesión de la maqueta. Guarda quién ingresó: una persona de la nómina (por su
- * id) o un funcionario de otro servicio (con los datos que declaró).
- * En producción la sesión la emite el backend tras validar el código.
+ * Sesión de la maqueta: guarda el id de la persona de la nómina que ingresó.
+ * Solo ingresan los encargados (regional y nacional); cualquier otra sesión
+ * guardada se descarta. En producción la sesión la emite el backend tras
+ * validar el código.
  */
 function leer() {
   try {
@@ -18,36 +19,8 @@ function leer() {
 }
 
 function resolver(s) {
-  if (!s) return null
-  if (s.demo) {
-    // Solo maqueta: RUT válido que no está en la nómina de prueba.
-    return {
-      ...s.demo,
-      id: 'demo-' + s.demo.rut,
-      calidad: 'afiliado',
-      plazo_fijo: false,
-      perfil: 'solicitante',
-      rol: 'Funcionario/a (persona de demostración)',
-      unidad: 'Oficina Central',
-      region: '13',
-      grupo_familiar: [],
-      demostracion: true,
-    }
-  }
-  if (s.externo) {
-    return {
-      ...s.externo,
-      id: 'ext-' + s.externo.rut,
-      calidad: 'otro_servicio',
-      plazo_fijo: false,
-      perfil: 'solicitante',
-      rol: 'Funcionario/a de ' + s.externo.institucion,
-      unidad: s.externo.institucion,
-      region: s.externo.region ?? '',
-      grupo_familiar: [],
-    }
-  }
-  return porId(s.id)
+  const p = s?.id ? porId(s.id) : null
+  return p && PERFILES_CON_INGRESO.includes(p.perfil) ? p : null
 }
 
 export function ProveedorSesion({ children }) {
@@ -80,4 +53,8 @@ export const useSesion = () => useContext(Contexto)
 
 /** Inicio de cada perfil. */
 // eslint-disable-next-line react-refresh/only-export-components
-export const INICIO = { solicitante: '/', encargada: '/encargada', central: '/central', uia: '/uia' }
+export const INICIO = { encargada: '/encargada', central: '/central' }
+
+/** Nombre de cada perfil con ingreso. Oficina Central se llama Encargado nacional desde el 12-11-2026. */
+// eslint-disable-next-line react-refresh/only-export-components
+export const PERFIL_ETIQUETA = { encargada: 'Encargada regional', central: 'Encargado nacional' }

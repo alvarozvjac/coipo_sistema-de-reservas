@@ -7,7 +7,7 @@
  * Zegers: donde el reglamento propuesto dice otra cosa, se anota.
  *
  * Todo lo que el reglamento deja como número está en PARAMETROS: en la
- * versión con base de datos, el perfil Administración Oficina Central los edita.
+ * versión con base de datos, el encargado nacional los edita en Administración.
  */
 
 import { diasEntre, fechaCorta, hoyISO, mesDe, nombreMes, restarDiasHabiles, sumarDias } from './fechas.js'
@@ -38,7 +38,7 @@ export const ADICIONAL_TARIFA = { afiliado: 0, jubilado: 0, no_afiliado: 5000, o
 
 /**
  * Temporadas altas: se asignan por sorteo (Art. 6), no por reserva directa.
- * Las define Oficina Central en la pestaña Sorteo (datos/servicio.js las
+ * Las define el encargado nacional en la pestaña Temporadas (datos/servicio.js las
  * copia aquí). `desde` = llegada del primer turno; `hasta` = salida del último:
  * se cierran las noches desde `desde` hasta el día anterior a `hasta`.
  */

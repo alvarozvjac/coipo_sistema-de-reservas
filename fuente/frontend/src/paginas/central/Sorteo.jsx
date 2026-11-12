@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Dices, Download, ShieldCheck } from 'lucide-react'
-import { demanda, desistirReserva, listarCasas, obtenerReserva, postulaciones, realizarSorteo, sorteoVigente, turnosVacantes, useDatos, vencerOferta } from '../../datos/servicio.js'
+import { demanda, desistirReserva, listarCasas, obtenerReserva, postulacionAbierta, postulaciones, realizarSorteo, responderOferta, sorteoVigente, turnosVacantes, useDatos, vencerOferta } from '../../datos/servicio.js'
 import { fechaCorta, fechaLarga, rangoFechas } from '../../lib/fechas.js'
 import { plural } from '../../lib/formato.js'
 import { CALIDADES } from '../../lib/reglas.js'
@@ -78,6 +78,17 @@ function Postulacion({ sorteo: s, lista }) {
         <Indicador etiqueta="Turnos con postulantes" valor={conDemanda} detalle={`${ofrecidos - conDemanda} sin postulantes por ahora`} />
         <Indicador etiqueta="Postulantes por cupo" valor={(lista.length / Math.max(1, conDemanda)).toLocaleString('es-CL', { maximumFractionDigits: 1 })} detalle="En los turnos con demanda" />
       </div>
+
+      {postulacionAbierta() && (
+        <div className="mt-5 flex flex-col gap-3 rounded-xl border border-verde-200 bg-verde-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[15px] text-verde-800">
+            <strong>Las postulaciones las registran los encargados</strong> a pedido de cada persona, en «Registrar postulación». Ahí también se retira una postulación.
+          </p>
+          <Boton a="/gestion/postular" className="shrink-0">
+            Registrar postulación
+          </Boton>
+        </div>
+      )}
 
       <div className="mt-5 rounded-xl border border-borde bg-white p-4 sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-5">
         <div>
@@ -236,6 +247,7 @@ function Resultados({ sorteo: s, lista }) {
 }
 
 function Adjudicados({ lista }) {
+  const { usuario } = useSesion()
   const [desistir, setDesistir] = useState(null)
   const [region, setRegion] = useState('')
   const [todos, setTodos] = useState(false)
@@ -299,7 +311,7 @@ function Adjudicados({ lista }) {
             <Boton
               variante="peligro"
               onClick={() => {
-                desistirReserva(desistir.reserva)
+                desistirReserva(desistir.reserva, usuario)
                 setDesistir(null)
               }}
             >
@@ -324,7 +336,7 @@ function Espera({ lista }) {
   return (
     <>
       <p className="mb-3 text-[15px] text-tinta-500">
-        Por cada turno, en el orden del sorteo. Cuando alguien desiste, el sistema ofrece el cupo por correo a la primera persona, que tiene {HORAS_OFERTA} horas para aceptar; si no responde, pasa a la siguiente.
+        Por cada turno, en el orden del sorteo. Cuando alguien desiste, el sistema ofrece el cupo por correo a la primera persona, que tiene {HORAS_OFERTA} horas para responder; cuando responda, registre su respuesta aquí. Si no responde, pasa a la siguiente.
       </p>
       <div className="grid gap-3 md:grid-cols-2">
         {grupos.map((g) => (
@@ -344,6 +356,14 @@ function Espera({ lista }) {
                         <EstadoPostulacion estado="ofertada" />
                         <span className="basis-full pl-8 text-[13px] text-tinta-500">
                           Oferta enviada el {fechaHora(p.oferta.enviada_en)}; vence el {fechaHora(p.oferta.vence_en)}.{' '}
+                          <button type="button" onClick={() => responderOferta(p.codigo, true)} className="font-medium text-verde-700 hover:underline">
+                            Acepta
+                          </button>
+                          {' · '}
+                          <button type="button" onClick={() => responderOferta(p.codigo, false)} className="font-medium text-verde-700 hover:underline">
+                            No acepta
+                          </button>
+                          {' · '}
                           <button type="button" onClick={() => vencerOferta(p.codigo)} className="font-medium text-verde-700 hover:underline">
                             Simular plazo vencido
                           </button>

@@ -40,16 +40,20 @@ const fechaHora = (iso) => {
   return `${Number(d.slice(8, 10))}/${d.slice(5, 7)} a las ${h.slice(0, 5)}`
 }
 
-/** Estado de la postulación del solicitante, con las acciones que correspondan. */
+/**
+ * Estado de una postulación, visto por el encargado que la registró: desde
+ * aquí registra el retiro o la respuesta de la persona a un cupo ofrecido
+ * (desde el 12-11-2026 la persona no ingresa al sistema).
+ */
 export function TarjetaPostulacion({ postulacion: p, sorteo, onReserva }) {
   const [confirmarRetiro, setConfirmarRetiro] = useState(false)
   const salida = salidaTurno(p)
 
   const texto = {
-    postulada: `El sorteo se realiza al cierre de la postulación. Le avisaremos el resultado por correo a ${p.contacto.correo}.`,
-    adjudicada: `Se adjudicó el turno. Su reserva ${p.reserva} quedó confirmada y le enviamos el comprobante por correo.`,
-    espera: `No se adjudicó el turno. Quedó en el lugar ${p.posicion} de la lista de espera: si alguien desiste, le ofreceremos el cupo por correo y tendrá ${HORAS_OFERTA} horas para aceptarlo.`,
-    ofertada: 'Se liberó el turno al que postuló. Si no responde dentro del plazo, el cupo pasa a la siguiente persona de la lista.',
+    postulada: `El sorteo se realiza al cierre de la postulación. El resultado se avisa por correo a ${p.contacto.correo}.`,
+    adjudicada: `Se adjudicó el turno. La reserva ${p.reserva} quedó registrada y se envió el comprobante por correo.`,
+    espera: `No se adjudicó el turno. Quedó en el lugar ${p.posicion} de la lista de espera: si alguien desiste, se le ofrece el cupo por correo y tiene ${HORAS_OFERTA} horas para responder.`,
+    ofertada: 'Se liberó el turno al que postuló y se le ofreció por correo. Cuando la persona responda, registre su respuesta; si no responde dentro del plazo, el cupo pasa a la siguiente de la lista.',
     excluida: p.motivo,
     sin_cupo: p.motivo,
   }[p.estado]
@@ -73,7 +77,7 @@ export function TarjetaPostulacion({ postulacion: p, sorteo, onReserva }) {
           {texto && <p className="mt-2 text-[15px] text-tinta-700">{texto}</p>}
           {p.estado === 'ofertada' && (
             <p className="mt-2 inline-flex items-center gap-1.5 text-[15px] font-semibold text-alerta-700">
-              <Clock className="size-4" aria-hidden /> Responda antes del {fechaHora(p.oferta.vence_en)}
+              <Clock className="size-4" aria-hidden /> Plazo para responder: {fechaHora(p.oferta.vence_en)}
             </p>
           )}
         </div>
@@ -82,7 +86,7 @@ export function TarjetaPostulacion({ postulacion: p, sorteo, onReserva }) {
       {p.estado === 'ofertada' && (
         <div className="mt-4 flex flex-wrap justify-end gap-2">
           <Boton variante="secundario" onClick={() => responderOferta(p.codigo, false)}>
-            No, liberar el cupo
+            Registrar que no acepta
           </Boton>
           <Boton
             onClick={() => {
@@ -90,13 +94,13 @@ export function TarjetaPostulacion({ postulacion: p, sorteo, onReserva }) {
               if (codigo) onReserva?.(codigo)
             }}
           >
-            Aceptar el turno
+            Registrar que acepta el turno
           </Boton>
         </div>
       )}
       {p.estado === 'adjudicada' && p.reserva && (
         <div className="mt-4 flex justify-end">
-          <Boton variante="secundario" a={`/reserva/${p.reserva}`}>
+          <Boton variante="secundario" a={`/gestion/reserva/${p.reserva}`}>
             Ver reserva
           </Boton>
         </div>
@@ -105,7 +109,7 @@ export function TarjetaPostulacion({ postulacion: p, sorteo, onReserva }) {
         <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
           {confirmarRetiro ? (
             <>
-              <span className="text-[15px] text-tinta-700">¿Retirar la postulación? Puede volver a postular mientras siga abierta.</span>
+              <span className="text-[15px] text-tinta-700">¿Retirar la postulación a pedido de la persona? Puede volver a postular mientras siga abierta.</span>
               <Boton variante="secundario" onClick={() => setConfirmarRetiro(false)}>
                 Volver
               </Boton>

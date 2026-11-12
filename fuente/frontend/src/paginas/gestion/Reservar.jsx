@@ -28,9 +28,10 @@ const PASOS = ['Fechas', 'Quiénes van', 'Pago y confirmación']
 const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? '—'
 
 /**
- * Reserva en tres pasos. La usa el solicitante para sí mismo y, con `titular`
- * y `gestor`, la encargada regional u Oficina Central para registrar la
- * reserva que una persona les pidió (asistida).
+ * Reserva en tres pasos. Desde el 12-11-2026 la usan solo los encargados
+ * (regional y nacional), con `titular` y `gestor`, para registrar la reserva
+ * que una persona les pidió; su declaración reemplaza la aceptación de la
+ * persona. El modo sin `gestor` (la persona reservando para sí) queda sin ruta.
  */
 export function Reservar({ titular, gestor, casaId, onCambiar }) {
   useDatos()
@@ -97,7 +98,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
       ? 'Escriba un teléfono donde ubicarlo durante la estadía.'
       : null
 
-  const pagoValido = pago === 'planilla' ? autoriza || asistida : pago === 'transferencia' ? vioCuenta : false
+  const pagoValido = pago === 'planilla' ? autoriza : pago === 'transferencia' ? vioCuenta : false
   const pasoValido = [erroresFechas.length === 0, !excede && !otrosConError && !contactoError && !errorGrupo && !errorPerro, acepta && pagoValido]
   const glosa = glosaTransferencia(casa, proximoCodigo())
   const elegirTransferencia = () => {
@@ -131,11 +132,10 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
       perro_asistencia: perro ? { credencial: credencial.name, certificado_sanitario: sanitario.name } : false,
       forma_pago:
         pago === 'planilla'
-          ? { tipo: 'planilla', cuotas, autorizacion: !asistida }
+          ? { tipo: 'planilla', cuotas, autorizacion: true }
           : { tipo: 'transferencia', anticipado: true, glosa },
       ...(asistida && {
         registrada_por: { nombre: gestor.nombre, perfil: gestor.perfil, region: gestor.region ?? null },
-        aceptacion_pendiente: true,
       }),
     })
     if (!codigo) {
@@ -358,19 +358,13 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
                               </button>
                             ))}
                           </div>
-                          {asistida ? (
-                            <p className="mt-3 rounded-lg bg-white p-3 text-[15px] ring-1 ring-borde">
-                              {usuario.nombre} autorizará el descuento de <strong>{pesos(total)}</strong> en {plural(cuotas, 'cuota', 'cuotas')} con el enlace que recibirá por correo.
-                            </p>
-                          ) : (
                           <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-lg bg-white p-3 ring-1 ring-borde">
                             <input type="checkbox" className="mt-0.5 size-5 accent-verde-700" checked={autoriza} onChange={(e) => setAutoriza(e.target.checked)} />
                             <span className="text-[15px]">
-                              Autorizo el descuento por planilla de <strong>{pesos(total)}</strong> en {plural(cuotas, 'cuota', 'cuotas')}, más los cargos que correspondan según el reglamento (Anexo A).
+                              {asistida ? `${usuario.nombre} autorizó` : 'Autorizo'} el descuento por planilla de <strong>{pesos(total)}</strong> en {plural(cuotas, 'cuota', 'cuotas')}, más los cargos que correspondan según el reglamento (Anexo A).
                             </span>
                           </label>
-                          )}
-                          {intento && !autoriza && !asistida && <p className="mt-2 text-sm text-error-700">Debe autorizar el descuento{formas.length > 1 ? ', o elegir la transferencia' : ''}.</p>}
+                          {intento && !autoriza && <p className="mt-2 text-sm text-error-700">Debe autorizar el descuento{formas.length > 1 ? ', o elegir la transferencia' : ''}.</p>}
                         </div>
                       )}
                     </OpcionPago>
@@ -418,11 +412,11 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
                   <input type="checkbox" className="mt-0.5 size-5 accent-verde-700" checked={acepta} onChange={(e) => setAcepta(e.target.checked)} />
                   <span className="text-[15px]">
                     {asistida
-                      ? `Declaro que ${usuario.nombre} me pidió esta reserva. Recibirá en ${correo} el comprobante, el acta de entrega y un enlace para aceptar el reglamento${pago === 'planilla' ? ' y autorizar el descuento por planilla' : ''}.`
+                      ? `Declaro que ${usuario.nombre} me pidió esta reserva y que conoce y acepta el Reglamento General de Uso de Casas de Veraneo o Descanso. Recibirá en ${correo} ${pago === 'transferencia' ? 'los datos para transferir y, cuando se compruebe el pago, ' : ''}el comprobante y el acta de entrega.`
                       : 'Conozco y acepto el Reglamento General de Uso de Casas de Veraneo o Descanso.'}
                   </span>
                 </label>
-                {intento && !acepta && <div className="mt-3"><Aviso tipo="error">{asistida ? 'Debe declarar que la persona pidió la reserva.' : 'Debe aceptar el reglamento para confirmar la reserva.'}</Aviso></div>}
+                {intento && !acepta && <div className="mt-3"><Aviso tipo="error">{asistida ? 'Debe declarar que la persona pidió la reserva y conoce el reglamento.' : 'Debe aceptar el reglamento para confirmar la reserva.'}</Aviso></div>}
                 {ocupada && <div className="mt-3"><Aviso tipo="error">Otra persona acaba de reservar esas fechas. Vuelva al paso 1 y elija otras.</Aviso></div>}
               </Tarjeta>
             </>

@@ -1,5 +1,5 @@
 /**
- * Indicadores para la toma de decisiones (dashboard de la Oficina Central).
+ * Indicadores para la toma de decisiones (dashboard del encargado nacional).
  *
  * Reglas de cálculo, para replicarlas en el backend:
  * - Reserva efectiva: confirmada, en curso o finalizada. No cuentan las

@@ -5,14 +5,10 @@ import './index.css'
 import { INICIO, ProveedorSesion, useSesion } from './componentes/Perfil.jsx'
 import { Plantilla } from './componentes/Plantilla.jsx'
 import { Ingreso } from './paginas/Ingreso.jsx'
-import { Buscar } from './paginas/solicitante/Buscar.jsx'
-import { Casa } from './paginas/solicitante/Casa.jsx'
-import { Reservar } from './paginas/solicitante/Reservar.jsx'
-import { Comprobante } from './paginas/solicitante/Comprobante.jsx'
-import { MisReservas } from './paginas/solicitante/MisReservas.jsx'
-import { Sorteo } from './paginas/solicitante/Sorteo.jsx'
+import { Comprobante } from './paginas/gestion/Comprobante.jsx'
+import { PostulacionAsistida } from './paginas/gestion/PostulacionAsistida.jsx'
 import { SorteoCentral } from './paginas/central/Sorteo.jsx'
-import { Proximamente } from './paginas/otros/Proximamente.jsx'
+import { Administracion } from './paginas/central/Administracion.jsx'
 import { InicioEncargada } from './paginas/encargada/Inicio.jsx'
 import { ReservasEncargada } from './paginas/encargada/Reservas.jsx'
 import { InventarioEncargada } from './paginas/encargada/Inventario.jsx'
@@ -32,7 +28,13 @@ function Requiere({ perfil, children }) {
   return children
 }
 
-const sol = (el) => <Requiere perfil="solicitante">{el}</Requiere>
+/** Inicio según el perfil (solo ingresan los encargados, decisión 12-11-2026). */
+function AlInicio() {
+  const { usuario } = useSesion()
+  return <Navigate to={INICIO[usuario.perfil]} replace />
+}
+
+const gestion = (el) => <Requiere perfil={['encargada', 'central']}>{el}</Requiere>
 
 /** La versión publicada como página de claude.ai navega en memoria: su dirección no se puede cambiar. */
 const Enrutador = import.meta.env.MODE === 'pagina' ? MemoryRouter : BrowserRouter
@@ -50,23 +52,20 @@ createRoot(document.getElementById('root')).render(
               </Requiere>
             }
           >
-            <Route index element={sol(<Buscar />)} />
-            <Route path="casa/:id" element={sol(<Casa />)} />
-            <Route path="casa/:id/reservar" element={sol(<Reservar />)} />
-            <Route path="reserva/:codigo" element={sol(<Comprobante />)} />
-            <Route path="mis-reservas" element={sol(<MisReservas />)} />
-            <Route path="sorteo" element={sol(<Sorteo />)} />
+            <Route index element={<AlInicio />} />
             <Route path="encargada" element={<Requiere perfil="encargada"><InicioEncargada /></Requiere>} />
             <Route path="encargada/reservas" element={<Requiere perfil="encargada"><ReservasEncargada /></Requiere>} />
             <Route path="encargada/inventario" element={<Requiere perfil="encargada"><InventarioEncargada /></Requiere>} />
             <Route path="central" element={<Requiere perfil="central"><InicioCentral /></Requiere>} />
             <Route path="central/cobros" element={<Requiere perfil="central"><Cobros /></Requiere>} />
             <Route path="central/casas" element={<Requiere perfil="central"><CasasTarifas /></Requiere>} />
+            <Route path="central/reservas" element={<Requiere perfil="central"><ReservasEncargada /></Requiere>} />
             <Route path="central/dashboard" element={<Requiere perfil="central"><Dashboard /></Requiere>} />
- <Route path="gestion/reservar" element={<Requiere perfil={['encargada', 'central']}><ReservaAsistida /></Requiere>} />
-            <Route path="gestion/reserva/:codigo" element={<Requiere perfil={['encargada', 'central']}><Comprobante /></Requiere>} />
             <Route path="central/sorteo" element={<Requiere perfil="central"><SorteoCentral /></Requiere>} />
-            <Route path="uia" element={<Requiere perfil="uia"><Proximamente perfil="uia" /></Requiere>} />
+            <Route path="central/administracion" element={<Requiere perfil="central"><Administracion /></Requiere>} />
+            <Route path="gestion/reservar" element={gestion(<ReservaAsistida />)} />
+            <Route path="gestion/reserva/:codigo" element={gestion(<Comprobante />)} />
+            <Route path="gestion/postular" element={gestion(<PostulacionAsistida />)} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

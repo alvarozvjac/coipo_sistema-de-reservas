@@ -1,32 +1,40 @@
 import { useState } from 'react'
 import { FileDown, Search } from 'lucide-react'
+import { REGIONES } from '../../datos/casas.js'
 import { listarCasas, reservasRegion, useDatos } from '../../datos/servicio.js'
 import { fechaCorta, rangoFechas } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
 import { CALIDADES, ESTADOS, PARENTESCOS, estadoReserva } from '../../lib/reglas.js'
 import { Boton, Estado, Tarjeta, claseEntrada } from '../../componentes/ui.jsx'
+import { BannerReservaAsistida } from '../gestion/ReservaAsistida.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
 import { Dialogo, antiguedad } from './comun.jsx'
 
 const FILTROS = ['todas', 'por_confirmar', 'confirmada', 'en_curso', 'finalizada', 'desistida', 'anulada']
 const PAGO = { planilla: 'Planilla', transferencia: 'Transferencia' }
-const NOTIF = { confirmacion: 'el comprobante de reserva', pago: 'el registro del pago', anulacion: 'aviso de anulación por Bienestar', devolucion: 'aviso de devolución' }
+const NOTIF = { confirmacion: 'el comprobante de reserva', por_confirmar: 'los datos para transferir', pago: 'el registro del pago', anulacion: 'aviso de anulación por Bienestar', devolucion: 'aviso de devolución', desistimiento: 'aviso de desistimiento' }
 
 async function descargar(reserva, numero) {
   const { descargarActa } = await import('../../lib/acta.js')
   await descargarActa(reserva, reserva.actas.find((a) => a.numero === numero))
 }
 
+/**
+ * Reservas de la región (encargada regional) o de todo el país (encargado
+ * nacional, desde el 12-11-2026, con filtro por región).
+ */
 export function ReservasEncargada() {
   useDatos()
   const { usuario } = useSesion()
+  const nacional = usuario.perfil === 'central'
+  const [region, setRegion] = useState(nacional ? '' : usuario.region)
   const [filtro, setFiltro] = useState('todas')
   const [casa, setCasa] = useState('')
   const [texto, setTexto] = useState('')
   const [abierta, setAbierta] = useState(null)
 
-  const casas = listarCasas().filter((c) => c.region === usuario.region)
-  const todas = reservasRegion(usuario.region)
+  const casas = listarCasas().filter((c) => !region || c.region === region)
+  const todas = reservasRegion(region)
     .map((r) => ({ ...r, visible: estadoReserva(r) }))
     .sort((a, b) => (a.entrada < b.entrada ? 1 : -1))
   const cuenta = (f) => (f === 'todas' ? todas.length : todas.filter((r) => r.visible === f).length)
@@ -40,7 +48,10 @@ export function ReservasEncargada() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold">Reservas de la región</h1>
+      <h1 className="text-2xl font-bold">{nacional ? 'Reservas de todo el país' : 'Reservas de la región'}</h1>
+      <div className="mt-4">
+        <BannerReservaAsistida />
+      </div>
 
       <div className="mt-4 flex flex-wrap gap-2" role="tablist" aria-label="Filtrar por estado">
         {FILTROS.map((f) => (
@@ -57,12 +68,30 @@ export function ReservasEncargada() {
         ))}
       </div>
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_260px]">
+      <div className={`mt-3 grid gap-3 ${nacional ? 'sm:grid-cols-[1fr_220px_260px]' : 'sm:grid-cols-[1fr_260px]'}`}>
         <label className="relative block">
           <span className="sr-only">Buscar</span>
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-tinta-400" aria-hidden />
           <input className={`${claseEntrada} pl-9`} placeholder="Buscar por nombre, RUT o código" value={texto} onChange={(e) => setTexto(e.target.value)} />
         </label>
+        {nacional && (
+          <select
+            className={claseEntrada}
+            value={region}
+            onChange={(e) => {
+              setRegion(e.target.value)
+              setCasa('')
+            }}
+            aria-label="Región"
+          >
+            <option value="">Todas las regiones</option>
+            {REGIONES.filter((r) => listarCasas().some((c) => c.region === r.codigo)).map((r) => (
+              <option key={r.codigo} value={r.codigo}>
+                {r.nombre}
+              </option>
+            ))}
+          </select>
+        )}
         <select className={claseEntrada} value={casa} onChange={(e) => setCasa(e.target.value)} aria-label="Casa">
           <option value="">Todas las casas</option>
           {casas.map((c) => (
@@ -138,7 +167,7 @@ export function ReservasEncargada() {
           </ul>
           {detalle.registrada_por && (
             <p className="mt-2 text-[15px]">
-              Registrada por {detalle.registrada_por.nombre} a pedido de la persona.{detalle.aceptacion_pendiente ? ' Falta que acepte el reglamento por correo.' : ' La persona ya aceptó el reglamento.'}
+              Registrada por {detalle.registrada_por.nombre} a pedido de la persona, que conoce y acepta el reglamento.
             </p>
           )}
           {detalle.titular_viaja === false && <p className="mt-2 text-[15px]">El usuario/a responsable no viaja. A cargo en la casa: <strong>{detalle.a_cargo}</strong>.</p>}
@@ -177,6 +206,7 @@ export function ReservasEncargada() {
             <Boton variante="secundario" onClick={() => setAbierta(null)}>
               Cerrar
             </Boton>
+            <Boton a={`/gestion/reserva/${detalle.codigo}`}>{['confirmada', 'por_confirmar'].includes(detalle.visible) ? 'Ver comprobante o registrar desistimiento' : 'Ver comprobante'}</Boton>
           </div>
         </Dialogo>
       )}

@@ -56,8 +56,19 @@ aprobación trazable de quien decide.
   con formulario Google. Álvaro Zegers lo entrega como evidencia del proceso actual e
   indica que verano e invierno se operan igual. Documento interno: no se guarda en este
   repositorio público (su lista de distribución tiene nombres de funcionarios).
+- 2026-11-12 · Bienestar (transmitido por Álvaro Zegers) · La primera etapa de la
+  implementación será solo con la encargada regional y el encargado de oficina central,
+  ahora llamado encargado nacional; las funciones de Mantenimiento UIA pasan al encargado
+  nacional; se deshabilita la reserva directa de los afiliados/as.
 
 ## Decisiones
+
+- 2026-11-12 · Solo encargados en la primera etapa: los afiliados/as no ingresan; el
+  encargado registra reservas, postulaciones al sorteo y desistimientos; su declaración
+  reemplaza la aceptación de la persona; Mantenimiento UIA pasa a la pestaña
+  «Administración» del encargado nacional, igual de básica · Álvaro Zegers, a partir de lo
+  planteado por Bienestar · detalle en `fuente/docs/DECISIONES.md`. [PENDIENTE: Bienestar
+  confirma si la declaración del encargado basta frente al Art. 27.]
 
 Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/DECISIONES.md`. Las que cambiaron el producto:
 
@@ -162,6 +173,17 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   de Puyehue con sus 13 turnos y las 6 cuotas desde marzo, 0 errores de consola (sin
   enviar la postulación). Manual (PDF y documento) actualizado el mismo día con capturas
   nuevas; el pie de la maqueta ya no dice que las tarifas son ficticias.
+- 2026-11-12 · local (`vite preview`), fecha fijada en el 02-11-2026 · prueba nueva
+  `e2e14` (35 comprobaciones) en escritorio y teléfono 390 × 844: 0 fallas. Cubre el
+  ingreso solo de encargados (un afiliado recibe el aviso), el registro de reserva con la
+  declaración y la autorización del descuento, el desistimiento registrado, la postulación
+  registrada y retirada, los menús, Administración, las reservas de todo el país, la
+  respuesta a un cupo de la lista de espera, una reserva de otro servicio con
+  transferencia y su pago en Cobros, y las rutas antiguas del afiliado. `e2e4` y `e2e9`,
+  adaptadas sin los pasos del afiliado, pasan; las pruebas del afiliado de la versión
+  anterior quedan obsoletas. Capturas del ingreso, del inicio de la encargada en teléfono
+  y de las reservas nacionales miradas. Manual de usuario (PDF y documento) rehecho
+  para los encargados, con capturas nuevas. Aún no publicada.
 
 ## Validación
 
@@ -170,6 +192,15 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   versión mostrada (URL + commit), observaciones clasificadas y aprobación.
 
 ## Aprendizajes
+
+- 2026-11-12 · CON001 · Una comprobación envuelta en «si el botón existe…, si no, OK»
+  pasaba sin probar nada: la aceptación de un cupo de la lista de espera nunca se ejercía,
+  porque el desistimiento elegido caía en un turno sin lista. Una prueba no debe tener
+  rama que apruebe sin comprobar; hay que preparar el caso que se quiere ver.
+
+- 2026-11-12 · CON001 · La estrategia de implementación (quién usa el sistema en la
+  primera etapa) no se preguntó en el objetivo 3 y cambió la mitad de las pantallas:
+  preguntar en el diseño con qué perfiles parte la operación, no solo cuáles existen.
 
 - 2026-11-02 · CON001 · Un reemplazo de texto aplicado a todo un archivo tocó dos
   componentes y dejó una variable sin definir que el linter no veía: activar `no-undef` y

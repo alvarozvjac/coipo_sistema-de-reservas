@@ -9,7 +9,7 @@
  * calidad: afiliado | jubilado | no_afiliado   (otro_servicio no está en nómina)
  * grado:   grado del trabajador/a activo/a (04 a 19); define el
  *          tramo de tarifa (Memo 6188/2026). Jubilados/as no tienen grado.
- * perfil:  solicitante | encargada | central | uia
+ * perfil:  solicitante (beneficiario/a, no ingresa) | encargada (regional) | central (encargado nacional)
  */
 
 export const NOMINA = [
@@ -98,27 +98,12 @@ export const NOMINA = [
     correo: 'patricia.herrera@conaf.cl',
     telefono: '+56 9 7788 1203',
     region: '13',
-    rol: 'Administradora de casas de veraneo',
+    rol: 'Encargada nacional de casas de veraneo',
     unidad: 'Servicio de Bienestar, Oficina Central',
     calidad: 'afiliado',
     plazo_fijo: false,
     grado: 7,
     perfil: 'central',
-    grupo_familiar: [],
-  },
-  {
-    id: 7,
-    nombre: 'Diego Lagos Mena',
-    rut: '17.330.962-7',
-    correo: 'diego.lagos@conaf.cl',
-    telefono: '+56 9 4401 9932',
-    region: '13',
-    rol: 'Desarrollador',
-    unidad: 'Unidad de Información y Análisis',
-    calidad: 'no_afiliado',
-    plazo_fijo: false,
-    grado: 9,
-    perfil: 'uia',
     grupo_familiar: [],
   },
 ]
@@ -134,15 +119,16 @@ export const EXTERNO_DEMO = {
 
 /** Accesos rápidos de la maqueta, en el orden en que se muestran. */
 export const ACCESOS_DEMO = [
-  { etiqueta: 'Afiliada', id: 1 },
-  { etiqueta: 'Afiliada a plazo fijo', id: 2 },
-  { etiqueta: 'Jubilado', id: 3 },
-  { etiqueta: 'No afiliado', id: 4 },
-  { etiqueta: 'Otro servicio público', externo: true },
   { etiqueta: 'Encargada regional', id: 5 },
-  { etiqueta: 'Oficina Central', id: 6 },
-  { etiqueta: 'Mantenimiento UIA', id: 7 },
+  { etiqueta: 'Encargado nacional', id: 6 },
 ]
+
+/**
+ * Perfiles que ingresan al sistema en la primera etapa (decisión de Bienestar,
+ * 12-11-2026): solo los encargados. Las demás personas de la nómina son
+ * beneficiarias: los encargados registran sus reservas y postulaciones.
+ */
+export const PERFILES_CON_INGRESO = ['encargada', 'central']
 
 const normalizarRut = (r) => String(r).replace(/[^0-9kK]/g, '').toUpperCase()
 

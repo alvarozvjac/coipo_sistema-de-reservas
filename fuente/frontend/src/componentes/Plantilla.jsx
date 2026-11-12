@@ -3,15 +3,10 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import { Banner } from './Banner.jsx'
 import { reiniciarDemo } from '../datos/servicio.js'
-import { CALIDADES } from '../lib/reglas.js'
-import { INICIO, useSesion } from './Perfil.jsx'
+import { INICIO, PERFIL_ETIQUETA, useSesion } from './Perfil.jsx'
 
+/** Menú de cada perfil. Desde el 12-11-2026 solo ingresan los encargados. */
 const NAV = {
-  solicitante: [
-    { a: '/', texto: 'Buscar casa', fin: true },
-    { a: '/sorteo', texto: 'Temporadas' },
-    { a: '/mis-reservas', texto: 'Mis reservas' },
-  ],
   encargada: [
     { a: '/encargada', texto: 'Inicio', fin: true },
     { a: '/encargada/reservas', texto: 'Reservas' },
@@ -19,18 +14,17 @@ const NAV = {
   ],
   central: [
     { a: '/central', texto: 'Inicio', fin: true },
+    { a: '/central/reservas', texto: 'Reservas' },
     { a: '/central/cobros', texto: 'Cobros' },
     { a: '/central/casas', texto: 'Casas y tarifas' },
     { a: '/central/sorteo', texto: 'Temporadas' },
     { a: '/central/dashboard', texto: 'Dashboard' },
+    { a: '/central/administracion', texto: 'Administración' },
   ],
-  uia: [{ a: '/uia', texto: 'Mantenimiento' }],
 }
 
 /** Manual de usuario (public/manual-usuario.pdf). En la página única va junto al index.html publicado. */
 export const MANUAL = import.meta.env.MODE === 'pagina' ? 'manual-usuario.pdf' : '/manual-usuario.pdf'
-
-const PERFIL_ETIQUETA = { encargada: 'Encargada regional', central: 'Oficina Central', uia: 'Mantenimiento UIA' }
 
 export function Plantilla() {
   const { usuario, salir } = useSesion()
@@ -40,7 +34,7 @@ export function Plantilla() {
   useEffect(() => {
     window.scrollTo({ top: 0 })
   }, [pathname])
-  const subtitulo = usuario.perfil === 'solicitante' ? CALIDADES[usuario.calidad] : PERFIL_ETIQUETA[usuario.perfil]
+  const subtitulo = PERFIL_ETIQUETA[usuario.perfil]
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -88,11 +82,6 @@ export function Plantilla() {
         </div>
       </header>
 
-      {usuario.demostracion && (
-        <p className="no-imprimir border-b border-alerta-700/20 bg-alerta-50 px-4 py-2 text-center text-[13px] text-alerta-700">
-          Está usando la maqueta como afiliado/a de demostración. Su RUT no se valida contra nóminas reales y nada sale de este navegador.
-        </p>
-      )}
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:py-8">
         <Outlet />
       </main>
