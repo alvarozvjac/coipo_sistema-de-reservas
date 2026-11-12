@@ -242,7 +242,10 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Jueces de `coipo_jueces` (perfil aplicacion): 0 bloqueantes. Sobre una copia con
   `adopta: interfaz`: j13 OK; j16 avisa COD-1 en `datos/casas.js` y `datos/servicio.js`
   (bajo 1000 líneas; brecha ya declarada en `CUMPLIMIENTO-FABRICA.md`).
-- No lo comprobé contra la URL pública: no se ha publicado.
+- Publicado en `f7d4360`: GitHub Pages sirve el mismo `index.html` (sha256 igual al local,
+  7.933.155 bytes). Recorrido en la URL pública con la fecha real (12-11-2026): ingreso como
+  `cnunez`, Panel con sus cifras y enlaces, Reservas con el tablero marcando hoy; consola sin
+  errores. No lo recorrí en teléfono contra la URL pública (sí en local).
 
 ## Validación
 
