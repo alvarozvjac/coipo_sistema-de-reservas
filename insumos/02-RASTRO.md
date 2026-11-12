@@ -295,7 +295,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `a9ae7d6` (sha256 igual al local, 7.968.139 bytes) y el HTML
   publicado no contiene «no atendid».
 
-### Nombre «Sistema de Gestión de Reservas» y banner de la gerencia (12-11-2026, local)
+### Nombre «Sistema de Gestión de Reservas» y banner de la gerencia (12-11-2026, publicado en `b0bcec0`)
 
 - Pedido: Álvaro Zegers, 12-11-2026 17:07. Formato tomado de `alvarozvjac/coipo_gestion_flota_vehiculos`
   (commit `bff6570`, `index.html` líneas 87-95 y 770-773): banner de la gerencia y título
@@ -305,6 +305,12 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   gerencia y el nombre va en la cabecera. Sin desborde horizontal en ningún ancho.
 - e2e16 24/0 y e2e14 60/0 en 1366×900 y 390×844 (agregan el título, el departamento y el
   `alt` del banner); e2e15 26/0 y e2e17 25/0; axe 0 infracciones en 19 pantallas.
+- Al publicar, `main` traía dos commits de otra sesión (6bd7688, 17:02, con este mismo cambio,
+  y fa487a1, 17:08, que lo revierte); el árbol quedaba igual al anterior y este commit se puso
+  encima sin conflicto. Pública: GitHub Pages sirve `b0bcec0` (sha256 igual al local,
+  8.034.141 bytes); en Chrome (Windows) se ven el banner de la gerencia, el título y el
+  departamento; consola sin errores. Ojo: Chrome mostró primero la versión anterior desde su
+  caché; con la dirección `?v=` cargó la nueva.
 
 ## Validación
 
