@@ -39,7 +39,7 @@ export function Actividad() {
           <h2 id="t-act" className="text-lg font-semibold">
             Registro de actividad
           </h2>
-          <p className="mt-1 max-w-3xl text-[15px] text-tinta-500">Lo que hicieron los encargados en el sistema: reservas, aprobaciones, pagos, casas, tarifas, temporadas y configuración. Las acciones automáticas no aparecen.</p>
+          <p className="mt-1 max-w-3xl text-[15px] text-tinta-500">Lo que hicieron los encargados en el sistema: reservas, aprobaciones, pagos, casas, tarifas, inventarios y configuración. Las acciones automáticas no aparecen.</p>
         </div>
         <Boton variante="secundario" onClick={() => descargarCSV(filas)} disabled={!filas.length}>
           <Download className="size-4" aria-hidden /> Descargar CSV

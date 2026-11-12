@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { diaSemana, fechaLarga, nombreMes, sumarDias } from '../lib/fechas.js'
-import { ESTADOS, temporadaAltaDe } from '../lib/reglas.js'
-import { bloqueosDe, nochesLiberadas } from '../datos/servicio.js'
+import { ESTADOS } from '../lib/reglas.js'
+import { bloqueosDe } from '../datos/servicio.js'
 
 /** Estados que ocupan noches en el tablero (las demás reservas no se dibujan). */
 export const EN_TABLERO = ['por_aprobar', 'por_confirmar', 'confirmada', 'en_curso', 'finalizada']
@@ -33,13 +33,11 @@ export function Tablero({ casas, reservas, desde, dias, minimo, hoy, personas, s
   const filas = casas.map((casa) => {
     const propias = reservas.filter((r) => r.casa_id === casa.id && EN_TABLERO.includes(r.visible) && r.entrada < sumarDias(desde, dias) && r.salida > desde)
     const bloqueos = bloqueosDe(casa.id)
-    const liberadas = nochesLiberadas(casa.id)
     const cabe = !personas || casa.capacidad >= personas
     const celdas = noches.map((d) => {
       const r = propias.find((x) => d >= x.entrada && d < x.salida)
       if (r) return { tipo: 'reserva', r }
       if (bloqueos.some((b) => d >= b.entrada && d < b.salida)) return { tipo: 'bloqueo' }
-      if (temporadaAltaDe(d) && !liberadas.has(d)) return { tipo: 'temporada' }
       if (d < minimo) return { tipo: 'pasado' }
       if (!cabe) return { tipo: 'capacidad' }
       return { tipo: 'libre' }
@@ -80,7 +78,6 @@ export function Tablero({ casas, reservas, desde, dias, minimo, hoy, personas, s
     const base = `${casa.nombre}, ${fechaLarga(d)}: `
     if (c.tipo === 'reserva') return `${base}${c.r.codigo}, ${c.r.titular.nombre}, ${ESTADOS[c.r.visible].etiqueta.toLowerCase()}`
     if (c.tipo === 'bloqueo') return `${base}bloqueada`
-    if (c.tipo === 'temporada') return `${base}temporada alta, por sorteo`
     if (c.tipo === 'pasado') return `${base}no se puede reservar`
     if (c.tipo === 'capacidad') return `${base}libre, pero no alcanza la capacidad`
     return `${base}libre`
@@ -138,9 +135,7 @@ export function Tablero({ casas, reservas, desde, dias, minimo, hoy, personas, s
                     ? 'bg-verde-100'
                     : c.tipo === 'bloqueo'
                       ? RAYADO
-                      : c.tipo === 'temporada'
-                        ? 'bg-alerta-50'
-                        : c.tipo === 'libre'
+                      : c.tipo === 'libre'
                           ? `${diaSemana(d) >= 5 ? 'bg-stone-50' : ''} hover:bg-verde-50`
                           : diaSemana(d) >= 5
                             ? 'bg-stone-50'
@@ -220,7 +215,6 @@ export function LeyendaTablero() {
       {item(BARRA.por_aprobar, 'Por aprobar')}
       {item(BARRA.finalizada, 'Finalizada')}
       {item(RAYADO, 'Bloqueada')}
-      {item('bg-alerta-50 ring-1 ring-inset ring-borde', 'Temporada alta (sorteo)')}
       {item('bg-white ring-1 ring-inset ring-borde', 'Libre')}
     </ul>
   )

@@ -18,7 +18,8 @@ Bienestar de CONAF, elaborada por la Unidad de Información y Análisis (UIA).
 
 Desde el 12-11-2026 la primera etapa es solo para los encargados de Bienestar: los
 afiliados/as no ingresan, y la encargada regional o el encargado nacional (antes Oficina
-Central) registra sus reservas y postulaciones.
+Central) registra sus reservas. No hay temporadas altas ni sorteo: todas las fechas se
+registran por orden de llegada si hay disponibilidad.
 
 El ingreso es con el **COIPO IAM, simulado**: pulse **«Ingresar con COIPO IAM»** y, en la
 pantalla del IAM, elija una cuenta de prueba (contraseña «maqueta»): `cnunez` (encargada
@@ -28,19 +29,12 @@ asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro)
 
 | Perfil | Qué se puede probar |
 |---|---|
-| Encargada regional | Panel de control de su región (por aprobar, por confirmar, llegadas y salidas, inventario); Reservas con tablero de ocupación de todo el país y listado: registra en un panel lateral, en las casas de su región, lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), solo si hay disponibilidad, viendo antes sus antecedentes, aprueba lo que registró el encargado nacional en su región, gestiona postulaciones y desistimientos; Inventario |
-| Encargado nacional | Panel nacional; Reservas con tablero de todo el país (registra en cualquier casa, queda por aprobar por la encargada de la región); Cobros (nómina de descuentos y transferencias); Temporadas y sorteo; Dashboard; Configuración (casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
+| Encargada regional | Panel de control de su región (por aprobar, por confirmar, llegadas y salidas, inventario); Reservas con tablero de ocupación de todo el país y listado: registra en un panel lateral, en las casas de su región, lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), solo si hay disponibilidad, viendo antes sus antecedentes, aprueba lo que registró el encargado nacional en su región, registra desistimientos; Inventario |
+| Encargado nacional | Panel nacional; Reservas con tablero de todo el país (registra en cualquier casa, queda por aprobar por la encargada de la región); Cobros (nómina de descuentos y transferencias); Dashboard; Configuración (casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
 
 Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María
 Fuentes, afiliada), 16.882.409-2 (Paula Ortiz, plazo fijo) o 6.884.215-8 (Hernán Soto,
 jubilado).
-
-**Sorteo de temporada alta:** la postulación de verano 2027 está abierta y la de invierno
-2027 todavía no se habilita. Registre una postulación con «Registrar postulación»; luego,
-como encargado nacional, entre a «Temporadas»: ahí puede habilitar la postulación de
-invierno y usar «Realizar sorteo» (en la maqueta se puede adelantar). Desde ahí también se
-registra un desistimiento, para ver cómo el cupo se ofrece a la lista de espera, y la
-respuesta de la persona a ese cupo.
 
 **Aprobación y ficha:** lo que registra el encargado nacional queda «Por aprobar»; la encargada de
 la región lo aprueba en su inicio y la persona recibe la ficha de la reserva (PDF con

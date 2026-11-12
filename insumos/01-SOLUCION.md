@@ -8,18 +8,18 @@ backend), decisiones en `fuente/docs/DECISIONES.md` · Manual de usuario:
 > **Cambio de alcance (2026-11-12, decisión de Bienestar comunicada por Álvaro Zegers).**
 > La primera etapa se implementa solo con la encargada regional y el encargado nacional
 > (nuevo nombre de Oficina Central). Los afiliados/as no ingresan al sistema: los
-> encargados registran sus reservas y postulaciones, con una declaración que reemplaza la
+> encargados registran sus reservas, con una declaración que reemplaza la
 > aceptación de la persona. Las funciones del perfil Mantenimiento UIA pasan al encargado
 > nacional (pestaña «Administración»). Los criterios que antes ejecutaba el solicitante
 > los ejecuta ahora el encargado que registra (`fuente/docs/DECISIONES.md`).
 
 ## Qué hace (una frase)
 
-Permite que las encargadas regionales y el encargado nacional de Bienestar registren las
-reservas y las postulaciones al sorteo de las 22 casas de veraneo a nombre de
-funcionarios/as de CONAF, jubilados/as y funcionarios/as de otros servicios públicos,
-según la disponibilidad y el reglamento, y que gestionen ocupación, inventario, cobros,
-tarifas, casas y el sorteo de temporada alta.
+Permite que las encargadas regionales y el encargado nacional de Bienestar registren, por
+orden de llegada y solo si hay disponibilidad, las reservas que les piden para las 22 casas
+de veraneo a nombre de funcionarios/as de CONAF, jubilados/as y funcionarios/as de otros
+servicios públicos, según el reglamento, y que gestionen ocupación, inventario, cobros,
+tarifas y casas.
 
 ## Qué NO hace (una frase + lista)
 
@@ -28,6 +28,8 @@ maqueta sin backend.
 
 - Casas solo de huéspedes (fuera de alcance desde la decisión de octubre de 2026).
 - Ingreso de los afiliados/as: en la primera etapa no entran al sistema (2026-11-12).
+- Temporadas altas, postulaciones y sorteo (quitados el 2026-11-12): todas las fechas, también
+  las de verano e invierno, se registran por orden de llegada si hay disponibilidad.
 - Pago en línea: el pago es por planilla o por transferencia que el encargado nacional registra.
 - Envío real de correos (simulado) y el COIPO IAM real: en la maqueta el inicio de sesión del IAM está simulado.
 - Integración con las nóminas de afiliados y de personal, IAM o ClaveÚnica (simulado).
@@ -43,21 +45,21 @@ maqueta sin backend.
 
 ## Iteración mínima
 
-Reserva de casas de veraneo fuera de temporada alta, con confirmación según disponibilidad,
+Reserva de casas de veraneo, con confirmación según disponibilidad,
 registrada por un encargado, descuento por planilla o transferencia registrada por el
 encargado nacional, comprobante y acta
 de entrega por correo, panel de la encargada regional (llegadas, salidas, reservas,
 inventario) y nómina mensual de descuentos en CSV. INFERIDO: es lo que reemplaza el flujo
-actual por correo y planillas; [PENDIENTE: confirmar con la Jefatura del Servicio de
-Bienestar si el sorteo de temporada alta debe estar en la primera puesta en marcha].
+actual por correo y planillas. El sorteo de temporada alta quedó fuera (decisión
+2026-11-12).
 
 ## Perfiles
 
 | Perfil | Dispositivo | Momento de uso | Qué necesita decidir |
 |---|---|---|---|
-| Beneficiario/a (afiliado/a, plazo fijo, no afiliado/a, jubilado/a, otro servicio público) | No ingresa (desde 2026-11-12) | Pide la reserva o la postulación a su encargada, por teléfono, correo o en persona | Qué casa y qué fechas, quiénes van, cómo paga; recibe comprobante y acta por correo |
-| Encargada regional | Computador de oficina (INFERIDO) | Jornada laboral, varias veces por semana | Quién llega y sale, qué casa necesita mantención; registrar reservas, postulaciones y desistimientos que le piden |
-| Encargado nacional (antes Oficina Central) | Computador de oficina (INFERIDO) | Cierre mensual de descuentos, temporadas, cambios de tarifa | Qué se descuenta, qué pagos registrar, tarifas, casas, temporadas y sorteo; reservas de todo el país; administración del sistema |
+| Beneficiario/a (afiliado/a, plazo fijo, no afiliado/a, jubilado/a, otro servicio público) | No ingresa (desde 2026-11-12) | Pide la reserva a su encargada, por cualquier vía (teléfono, correo, en persona, WhatsApp) | Qué casa y qué fechas, quiénes van, cómo paga; recibe la ficha de la reserva por correo |
+| Encargada regional | Computador de oficina (INFERIDO) | Jornada laboral, varias veces por semana | Quién llega y sale, qué casa necesita mantención; registrar las reservas y desistimientos que le piden |
+| Encargado nacional (antes Oficina Central) | Computador de oficina (INFERIDO) | Cierre mensual de descuentos, cambios de tarifa | Qué se descuenta, qué pagos registrar, tarifas, casas; reservas de todo el país; configuración del sistema |
 
 ## Pantallas
 
@@ -69,7 +71,6 @@ Bienestar si el sorteo de temporada alta debe estar en la primera puesta en marc
 | Reservas: tablero de ocupación + listado (fusiona Reservas y Disponibilidad) | Encargada, encargado nacional | Ver la ocupación por casa y noche en una o todas las regiones, elegir un tramo libre y registrarlo, o abrir una reserva para gestionarla | C10, C19, C20, C23 |
 | Registrar reserva (panel lateral en Reservas) | Encargada, encargado nacional | Registrar lo que la persona pidió, solo si hay disponibilidad, sin perder de vista la ocupación y viendo antes sus antecedentes | C2 a C7, C23, C25 |
 | Configuración › Casas › otras direcciones | Encargado nacional | Mantener las direcciones que salen en la ficha | C21 |
-| Registrar postulación | Encargada, encargado nacional | Registrar, ver o retirar la postulación de una persona; registrar su respuesta a un cupo | C9, C18 |
 | Inventario | Encargada regional | Actualizar el inventario que va en la ficha | C10 |
 | Cobros | Encargado nacional | Registrar pagos, informar la nómina | C6, C11 |
 | Configuración › Casas, Tarifas, Bloqueos de fechas | Encargado nacional | Retirar casas, actualizar tarifas, bloquear fechas | C12, C13, C14 |
@@ -77,7 +78,6 @@ Bienestar si el sorteo de temporada alta debe estar en la primera puesta en marc
 | Configuración › Parámetros | Encargado nacional | Cambiar un parámetro del reglamento desde una fecha y con respaldo | C27 |
 | Configuración › Plantillas de correo | Encargado nacional | Ajustar lo que recibe la persona | C28 |
 | Configuración › Actividad | Encargado nacional | Saber quién hizo qué y cuándo | C29 |
-| Temporadas (temporadas altas y sorteo de cada una) | Encargado nacional | Definir temporadas, habilitar la postulación, realizar el sorteo, registrar respuestas a ofertas | C15, C16, C18 |
 | Dashboard | Encargado nacional | Decidir sobre tarifas, mantenciones y oferta | C17 |
 
 ## Criterios de aceptación
@@ -102,9 +102,9 @@ correspondencia está en `02-RASTRO.md`.
 - **C4 · Otro servicio público (Art. 9).** Dado un funcionario de otro servicio público,
   cuando el encargado abre el calendario para registrarle una reserva, entonces solo puede elegir llegadas dentro de 15 días y paga
   solo por transferencia.
-- **C5 · Temporada alta.** Dada una temporada alta guardada (verano 2027: 2 de enero a 27
-  de febrero), cuando el encargado abre enero en el calendario, entonces esas noches no
-  se pueden reservar directo, salvo los turnos vacantes después del sorteo.
+- **C5 · Sin temporadas (decisión 12-11-2026).** Dada una persona sin reserva en enero y
+  una casa libre en enero de 2027, cuando el encargado la registra, entonces se confirma
+  como cualquier otra fecha: no hay sorteo, postulación ni noches cerradas.
 - **C6 · Transferencia por confirmar (decisión 02-11-2026).** Dada una reserva de 2 noches
   por transferencia para un funcionario de otro servicio público, cuando el encargado la
   registra, entonces ve
@@ -119,10 +119,6 @@ correspondencia está en `02-RASTRO.md`.
   en 26 días, cuando el encargado registra el desistimiento que la persona le pidió,
   entonces el sistema indica «sin costo»; con menos de 10 días hábiles, cobra la estadía
   completa.
-- **C9 · Postulación al sorteo.** Dada la postulación de verano abierta, cuando el
-  encargado registra la postulación de una afiliada a una casa y un turno, entonces la
-  postulación queda con estado «Postulada»; y a un funcionario de otro servicio público no
-  se le puede registrar.
 - **C10 · Encargada regional.** Dada la encargada de Valparaíso, cuando abre su inicio,
   entonces ve llegadas y salidas de hoy y mañana, la ocupación de 4 semanas y las reservas
   nuevas de 7 días, sin botones para confirmar.
@@ -139,22 +135,9 @@ correspondencia está en `02-RASTRO.md`.
 - **C14 · Bloqueo de fechas.** Dada una casa con reservas en las fechas elegidas, cuando
   se bloquea por mantención, entonces se advierte qué reservas se anularán y se anulan al
   confirmar.
-- **C15 · Nueva temporada.** Dado el formulario de temporada con llegada 08-07-2028 y
-  salida 25-07-2028 (sábado), cuando se intenta crear, entonces el sistema la rechaza
-  porque no completa turnos enteros; con salida 22-07-2028 crea 2 turnos y la temporada
-  queda con la «Postulación no habilitada».
-- **C16 · Sorteo.** Dadas las postulaciones de verano, cuando el encargado nacional realiza el
-  sorteo, entonces cada turno con postulantes queda adjudicado a una persona, el resto en
-  lista de espera, y se registra la semilla.
 - **C17 · Dashboard.** Dado el período «año a la fecha», cuando el encargado nacional abre el
   dashboard, entonces ve usuarios, reservas, noches, ocupación, ingresos y anticipación,
   sin indicadores de confirmación manual.
-- **C18 · Habilitar la postulación (decisión 02-11-2026).** Dada la temporada «Vacaciones
-  de invierno 2027» con la postulación no habilitada, cuando el encargado abre
-  «Registrar postulación», entonces la ve como «Postulación aún no habilitada»; y cuando
-  el encargado nacional pulsa «Habilitar postulación», entonces la temporada queda
-  «Postulación abierta» hasta el 21-05-2027 y el encargado puede registrar postulaciones
-  con código P-I27-NNNN.
 - **C19 · Aprobación (decisión 12-11-2026).** Dada una reserva que el encargado nacional
   registra en el Departamento Viña del Mar, cuando la guarda, entonces queda «Por aprobar»
   con las fechas apartadas y sin envío a la persona; cuando la encargada de Valparaíso la

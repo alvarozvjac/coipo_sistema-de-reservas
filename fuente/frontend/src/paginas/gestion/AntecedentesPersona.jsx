@@ -19,16 +19,15 @@ export function AntecedentesPersona({ persona }) {
     ...a.mesesConReserva.map((m) => `Ya tiene una reserva en ${nombreMes(m + '-01')}: rige una por mes calendario (Art. 7).`),
     ...a.porPagar.map((r) => `${r.codigo}: transferencia sin registrar (${pesos(r.total)}), llegada el ${fechaCorta(r.entrada)}.`),
     ...a.cargos.map((r) => `${r.codigo}: desistió fuera de plazo; cargo de ${pesos(r.cargo_desistimiento)}.`),
-    ...a.reservas.filter((r) => r.pierde_sorteo_siguiente).map((r) => `${r.codigo}: no podrá postular al próximo sorteo.`),
   ]
-  const vacio = !a.reservas.length && !a.postulaciones.length
+  const vacio = !a.reservas.length
 
   return (
     <Tarjeta className="p-5">
       <h3 className="flex items-center gap-2 font-semibold">
         <History className="size-5 text-tinta-500" aria-hidden /> Antecedentes de {persona.nombre.split(' ')[0]}
       </h3>
-      {vacio && <p className="mt-2 text-[15px] text-tinta-500">Sin reservas ni postulaciones en los últimos 12 meses.</p>}
+      {vacio && <p className="mt-2 text-[15px] text-tinta-500">Sin reservas en los últimos 12 meses.</p>}
       {avisos.length > 0 && (
         <ul className="mt-3 space-y-2">
           {avisos.map((t) => (
@@ -53,18 +52,6 @@ export function AntecedentesPersona({ persona }) {
             ))}
           </ul>
           {a.reservas.length > MAX && <p className="text-[13px] text-tinta-500">y {plural(a.reservas.length - MAX, 'más', 'más')}; búsquelas por RUT en el listado.</p>}
-        </>
-      )}
-      {a.postulaciones.length > 0 && (
-        <>
-          <p className="mt-4 text-[13px] font-medium text-tinta-500">Postulaciones ({a.postulaciones.length})</p>
-          <ul className="mt-1 text-[15px]">
-            {a.postulaciones.slice(0, MAX).map((p) => (
-              <li key={p.codigo}>
-                {p.sorteo.nombre} · {p.casa?.nombre} <span className="text-tinta-500">· {p.estado}</span>
-              </li>
-            ))}
-          </ul>
         </>
       )}
     </Tarjeta>

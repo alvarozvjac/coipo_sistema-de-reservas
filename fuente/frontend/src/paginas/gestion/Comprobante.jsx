@@ -219,7 +219,7 @@ function DialogoDesistir({ reserva: r, gestor, onCerrar }) {
             : `Avisa dentro del plazo (hasta el ${fechaCorta(limite, true)}, ${PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles antes de la llegada): no tiene costo.`}
         </Aviso>
       </div>
-      <p className="mt-3 text-[13px] text-tinta-500">Queda registrado que usted lo registró. Se avisa a la persona por correo{r.origen === 'sorteo' ? ' y el turno se ofrece a la lista de espera' : ''}.</p>
+      <p className="mt-3 text-[13px] text-tinta-500">Queda registrado que usted lo registró. Se avisa a la persona por correo.</p>
       <div className="mt-6 flex justify-end gap-3">
         <Boton variante="secundario" onClick={onCerrar}>
           Volver

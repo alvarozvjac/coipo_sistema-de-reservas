@@ -5,13 +5,11 @@ import {
   ChevronRight,
   Plus,
   Search,
-  Ticket,
   X,
 } from "lucide-react";
 import { REGIONES } from "../../datos/casas.js";
 import {
   listarCasas,
-  postulacionAbierta,
   reservasRegion,
   useDatos,
 } from "../../datos/servicio.js";
@@ -152,7 +150,6 @@ export function Reservas() {
     : null;
   const puedeRegistrar =
     casaSel && (!regional || casaSel.region === usuario.region);
-  const postular = postulacionAbierta();
   const nuevaSolicitud = (inicial = {}) => {
     setRegistro(inicial);
     setParams(
@@ -178,11 +175,6 @@ export function Reservas() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {postular && (
-            <Boton variante="secundario" a="/gestion/postular">
-              <Ticket className="size-4" aria-hidden /> Registrar postulación
-            </Boton>
-          )}
           <Boton onClick={() => nuevaSolicitud()}>
             <Plus className="size-4" aria-hidden /> Nueva solicitud
           </Boton>

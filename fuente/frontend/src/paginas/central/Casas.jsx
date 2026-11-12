@@ -45,7 +45,7 @@ export function Casas() {
     <>
       <div className="grid gap-3 md:grid-cols-2">
         <Aviso tipo="info">
-          <strong>Retirar del sistema</strong> es para una casa que deja de ofrecerse sin fecha de término: venta o entrega del inmueble, término de convenio o daño mayor. Deja de aparecer al buscar y en el sorteo, y sus reservas futuras se anulan con aviso.
+          <strong>Retirar del sistema</strong> es para una casa que deja de ofrecerse sin fecha de término: venta o entrega del inmueble, término de convenio o daño mayor. Deja de aparecer al buscar, y sus reservas futuras se anulan con aviso.
         </Aviso>
         <Aviso tipo="info">
           Para cerrar <strong>fechas concretas</strong> de una casa que sigue en servicio (mantención, fumigación, fuerza mayor), use la pestaña <strong>Bloqueos de fechas</strong>: la casa sigue apareciendo y solo esas noches quedan cerradas.
@@ -160,7 +160,7 @@ function DialogoRetiro({ casa, onCerrar, onListo }) {
   const valido = motivo && (motivo !== 'Otro motivo' || detalle.trim().length >= 5)
   return (
     <Dialogo titulo={`Retirar ${casa.nombre} del sistema`} onCerrar={onCerrar}>
-      <p className="mt-2 text-[15px] text-tinta-700">La casa dejará de aparecer al buscar y en el sorteo, sin fecha de término, hasta que la reincorpore. Si solo necesita cerrar algunas fechas, use un bloqueo.</p>
+      <p className="mt-2 text-[15px] text-tinta-700">La casa dejará de aparecer al buscar, sin fecha de término, hasta que la reincorpore. Si solo necesita cerrar algunas fechas, use un bloqueo.</p>
       <div className="mt-4 space-y-3">
         <Campo etiqueta="Motivo">
           <select className={claseEntrada} value={motivo} onChange={(e) => setMotivo(e.target.value)}>

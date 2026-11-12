@@ -18,7 +18,6 @@ const NAV = {
     { a: '/central', texto: 'Panel', fin: true },
     { a: '/central/reservas', texto: 'Reservas' },
     { a: '/central/cobros', texto: 'Cobros' },
-    { a: '/central/sorteo', texto: 'Temporadas' },
     { a: '/central/dashboard', texto: 'Dashboard' },
     { a: '/central/configuracion', texto: 'Configuración' },
   ],

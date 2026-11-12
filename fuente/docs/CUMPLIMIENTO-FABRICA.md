@@ -90,9 +90,9 @@ en TypeScript y hexagonal. Reescribir la maqueta duplicaría ese trabajo.
 **Lo que conviene a la fábrica** (propuesta para Luis Monsalve):
 
 1. Sembrar `coipo_<nombre>` con `semilla/sembrar.py` y llevar desde la maqueta solo lo que
-   ya está separado: `lib/reglas.js` → `dominio/reglas.ts`, `lib/sorteo.js` →
-   `dominio/sorteo.ts`, `lib/indicadores.js` → `dominio/indicadores.ts`.
-2. Partir `datos/servicio.js` por recurso (reservas, sorteo, casas, cobros, inventario)
+   ya está separado: `lib/reglas.js` → `dominio/reglas.ts`, `lib/indicadores.js` →
+   `dominio/indicadores.ts`.
+2. Partir `datos/servicio.js` por recurso (reservas, casas, cobros, inventario, configuración)
    como puertos de `aplicacion/puertos/` con su adaptador http.
 3. `datos/casas.js` es dato (22 casas del llamado): va a `datos_prueba/` o a una migración
    SQL, no al código.

@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-import { LogIn, LogOut, Phone, Plus, Ticket } from 'lucide-react'
-import { postulacionAbierta } from '../datos/servicio.js'
+import { LogIn, LogOut, Phone, Plus } from 'lucide-react'
 import { diasEntre, fechaCorta, sumarDias } from '../lib/fechas.js'
 import { plural } from '../lib/formato.js'
 import { estadoReserva } from '../lib/reglas.js'
@@ -15,11 +14,6 @@ import { Boton, Tarjeta } from './ui.jsx'
 export function AccionesRegistro({ reservas }) {
   return (
     <div className="flex flex-wrap gap-2">
-      {postulacionAbierta() && (
-        <Boton variante="secundario" a="/gestion/postular">
-          <Ticket className="size-4" aria-hidden /> Registrar postulación
-        </Boton>
-      )}
       <Boton a={`${reservas}?nueva=1`}>
         <Plus className="size-4" aria-hidden /> Nueva solicitud
       </Boton>

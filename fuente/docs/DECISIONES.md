@@ -252,6 +252,8 @@ con el botón *Reservar para otra persona*.
 
 ## Sorteo de temporada alta (paso 4, 20-10-2026)
 
+> **Ya no rige** (decisión 12-11-2026, 17:29: sin temporadas altas ni sorteo). Se conserva como historia.
+
 Aplica el Art. 6.
 
 **Temporadas configurables** (ajuste 02-11-2026): Oficina Central crea y edita cada
@@ -301,6 +303,8 @@ En la maqueta, la postulación de verano 2027 está abierta con postulaciones fi
 Oficina Central puede adelantar el sorteo y simular el vencimiento de una oferta.
 
 ## Práctica vigente del llamado a postular (decisión 06-11-2026)
+
+> **Ya no rige** (decisión 12-11-2026, 17:29: sin temporadas altas ni sorteo). Se conserva como historia.
 
 Fuente: Memorándum N° 6188/2026 de la Jefatura del Departamento de Bienestar del Personal
 (06-11-2026, «Llamado a postular uso de casas en vacaciones de verano 2027») y el
@@ -432,6 +436,32 @@ Fuente: Álvaro Zegers (UIA), 12-11-2026, eligiendo entre mejoras propuestas.
   12 meses y próximas y sus postulaciones.
 - Deuda técnica declarada: `Reservar.jsx` conserva el modo de tres pasos sin uso; se limpia
   en la próxima iteración.
+
+## Sin temporadas altas ni sorteo (decisión 12-11-2026, 17:29)
+
+Fuente: Álvaro Zegers (UIA), 12-11-2026: «ahora que el sistema de gestión de reservas no será
+utilizado por los usuarios, todo lo referente a las temporadas debe ser quitado, ya que la
+lógica solamente es registrar las solicitudes cuando haya disponibilidad». Respuestas del
+mismo día: las fechas de verano e invierno se registran como cualquier otra, por orden de
+llegada; siguen todas las reglas del reglamento para la persona (capacidad, una reserva por
+mes, anticipación de 90 días y 15 para otros servicios, perro de asistencia, forma de pago);
+las reservas de prueba que venían del sorteo se quitan.
+
+- Se quitaron la pestaña Temporadas, «Registrar postulación», el sorteo (con lista de espera,
+  ofertas y turnos vacantes), las noches cerradas por temporada alta en el tablero y su
+  leyenda, las cuotas de temporada alta (y sus dos parámetros en Configuración), las
+  postulaciones en los antecedentes, el aviso «no podrá postular al próximo sorteo» y la
+  actividad de temporadas y sorteos. Se borraron `lib/sorteo.js`, `Sorteo.jsx`,
+  `Temporadas.jsx`, `PostulacionAsistida.jsx`, `Postulacion.jsx` y `Calendario.jsx` (el
+  calendario solo lo usaba el formulario de tres pasos, que ya no se usaba: `Reservar.jsx`
+  quedó solo como el contenido del panel lateral). Clave `reserva_veraneo_v18`.
+- Las secciones de este documento sobre temporada alta y sorteo quedan como historia: **ya
+  no rigen**.
+- Siguen las reglas de la persona: Art. 7 (una reserva por mes), Art. 9 (otros servicios, 15
+  días), anticipación máxima de 90 días, Art. 14 (capacidad), Art. 15 (perro de asistencia),
+  Art. 21 (forma de pago) y el desistimiento del Memo 6188/2026.
+- [PENDIENTE: Bienestar] Si el Art. 6 del reglamento propuesto (sorteo de temporada alta) se
+  elimina o se modifica, para que la norma y el sistema digan lo mismo.
 
 ## Configuración del encargado nacional (decisión 12-11-2026, tarde)
 

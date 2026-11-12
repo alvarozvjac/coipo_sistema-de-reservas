@@ -18,10 +18,9 @@ const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? "—
 
 /**
  * A nombre de quién se registra (decisión 12-11-2026): el RUT completa los datos
- * desde la nómina; para otro servicio público se ingresan a mano. Con
- * `soloConaf` (postulaciones) no se ofrece la opción de otro servicio público.
+ * desde la nómina; para otro servicio público se ingresan a mano.
  */
-export function Persona({ persona, onPersona, soloConaf = false, titulo = "1. ¿A nombre de quién?" }) {
+export function Persona({ persona, onPersona, titulo = "1. ¿A nombre de quién?" }) {
   const [tipo, setTipo] = useState("conaf");
   const [rut, setRut] = useState("");
   const [error, setError] = useState(null);
@@ -63,9 +62,7 @@ export function Persona({ persona, onPersona, soloConaf = false, titulo = "1. ¿
     const p = buscarPersona(rut);
     if (!p)
       return setError(
-        soloConaf
-          ? "Ese RUT no está en la nómina de CONAF ni de Bienestar. Los funcionarios de otros servicios públicos no postulan al sorteo (Art. 9)."
-          : "Ese RUT no está en la nómina de CONAF ni de Bienestar. Si es funcionario/a de otro servicio público, elija esa opción.",
+        "Ese RUT no está en la nómina de CONAF ni de Bienestar. Si es funcionario/a de otro servicio público, elija esa opción.",
       );
     setError(null);
     onPersona(p);
@@ -95,7 +92,7 @@ export function Persona({ persona, onPersona, soloConaf = false, titulo = "1. ¿
   return (
     <Tarjeta className="p-5">
       <h2 className="text-lg font-semibold">{titulo}</h2>
-      {!soloConaf && (
+      {(
         <div
           className="mt-3 grid gap-2 sm:grid-cols-2"
           role="radiogroup"
@@ -128,7 +125,7 @@ export function Persona({ persona, onPersona, soloConaf = false, titulo = "1. ¿
         </div>
       )}
 
-      {tipo === "conaf" || soloConaf ? (
+      {tipo === "conaf" ? (
         <div className="mt-4">
           <form
             className="flex flex-col gap-3 sm:flex-row sm:items-end"

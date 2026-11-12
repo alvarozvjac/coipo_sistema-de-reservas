@@ -11,7 +11,7 @@ import { BotonTema } from '../componentes/BotonTema.jsx'
  * Ingreso de los encargados de Bienestar (regional y nacional) con su cuenta
  * institucional del COIPO IAM. En la maqueta el IAM está simulado
  * (datos/iam.js). En la primera etapa los afiliados/as no ingresan: los
- * encargados registran sus reservas y postulaciones (decisión de Bienestar,
+ * encargados registran las reservas (decisión de Bienestar,
  * 12-11-2026).
  */
 export function Ingreso() {
@@ -27,7 +27,7 @@ export function Ingreso() {
       <main className="mx-auto w-full max-w-md flex-1 px-4 py-8 sm:py-12">
         <p className="text-[13px] font-semibold uppercase tracking-wide text-verde-700">Departamento de Bienestar · CONAF</p>
         <h1 className="mt-1 text-[26px] font-bold leading-tight text-tinta-900">Sistema de Gestión de Reservas</h1>
-        <p className="mt-1 text-[15px] text-tinta-700">Gestión de reservas y sorteos para los encargados de Bienestar.</p>
+        <p className="mt-1 text-[15px] text-tinta-700">Registro y gestión de reservas para los encargados de Bienestar.</p>
 
         <div className="mt-6 rounded-2xl border border-borde bg-white p-5 sm:p-6">
           <h2 className="text-[17px] font-semibold text-tinta-900">Ingreso de encargados</h2>
@@ -36,7 +36,7 @@ export function Ingreso() {
             <LogIn className="size-4" aria-hidden /> Ingresar con COIPO IAM
           </Boton>
           <p className="mt-3 text-[13px] text-tinta-500">
-            Si necesita una reserva o postular al sorteo, pídasela a la encargada de Bienestar de su región: en esta etapa solo ingresan los encargados.
+            Si necesita una reserva, pídasela a la encargada de Bienestar de su región: en esta etapa solo ingresan los encargados.
           </p>
         </div>
 

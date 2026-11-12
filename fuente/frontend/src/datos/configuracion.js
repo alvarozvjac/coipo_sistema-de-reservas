@@ -51,8 +51,6 @@ export const EDITABLES = [
   { clave: 'plazo_observaciones_horas', etiqueta: 'Plazo para informar diferencias de inventario', unidad: 'horas', min: 1, max: 72, fuente: 'Art. 13' },
   { clave: 'hora_ingreso', etiqueta: 'Hora de ingreso (check-in)', unidad: 'hora', tipo: 'hora', fuente: 'Art. 12' },
   { clave: 'hora_salida', etiqueta: 'Hora de salida (check-out)', unidad: 'hora', tipo: 'hora', fuente: 'Art. 12' },
-  { clave: 'noches_turno_temporada_alta', etiqueta: 'Noches por turno, para temporadas nuevas', unidad: 'noches', min: 1, max: 14, fuente: 'Memo 6188/2026 (Art. 6 b dice máximo 7)' },
-  { clave: 'cuotas_temporada_alta', etiqueta: 'Cuotas de temporada alta, para temporadas nuevas', unidad: 'cuotas', min: 1, max: 12, fuente: 'Memo 6188/2026' },
 ]
 
 export const historialParametros = () => [...(almacen.leer().parametros ?? [])].sort((a, b) => (a.en < b.en ? 1 : -1))
@@ -196,7 +194,7 @@ export const reservaEjemplo = () => todasLasReservas().find((r) => r.registrada_
 
 /* ---------- Registro de actividad (se arma con lo que ya queda registrado) ---------- */
 
-export const AREAS = { reservas: 'Reservas', cobros: 'Cobros', casas: 'Casas y tarifas', temporadas: 'Temporadas', configuracion: 'Configuración', inventario: 'Inventario' }
+export const AREAS = { reservas: 'Reservas', cobros: 'Cobros', casas: 'Casas y tarifas', configuracion: 'Configuración', inventario: 'Inventario' }
 
 /**
  * Quién hizo qué y cuándo. No hay una bitácora aparte: se arma con los
@@ -222,14 +220,6 @@ export function actividad() {
   for (const x of e.retiros ?? []) add(x.en, x.por, 'casas', x.accion === 'retiro' ? 'Retiró una casa' : 'Reincorporó una casa', `${casa(x.casa_id)}${x.motivo ? ` · ${x.motivo}` : ''}`)
   for (const d of e.historial_direcciones ?? []) add(d.en, d.por, 'casas', 'Editó otras direcciones', `${casa(d.casa_id)} · ${d.cantidad} dirección(es)`)
   for (const [id, inv] of Object.entries(e.inventarios ?? {})) add(inv.actualizado_en, inv.actualizado_por, 'inventario', 'Actualizó el inventario', casa(Number(id)))
-  for (const t of e.temporadas ?? []) {
-    add(t.creada_en, t.creada_por, 'temporadas', 'Creó una temporada', t.nombre)
-    add(t.modificada_en, t.modificada_por, 'temporadas', 'Modificó una temporada', t.nombre)
-  }
-  for (const s of e.sorteos ?? []) {
-    add(s.abierta_en, s.abierta_por, 'temporadas', 'Abrió la postulación', s.nombre ?? s.id)
-    add(s.sorteado_en, s.sorteado_por, 'temporadas', 'Realizó el sorteo', s.nombre ?? s.id)
-  }
   for (const [periodo, n] of Object.entries(e.nominas ?? {})) add(n.en, n.por, 'cobros', 'Cambió el estado de la nómina', `${periodo} · ${n.estado}`)
   for (const p of e.parametros ?? []) {
     const def = EDITABLES.find((d) => d.clave === p.clave)

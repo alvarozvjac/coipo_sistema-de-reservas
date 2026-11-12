@@ -9,12 +9,12 @@ https://alvarozvjac.github.io/coipo_sistema-de-reservas/ · Aprobó: [PENDIENTE,
 
 ## En una frase, qué hace
 
-Permite que las encargadas regionales y el encargado nacional de Bienestar registren las
-reservas y las postulaciones al sorteo de las 22 casas de veraneo a nombre de
-funcionarios/as de CONAF, jubilados/as y funcionarios/as de otros servicios públicos,
-según la disponibilidad y el reglamento, y que gestionen ocupación, inventario, cobros,
-tarifas, casas y los sorteos de temporada alta (primera etapa, decisión del 12-11-2026:
-los afiliados/as no ingresan). La encargada regional registra en su región y aprueba lo
+Permite que las encargadas regionales y el encargado nacional de Bienestar registren, por
+orden de llegada y solo si hay disponibilidad, las reservas que les piden para las 22 casas
+de veraneo a nombre de funcionarios/as de CONAF, jubilados/as y funcionarios/as de otros
+servicios públicos, según el reglamento, y que gestionen ocupación, inventario, cobros,
+tarifas y casas (primera etapa, decisión del 12-11-2026: los afiliados/as no ingresan y no
+hay temporadas altas ni sorteo). La encargada regional registra en su región y aprueba lo
 que el encargado nacional registra en ella; al aprobarse, la persona recibe una ficha con
 acompañantes, direcciones e inventario; ambos consultan la disponibilidad de todo el país.
 

@@ -1,4 +1,4 @@
-import { postulacionesDe, todasLasReservas } from './servicio.js'
+import { todasLasReservas } from './servicio.js'
 import { hoyISO, mesDe, sumarDias } from '../lib/fechas.js'
 import { estadoReserva } from '../lib/reglas.js'
 
@@ -13,8 +13,8 @@ const normalizarRut = (rut) => String(rut ?? '').replace(/[^0-9kK]/g, '').toUppe
 
 /**
  * Antecedentes de una persona para quien registra (decisión 12-11-2026): sus
- * reservas de los últimos 12 meses y las próximas, sus postulaciones y los
- * avisos que cambian lo que se le puede ofrecer.
+ * reservas de los últimos 12 meses y las próximas, y los avisos que cambian
+ * lo que se le puede ofrecer.
  */
 export function antecedentesPersona(persona) {
   const rut = normalizarRut(persona.rut)
@@ -28,7 +28,6 @@ export function antecedentesPersona(persona) {
   const vigentes = reservas.filter((r) => ['por_aprobar', 'por_confirmar', 'confirmada', 'en_curso'].includes(r.visible))
   return {
     reservas,
-    postulaciones: persona.id != null ? postulacionesDe(persona.id) : [],
     mesesConReserva: [...new Set(vigentes.filter((r) => r.salida > hoy).map((r) => mesDe(r.entrada)))],
     porPagar: reservas.filter((r) => r.visible === 'por_confirmar'),
     cargos: reservas.filter((r) => r.estado === 'desistida' && r.cargo_desistimiento > 0),

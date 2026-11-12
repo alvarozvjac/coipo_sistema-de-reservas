@@ -9,8 +9,6 @@ import { Ingreso } from './paginas/Ingreso.jsx'
 import { IamSimulado } from './paginas/iam/IamSimulado.jsx'
 import { Callback } from './paginas/iam/Callback.jsx'
 import { Comprobante } from './paginas/gestion/Comprobante.jsx'
-import { PostulacionAsistida } from './paginas/gestion/PostulacionAsistida.jsx'
-import { SorteoCentral } from './paginas/central/Sorteo.jsx'
 import { InicioEncargada } from './paginas/encargada/Inicio.jsx'
 import { Reservas } from './paginas/gestion/Reservas.jsx'
 import { InventarioEncargada } from './paginas/encargada/Inventario.jsx'
@@ -81,12 +79,10 @@ createRoot(document.getElementById('root')).render(
             <Route path="central/casas" element={<Navigate to="/central/configuracion" replace />} />
             <Route path="central/reservas" element={<Requiere perfil="central"><Reservas /></Requiere>} />
             <Route path="central/dashboard" element={<Requiere perfil="central"><Dashboard /></Requiere>} />
-            <Route path="central/sorteo" element={<Requiere perfil="central"><SorteoCentral /></Requiere>} />
             <Route path="central/administracion" element={<Navigate to="/central/configuracion?pestana=usuarios" replace />} />
             <Route path="gestion/reservar" element={<IrAReservas nueva />} />
             <Route path="gestion/disponibilidad" element={<IrAReservas />} />
             <Route path="gestion/reserva/:codigo" element={gestion(<Comprobante />)} />
-            <Route path="gestion/postular" element={gestion(<PostulacionAsistida />)} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

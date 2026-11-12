@@ -312,6 +312,17 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   departamento; consola sin errores. Ojo: Chrome mostró primero la versión anterior desde su
   caché; con la dirección `?v=` cargó la nueva.
 
+### Sin temporadas altas ni sorteo (12-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 12-11-2026 17:29; respuestas: verano como cualquier fecha, todas las
+  reglas de la persona siguen, quitar las reservas de prueba del sorteo.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844: e2e14 52 (agrega: enero se registra
+  sin sorteo; `/gestion/postular` y `/central/sorteo` ya no existen; menú sin Temporadas),
+  e2e15 26, e2e16 24, e2e17 25, 0 fallas; e2e4 17/0 y e2e9 20/0 (el estado ya no guarda
+  temporadas ni sorteos). axe-core: 0 infracciones en 17 pantallas, claro y oscuro.
+- Capturas miradas: Panel nacional sin «Registrar postulación» y tablero de enero de 2027 con
+  reservas normales y la leyenda sin «Temporada alta».
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la

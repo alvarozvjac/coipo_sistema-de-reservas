@@ -1,14 +1,15 @@
 /**
  * Reglas del Reglamento General de Uso de Casas de Veraneo o Descanso
  * (propuesta de actualización, octubre 2026) y decisiones de Bienestar/UIA.
- * Desde el 06-11-2026 los turnos, las tarifas por grado, el desistimiento y
- * las cuotas de temporada alta siguen la práctica vigente del Memorándum
- * N° 6188/2026 (llamado a postular, verano 2027), por decisión de Álvaro
- * Zegers: donde el reglamento propuesto dice otra cosa, se anota.
+ * Desde el 06-11-2026 las tarifas por grado y el desistimiento siguen la
+ * práctica vigente del Memorándum N° 6188/2026, por decisión de Álvaro
+ * Zegers: donde el reglamento propuesto dice otra cosa, se anota. Desde el
+ * 12-11-2026 no hay temporadas altas ni sorteo: el sistema lo usan solo los
+ * encargados y registran por orden de llegada lo que tiene disponibilidad.
  *
- * Todo lo que el reglamento deja como número está en PARAMETROS: en la
- * Desde el 12-11-2026 el encargado nacional cambia los editables en
- * Configuración › Parámetros, con fecha de vigencia (datos/configuracion.js).
+ * Todo lo que el reglamento deja como número está en PARAMETROS; el encargado
+ * nacional cambia los editables en Configuración › Parámetros, con fecha de
+ * vigencia (datos/configuracion.js).
  */
 
 import { diasEntre, fechaCorta, hoyISO, mesDe, nombreMes, restarDiasHabiles, sumarDias } from './fechas.js'
@@ -20,8 +21,6 @@ export const PARAMETROS = {
   aviso_retiro_anticipado_dias: 2, // Art. 10 e)
   dias_aseo_entre_reservas: 1, // decisión de Bienestar
   reservas_por_mes: 1, // Art. 7
-  noches_turno_temporada_alta: 6, // Memo 6188/2026 (el reglamento propuesto dice máximo 7, Art. 6 b); cada temporada puede fijar otro
-  cuotas_temporada_alta: 6, // Memo 6188/2026: 6 cuotas; cada temporada fija el mes de la primera
   cuotas_maximas_planilla: 3, // reserva directa: decisión de Bienestar (Anexo A pide el número de cuotas)
   hora_ingreso: '15:00', // Art. 12
   hora_salida: '12:00', // Art. 12
@@ -36,17 +35,6 @@ export const PARAMETROS = {
  * tarifa de afiliado.
  */
 export const ADICIONAL_TARIFA = { afiliado: 0, jubilado: 0, no_afiliado: 5000, otro_servicio: 15000 }
-
-/**
- * Temporadas altas: se asignan por sorteo (Art. 6), no por reserva directa.
- * Las define el encargado nacional en la pestaña Temporadas (datos/servicio.js las
- * copia aquí). `desde` = llegada del primer turno; `hasta` = salida del último:
- * se cierran las noches desde `desde` hasta el día anterior a `hasta`.
- */
-export const TEMPORADAS_ALTAS = []
-
-/** Frase para los mensajes: «la temporada de verano 2027», «las vacaciones de invierno 2027». */
-export const fraseTemporada = (t) => (t.tipo === 'invierno' ? `las vacaciones de invierno ${t.desde.slice(0, 4)}` : `la temporada de verano ${t.desde.slice(0, 4)}`)
 
 /** Calidad del usuario/a responsable (Anexo A). */
 export const CALIDADES = {
@@ -111,8 +99,6 @@ export const CONDICIONES_USO = [
   `Si se retira antes de tiempo, avise con ${PARAMETROS.aviso_retiro_anticipado_dias} días; sin aviso se cobra el período completo (Art. 10 e).`,
 ]
 
-export const temporadaAltaDe = (iso) => TEMPORADAS_ALTAS.find((t) => iso >= t.desde && iso < t.hasta)
-
 /**
  * Última fecha de llegada que puede elegir una persona. Las reservas se
  * confirman solas si hay disponibilidad (decisión 20-10-2026), así que el
@@ -140,14 +126,10 @@ export function nochesNoDisponibles(ocupaciones) {
   return set
 }
 
-/** Noches de temporada alta que quedaron vacantes tras el sorteo (se reservan directo). */
-const SIN_LIBERAR = new Set()
-
 /** Estado de una noche para el calendario. */
-export function estadoNoche(iso, noDisponibles, hoy = hoyISO(), calidad, liberadas = SIN_LIBERAR) {
+export function estadoNoche(iso, noDisponibles, hoy = hoyISO(), calidad) {
   if (iso <= hoy) return 'pasado'
   if (iso > limiteReserva(hoy, calidad)) return 'fuera_plazo'
-  if (temporadaAltaDe(iso) && !liberadas.has(iso)) return 'temporada_alta'
   if (noDisponibles.has(iso)) return 'ocupado'
   return 'disponible'
 }
@@ -158,7 +140,7 @@ const vigente = (r, hoy) => !['desistida', 'anulada', 'rechazada'].includes(r.es
  * Valida un rango de fechas para un solicitante.
  * Devuelve una lista de mensajes; vacía = se puede solicitar.
  */
-export function validarFechas({ entrada, salida, noDisponibles, reservasUsuario = [], hoy = hoyISO(), calidad, liberadas = SIN_LIBERAR }) {
+export function validarFechas({ entrada, salida, noDisponibles, reservasUsuario = [], hoy = hoyISO(), calidad }) {
   const errores = []
   if (!entrada || !salida) return ['Elija la fecha de llegada y la de salida.']
   if (salida <= entrada) return ['La salida debe ser posterior a la llegada.']
@@ -172,14 +154,11 @@ export function validarFechas({ entrada, salida, noDisponibles, reservasUsuario 
     )
 
   let d = entrada
-  let alta = null
   let ocupada = false
   while (d < salida) {
-    if (!liberadas.has(d)) alta ??= temporadaAltaDe(d)
     if (noDisponibles.has(d)) ocupada = true
     d = sumarDias(d, 1)
   }
-  if (alta) errores.push(`Las fechas caen en ${fraseTemporada(alta)}, que se asigna por sorteo entre quienes postulen (Art. 6).`)
   if (ocupada) errores.push('Hay noches ocupadas en ese rango (se deja un día libre entre reservas para aseo).')
 
   const otra = reservasUsuario.find((r) => vigente(r, hoy) && mesDe(r.entrada) === mesDe(entrada))
