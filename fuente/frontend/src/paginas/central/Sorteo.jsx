@@ -219,7 +219,7 @@ function Resultados({ sorteo: s, lista }) {
         <Indicador etiqueta="Sin cupo o sin posibilidad" valor={otros.length} detalle="Rechazaron, vencieron o Art. 10 d" />
       </div>
 
-      <div className="mt-6 flex gap-1 overflow-x-auto border-b border-borde" role="tablist">
+      <div className="mt-6 flex gap-1 overflow-x-auto overflow-y-hidden border-b border-borde" role="tablist">
         {[
           ['adjudicados', `Adjudicados (${adjudicados.length})`],
           ['espera', `Lista de espera (${espera.length})`],

@@ -25,7 +25,7 @@ export function Cobros() {
   return (
     <>
       <h1 className="text-2xl font-bold">Cobros</h1>
-      <div className="mt-4 flex gap-1 overflow-x-auto border-b border-borde" role="tablist">
+      <div className="mt-4 flex gap-1 overflow-x-auto overflow-y-hidden border-b border-borde" role="tablist">
         {[
           ['nomina', 'Nómina de descuentos'],
           ['pagos', `Pagos por registrar (${pagos.length})`],

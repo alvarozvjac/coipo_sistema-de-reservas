@@ -266,7 +266,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   Reservas; consola sin errores. No recorrí en la URL pública el registro completo ni el
   teléfono (sí en local).
 
-### Configuración del encargado nacional (12-11-2026, local, sin publicar)
+### Configuración del encargado nacional (12-11-2026, publicado en `a13cfb9`)
 
 - Pedido: Álvaro Zegers, 12-11-2026 16:25; respuestas: las cuatro secciones, roles en el IAM,
   parámetros con fecha de vigencia. Decisiones en `fuente/docs/DECISIONES.md`.
@@ -277,6 +277,10 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Defecto visto en el teléfono y corregido: el texto oculto de la cabecera de la tabla de
   parámetros ensanchaba la página a 628 px, y el diálogo de cambio quedaba fuera de la
   pantalla (la prueba no podía pulsar «Guardar cambio»).
+- Pública: GitHub Pages sirvió `a13cfb9` (sha256 igual al local, 7.979.959 bytes); en Chrome
+  de escritorio (Windows), ingreso como `pherrera`, Configuración › Parámetros sin errores de
+  consola. Visto ahí y no en las capturas locales: las filas de pestañas (Configuración,
+  Cobros, Temporadas) mostraban una barra de desplazamiento vertical; se corrigió.
 
 ## Validación
 

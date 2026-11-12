@@ -30,7 +30,7 @@ export function Configuracion() {
   return (
     <>
       <h1 className="text-2xl font-bold">Configuración</h1>
-      <div className="mt-4 flex gap-1 overflow-x-auto border-b border-borde" role="tablist" aria-label="Secciones de configuración">
+      <div className="mt-4 flex gap-1 overflow-x-auto overflow-y-hidden border-b border-borde" role="tablist" aria-label="Secciones de configuración">
         {PESTANAS.map(([k, t]) => (
           <button
             key={k}
