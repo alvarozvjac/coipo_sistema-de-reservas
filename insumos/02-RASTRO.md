@@ -247,7 +247,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   `cnunez`, Panel con sus cifras y enlaces, Reservas con el tablero marcando hoy; consola sin
   errores. No lo recorrí en teléfono contra la URL pública (sí en local).
 
-### Panel lateral de registro, no atendidas y antecedentes (12-11-2026, local, sin publicar)
+### Panel lateral de registro, no atendidas y antecedentes (12-11-2026, publicado en `1cb52e2`)
 
 - Pedido: Álvaro Zegers, 12-11-2026 (mejoras elegidas). Decisiones en `fuente/docs/DECISIONES.md`.
 - Playwright (fecha fija 02-11-2026), 1366×900 y 390×844: e2e16 24 comprobaciones (agrega
@@ -261,6 +261,10 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   nombre de quién?»); el selector de casa se cortaba.
 - Jueces: 0 bloqueantes. Con `adopta: interfaz`: j13 OK; j16 avisa COD-1 en `casas.js`,
   `servicio.js` y `Casas.jsx` (todos bajo 1000 líneas).
+- Pública: GitHub Pages sirve `1cb52e2` (sha256 igual al local, 7.951.987 bytes); en Chrome de
+  escritorio, ingreso como `cnunez`, «Nueva solicitud» del Panel abre el panel lateral en
+  Reservas; consola sin errores. No recorrí en la URL pública el registro completo ni el
+  teléfono (sí en local).
 
 ## Validación
 
