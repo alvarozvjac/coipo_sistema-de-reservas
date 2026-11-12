@@ -282,7 +282,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   consola. Visto ahí y no en las capturas locales: las filas de pestañas (Configuración,
   Cobros, Temporadas) mostraban una barra de desplazamiento vertical; se corrigió.
 
-### Se quitan las solicitudes no atendidas (12-11-2026, local, sin publicar)
+### Se quitan las solicitudes no atendidas (12-11-2026, publicado en `a9ae7d6`)
 
 - Pedido: Álvaro Zegers, 12-11-2026 16:45: solo se ingresan las solicitudes con disponibilidad.
 - Se quitaron el diálogo, la lista, el botón del tablero, el conteo del Dashboard, la sección
@@ -292,6 +292,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   comprueba ahora que otra región es solo consulta, que no aparece nada de «no atendidas» y
   que, si las reglas no lo permiten, el panel no deja registrar); e2e4 17/0 y e2e9 26/0.
   axe-core: 0 infracciones en 19 pantallas, claro y oscuro.
+- Pública: GitHub Pages sirve `a9ae7d6` (sha256 igual al local, 7.968.139 bytes) y el HTML
+  publicado no contiene «no atendid».
 
 ## Validación
 
