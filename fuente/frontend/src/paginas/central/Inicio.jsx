@@ -62,7 +62,7 @@ export function InicioCentral() {
             {plural(casas.filter((c) => c.activa).length, 'casa activa', 'casas activas')} en {resumen.length} regiones · {fechaCorta(hoy, true)}
           </p>
         </div>
-        <AccionesRegistro />
+        <AccionesRegistro reservas="/central/reservas" />
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">

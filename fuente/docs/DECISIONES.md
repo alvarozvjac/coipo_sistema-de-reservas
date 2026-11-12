@@ -409,6 +409,33 @@ personas piden a la encargada regional o al encargado nacional por cualquier ví
 - [PENDIENTE: Bienestar] Si «WhatsApp» es un canal aceptado institucionalmente para pedir
   reservas, o se reemplaza por «Mensajería».
 
+## Registro en panel lateral, solicitudes no atendidas y antecedentes (decisión 12-11-2026, tarde)
+
+Fuente: Álvaro Zegers (UIA), 12-11-2026, eligiendo entre mejoras propuestas.
+
+- **Registro en un panel lateral de Reservas**: el formulario de tres pasos se reemplaza por
+  un panel a la derecha (pantalla completa en el teléfono) con todo en una columna: casa y
+  fechas (vienen del tramo del tablero y se pueden cambiar), persona por RUT con sus
+  antecedentes, quiénes van, contacto, pago, vía y declaración. Al registrar, el panel se
+  cierra y Reservas dice el resultado. Si las reglas de la persona no lo permiten, el panel
+  lo dice y ofrece «Registrar como solicitud no atendida». `/gestion/reservar` y «Nueva
+  solicitud» del Panel abren este panel.
+- **Solicitudes no atendidas**: se registra el pedido que no terminó en reserva, con nombre
+  (RUT opcional), vía, región o casa pedida, fechas, personas y motivo (sin cupo, otra región
+  derivada, fuera de plazo o de las reglas, temporada alta, otro con detalle). No aparta
+  fechas ni avisa a la persona. Se registran desde «Solicitud no atendida», desde una casa de
+  otra región en el tablero («Registrar como derivada») o desde el panel de registro. Se ven
+  en Reservas › Listado › No atendidas y se cuentan en el Dashboard («Cómo llegan las
+  solicitudes»: vía de las reservas y no atendidas por motivo). Clave `reserva_veraneo_v16`.
+- **Antecedentes de la persona**: al encontrarla por RUT (en el registro y en la postulación)
+  se muestran avisos primero (ya tiene reserva ese mes, transferencia sin registrar, cargo
+  por desistimiento, no podrá postular al próximo sorteo) y luego sus reservas de los últimos
+  12 meses y próximas, sus postulaciones y sus pedidos no atendidos.
+- [PENDIENTE: Bienestar] Plazo de conservación de las solicitudes no atendidas y si el RUT
+  debe pedirse (hoy es opcional): es un tratamiento de datos personales (Ley 21.719).
+- Deuda técnica declarada: `Reservar.jsx` conserva el modo de tres pasos sin uso; se limpia
+  en la próxima iteración.
+
 ## Perfiles (2 desde el 12-11-2026)
 
 Los asigna el rol del COIPO IAM (sección «Ingreso con el COIPO IAM»).

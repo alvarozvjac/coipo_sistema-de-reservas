@@ -12,7 +12,7 @@ import { Boton, Tarjeta } from './ui.jsx'
  */
 
 /** Botones para registrar lo que una persona pidió, en la cabecera del panel. */
-export function AccionesRegistro() {
+export function AccionesRegistro({ reservas }) {
   return (
     <div className="flex flex-wrap gap-2">
       {postulacionAbierta() && (
@@ -20,7 +20,7 @@ export function AccionesRegistro() {
           <Ticket className="size-4" aria-hidden /> Registrar postulación
         </Boton>
       )}
-      <Boton a="/gestion/reservar">
+      <Boton a={`${reservas}?nueva=1`}>
         <Plus className="size-4" aria-hidden /> Nueva solicitud
       </Boton>
     </div>

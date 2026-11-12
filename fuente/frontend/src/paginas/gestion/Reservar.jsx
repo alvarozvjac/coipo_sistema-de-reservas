@@ -34,7 +34,7 @@ const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? '—
  * que una persona les pidió; su declaración reemplaza la aceptación de la
  * persona. El modo sin `gestor` (la persona reservando para sí) queda sin ruta.
  */
-export function Reservar({ titular, gestor, casaId, onCambiar }) {
+export function Reservar({ titular, gestor, casaId, onCambiar, panel }) {
   useDatos()
   const params = useParams()
   const [p, setP] = useSearchParams()
@@ -44,9 +44,10 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
   const asistida = Boolean(gestor)
   const casa = obtenerCasa(casaId ?? params.id)
 
-  const entrada = p.get('entrada')
-  const salida = p.get('salida')
-  const [paso, setPaso] = useState(entrada && salida && !gestor ? 1 : 0)
+  // En el panel lateral de Reservas (decisión 12-11-2026) las fechas vienen del tablero y todo va en una sola vista.
+  const entrada = panel ? panel.entrada : p.get('entrada')
+  const salida = panel ? panel.salida : p.get('salida')
+  const [paso, setPaso] = useState(panel ? 1 : entrada && salida && !gestor ? 1 : 0)
   const [viaja, setViaja] = useState(true)
   const [aCargo, setACargo] = useState('')
   const [otros, setOtros] = useState([])
@@ -111,9 +112,9 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
 
   function avanzar() {
     setIntento(true)
-    if (!pasoValido[paso]) return
+    if (panel ? !pasoValido.every(Boolean) : !pasoValido[paso]) return
     setIntento(false)
-    if (paso < 2) {
+    if (!panel && paso < 2) {
       setPaso(paso + 1)
       window.scrollTo({ top: 0 })
       return
@@ -145,6 +146,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
       setOcupada(true)
       return
     }
+    if (panel) return panel.onListo(codigo)
     navegar(asistida ? `/gestion/reserva/${codigo}?nueva=1` : `/reserva/${codigo}?nueva=1`, { replace: !asistida })
   }
 
@@ -155,47 +157,12 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
     setP(q, { replace: true })
   }
 
-  return (
-    <>
-      {asistida ? (
-        <button type="button" onClick={onCambiar} className="inline-flex items-center gap-1 text-sm font-medium text-verde-700 hover:underline">
-          <ArrowLeft className="size-4" aria-hidden /> Cambiar persona o casa
-        </button>
-      ) : (
-        <Link to={`/casa/${casa.id}${entrada && salida ? `?entrada=${entrada}&salida=${salida}` : ''}`} className="inline-flex items-center gap-1 text-sm font-medium text-verde-700 hover:underline">
-          <ArrowLeft className="size-4" aria-hidden /> Volver a la casa
-        </Link>
-      )}
-      <h1 className="mt-3 text-2xl font-bold text-tinta-900">
-        Reservar {casa.nombre}
-        {asistida && <span className="block text-lg font-semibold text-tinta-700">a nombre de {usuario.nombre}</span>}
-      </h1>
-
-      <ol className="mt-4 flex gap-2" aria-label="Pasos de la reserva">
-        {PASOS.map((t, i) => (
-          <li key={t} className="flex-1">
-            <button type="button" disabled={i > paso} onClick={() => setPaso(i)} aria-current={i === paso ? 'step' : undefined} className="w-full text-left disabled:cursor-default">
-              <span className={`block h-1.5 rounded-full ${i <= paso ? 'bg-verde-600' : 'bg-stone-200'}`} />
-              <span className={`mt-1.5 block text-[13px] sm:text-sm ${i === paso ? 'font-semibold text-tinta-900' : 'text-tinta-500'}`}>
-                {i + 1}. {t}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ol>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
-        <div className="min-w-0 space-y-5">
-          {paso === 0 && (
-            <Tarjeta className="p-5">
-              <h2 className="mb-4 text-lg font-semibold">¿Cuándo quiere ir?</h2>
-              <Calendario noDisponibles={noDisponibles} entrada={entrada} salida={salida} onCambio={cambiarFechas} calidad={usuario.calidad} liberadas={liberadas} />
-              {entrada && salida && erroresFechas.map((e) => <div key={e} className="mt-3"><Aviso tipo="error">{e}</Aviso></div>)}
-            </Tarjeta>
-          )}
-
-          {paso === 1 && (
+  function cuerpo() {
+    return (
+      <>
+          {(paso === 1 || panel) && (
             <>
+              {!panel && (
               <Tarjeta className="p-5">
                 <h2 className="text-lg font-semibold">Usuario/a responsable</h2>
                 <dl className="mt-3 grid gap-x-6 gap-y-2 text-[15px] sm:grid-cols-2">
@@ -211,6 +178,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
                     : 'Datos de la nómina de CONAF y Bienestar. Si hay un error, avise a su encargada regional.'}
                 </p>
               </Tarjeta>
+              )}
 
               <Tarjeta className="p-5">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -326,7 +294,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
             </>
           )}
 
-          {paso === 2 && (
+          {(paso === 2 || panel) && (
             <>
               <Tarjeta className="p-5">
                 <h2 className="text-lg font-semibold">¿Cómo pagará?</h2>
@@ -445,6 +413,80 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
               </Tarjeta>
             </>
           )}
+
+        {panel && (
+          <div className="flex flex-wrap justify-end gap-3">
+            <Boton variante="secundario" onClick={panel.onCancelar}>
+              Cancelar
+            </Boton>
+            <Boton onClick={avanzar}>Registrar reserva</Boton>
+          </div>
+        )}
+        {cuadro && panel && <CuadroTransferencia monto={total} glosa={glosa} plazo="antes de su llegada" onCerrar={cerrarCuadro} />}
+      </>
+    )
+  }
+
+  if (panel)
+    return (
+      <div className="space-y-5">
+        {erroresFechas.length > 0 && (
+          <Tarjeta className="p-5">
+            <h3 className="font-semibold">No se puede registrar para esta persona</h3>
+            {erroresFechas.map((e) => (
+              <div key={e} className="mt-3">
+                <Aviso tipo="error">{e}</Aviso>
+              </div>
+            ))}
+            <Boton variante="secundario" className="mt-4" onClick={panel.onNoAtendida}>
+              Registrar como solicitud no atendida
+            </Boton>
+          </Tarjeta>
+        )}
+        {erroresFechas.length === 0 && cuerpo()}
+      </div>
+    )
+
+  return (
+    <>
+      {asistida ? (
+        <button type="button" onClick={onCambiar} className="inline-flex items-center gap-1 text-sm font-medium text-verde-700 hover:underline">
+          <ArrowLeft className="size-4" aria-hidden /> Cambiar persona o casa
+        </button>
+      ) : (
+        <Link to={`/casa/${casa.id}${entrada && salida ? `?entrada=${entrada}&salida=${salida}` : ''}`} className="inline-flex items-center gap-1 text-sm font-medium text-verde-700 hover:underline">
+          <ArrowLeft className="size-4" aria-hidden /> Volver a la casa
+        </Link>
+      )}
+      <h1 className="mt-3 text-2xl font-bold text-tinta-900">
+        Reservar {casa.nombre}
+        {asistida && <span className="block text-lg font-semibold text-tinta-700">a nombre de {usuario.nombre}</span>}
+      </h1>
+
+      <ol className="mt-4 flex gap-2" aria-label="Pasos de la reserva">
+        {PASOS.map((t, i) => (
+          <li key={t} className="flex-1">
+            <button type="button" disabled={i > paso} onClick={() => setPaso(i)} aria-current={i === paso ? 'step' : undefined} className="w-full text-left disabled:cursor-default">
+              <span className={`block h-1.5 rounded-full ${i <= paso ? 'bg-verde-600' : 'bg-stone-200'}`} />
+              <span className={`mt-1.5 block text-[13px] sm:text-sm ${i === paso ? 'font-semibold text-tinta-900' : 'text-tinta-500'}`}>
+                {i + 1}. {t}
+              </span>
+            </button>
+          </li>
+        ))}
+      </ol>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
+        <div className="min-w-0 space-y-5">
+          {paso === 0 && (
+            <Tarjeta className="p-5">
+              <h2 className="mb-4 text-lg font-semibold">¿Cuándo quiere ir?</h2>
+              <Calendario noDisponibles={noDisponibles} entrada={entrada} salida={salida} onCambio={cambiarFechas} calidad={usuario.calidad} liberadas={liberadas} />
+              {entrada && salida && erroresFechas.map((e) => <div key={e} className="mt-3"><Aviso tipo="error">{e}</Aviso></div>)}
+            </Tarjeta>
+          )}
+
+          {cuerpo()}
 
           <div className="flex flex-wrap justify-between gap-3">
             {paso > 0 ? (

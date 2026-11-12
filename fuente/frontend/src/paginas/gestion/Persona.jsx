@@ -1,12 +1,8 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
 import { Search, UserCheck } from "lucide-react";
 import { REGIONES } from "../../datos/casas.js";
 import {
   buscarPersona,
-  listarCasas,
-  obtenerCasa,
-  useDatos,
 } from "../../datos/servicio.js";
 import { formatearRut, rutValido } from "../../lib/formato.js";
 import { CALIDADES, PARAMETROS } from "../../lib/reglas.js";
@@ -17,74 +13,15 @@ import {
   Tarjeta,
   claseEntrada,
 } from "../../componentes/ui.jsx";
-import { INICIO, useSesion } from "../../componentes/Perfil.jsx";
-import { Reservar } from "./Reservar.jsx";
 
 const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? "—";
 
 /**
- * Registro de una reserva: la encargada regional o el encargado nacional
- * registra la reserva que una persona le pidió (por teléfono, correo o en
- * persona). Rigen las reglas del reglamento para esa persona; la declaración
- * del encargado reemplaza la aceptación de la persona (decisión 12-11-2026).
+ * A nombre de quién se registra (decisión 12-11-2026): el RUT completa los datos
+ * desde la nómina; para otro servicio público se ingresan a mano. Con
+ * `soloConaf` (postulaciones) no se ofrece la opción de otro servicio público.
  */
-export function ReservaAsistida() {
-  useDatos();
-  const { usuario: gestor } = useSesion();
-  const [persona, setPersona] = useState(null);
-  // Desde la consulta de disponibilidad llega ?casa=ID&entrada&salida.
-  const [busqueda] = useSearchParams();
-  const casaInicial = busqueda.get("casa") ?? "";
-  const [casaId, setCasaId] = useState(() => {
-    const c = casaInicial && obtenerCasa(Number(casaInicial));
-    return c && (gestor.perfil !== "encargada" || c.region === gestor.region) ? casaInicial : "";
-  });
-  const [listo, setListo] = useState(false);
-
-  if (listo && persona && casaId)
-    return (
-      <Reservar
-        key={`${persona.id}-${casaId}`}
-        titular={persona}
-        gestor={gestor}
-        casaId={Number(casaId)}
-        onCambiar={() => setListo(false)}
-      />
-    );
-
-  return (
-    <div className="mx-auto max-w-3xl">
-      <Link
-        to={INICIO[gestor.perfil]}
-        className="text-sm font-medium text-verde-700 hover:underline"
-      >
-        ← Volver al inicio
-      </Link>
-      <h1 className="mt-3 text-2xl font-bold">Registrar una reserva</h1>
-      <p className="mt-1 text-[15px] text-tinta-500">
-        Registre la reserva que la persona le pidió. Rigen las reglas del
-        reglamento para esa persona: disponibilidad, anticipación, una reserva
-        por mes y temporada alta por sorteo. Queda registrado que usted la hizo.
-      </p>
-
-      <div className="mt-6 space-y-5">
-        <Persona persona={persona} onPersona={setPersona} />
-        {persona && (
-          <ElegirCasa
-            gestor={gestor}
-            persona={persona}
-            casaId={casaId}
-            onCasa={setCasaId}
-            onListo={() => setListo(true)}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
-/** Paso 1: a nombre de quién. Con `soloConaf` (postulaciones) no se ofrece la opción de otro servicio público. */
-export function Persona({ persona, onPersona, soloConaf = false }) {
+export function Persona({ persona, onPersona, soloConaf = false, titulo = "1. ¿A nombre de quién?" }) {
   const [tipo, setTipo] = useState("conaf");
   const [rut, setRut] = useState("");
   const [error, setError] = useState(null);
@@ -157,7 +94,7 @@ export function Persona({ persona, onPersona, soloConaf = false }) {
 
   return (
     <Tarjeta className="p-5">
-      <h2 className="text-lg font-semibold">1. ¿A nombre de quién?</h2>
+      <h2 className="text-lg font-semibold">{titulo}</h2>
       {!soloConaf && (
         <div
           className="mt-3 grid gap-2 sm:grid-cols-2"
@@ -272,80 +209,6 @@ export function Persona({ persona, onPersona, soloConaf = false }) {
             Continuar
           </Boton>
         </div>
-      )}
-    </Tarjeta>
-  );
-}
-
-/**
- * Paso 2. Desde el 12-11-2026 la encargada regional solo registra en las casas
- * de su región; el encargado nacional, en todas (y la reserva queda por
- * aprobar por la encargada de la región de la casa).
- */
-function ElegirCasa({ gestor, persona, casaId, onCasa, onListo }) {
-  const regional = gestor.perfil === "encargada";
-  const casas = listarCasas().filter((c) => !regional || c.region === gestor.region);
-  const [region, setRegion] = useState(() =>
-    regional ? gestor.region : (obtenerCasa(Number(casaId))?.region ?? ""),
-  );
-  const visibles = casas.filter((c) => !region || c.region === region);
-  return (
-    <Tarjeta className="p-5">
-      <h2 className="text-lg font-semibold">2. ¿Qué casa?</h2>
-      <p className="mt-1 text-[13px] text-tinta-500">
-        {regional
-          ? `Puede registrar en las casas de la Región de ${nombreRegion(gestor.region)}. Para otra región, la registra su encargada o el encargado nacional.`
-          : "Puede registrar en cualquier casa del país; quedará por aprobar por la encargada de la región de la casa."}{" "}
-        Luego verá su calendario de disponibilidad.
-      </p>
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <Campo etiqueta="Región">
-          <select
-            className={claseEntrada}
-            disabled={regional}
-            value={region}
-            onChange={(e) => {
-              setRegion(e.target.value);
-              onCasa("");
-            }}
-          >
-            <option value="">Todas las regiones</option>
-            {REGIONES.filter((r) =>
-              casas.some((c) => c.region === r.codigo),
-            ).map((r) => (
-              <option key={r.codigo} value={r.codigo}>
-                {r.nombre}
-              </option>
-            ))}
-          </select>
-        </Campo>
-        <Campo etiqueta="Casa">
-          <select
-            className={claseEntrada}
-            value={casaId}
-            onChange={(e) => onCasa(e.target.value)}
-          >
-            <option value="">Elija una casa</option>
-            {visibles.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.nombre} · hasta {c.capacidad} personas
-                {region ? "" : ` · ${nombreRegion(c.region)}`}
-              </option>
-            ))}
-          </select>
-        </Campo>
-      </div>
-      <div className="mt-4 flex justify-end">
-        <Boton disabled={!casaId} onClick={onListo}>
-          Ver calendario y reservar
-        </Boton>
-      </div>
-      {persona.calidad === "otro_servicio" && (
-        <p className="mt-3 text-[13px] text-tinta-500">
-          Por ser de otro servicio público, solo puede reservar fechas dentro de
-          los próximos {PARAMETROS.anticipacion_maxima_otro_servicio_dias} días
-          (Art. 9).
-        </p>
       )}
     </Tarjeta>
   );

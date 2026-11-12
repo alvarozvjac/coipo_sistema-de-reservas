@@ -1,10 +1,11 @@
+import { MOTIVOS_NO_ATENDIDA, noAtendidas } from '../../datos/solicitudes.js'
 import { useState } from 'react'
 import { ArrowDown, ArrowUp, Download, Lightbulb } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
 import { listarCasas, todasLasReservas, useDatos } from '../../datos/servicio.js'
 import { fechaCorta, hoyISO, nombreMes, primerDiaMes, sumarDias } from '../../lib/fechas.js'
 import { pesos } from '../../lib/formato.js'
-import { CALIDADES } from '../../lib/reglas.js'
+import { CALIDADES, VIAS } from '../../lib/reglas.js'
 import { calcularIndicadores } from '../../lib/indicadores.js'
 import { descargarCSV } from '../../lib/csv.js'
 import { BarrasHorizontales, Columnas, Indicador, Panel } from '../../componentes/graficos.jsx'
@@ -195,6 +196,7 @@ export function Dashboard() {
             />
           </div>
         </Panel>
+        <PanelSolicitudes reservas={reservas} desde={p.desde} hasta={p.hasta} region={region} />
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
@@ -249,5 +251,25 @@ export function Dashboard() {
         Datos ficticios de la maqueta. Cálculo: reservas confirmadas, en curso o finalizadas; los ingresos consideran las noches dentro del período y los cargos por desistimiento.
       </p>
     </>
+  )
+}
+
+/**
+ * Cómo llegan los pedidos y cuáles no se atendieron (decisión 12-11-2026): la
+ * vía de las reservas registradas en el período y los motivos de las
+ * solicitudes no atendidas. La vía de las reservas de la demostración es ficticia.
+ */
+function PanelSolicitudes({ reservas, desde, hasta, region }) {
+  const enPeriodo = (iso) => iso >= desde && iso < hasta
+  const conVia = reservas.filter((r) => r.via && enPeriodo(r.creada_en.slice(0, 10)) && (!region || r.casa.region === region))
+  const porVia = Object.entries(VIAS).map(([k, t]) => ({ etiqueta: t, valor: conVia.filter((r) => r.via === k).length })).filter((x) => x.valor)
+  const na = noAtendidas(region).filter((x) => enPeriodo(x.creada_en.slice(0, 10)))
+  const porMotivo = Object.entries(MOTIVOS_NO_ATENDIDA).map(([k, t]) => ({ etiqueta: t, valor: na.filter((x) => x.motivo === k).length })).filter((x) => x.valor)
+  return (
+    <Panel titulo="Cómo llegan las solicitudes" subtitulo="Vía de las reservas registradas en el período y pedidos no atendidos">
+      <BarrasHorizontales datos={porVia} formato={(v) => `${miles(v)} (${pct(conVia.length ? v / conVia.length : 0)})`} />
+      <h3 className="mt-6 text-[14px] font-semibold text-tinta-900">No atendidas por motivo ({miles(na.length)})</h3>
+      <div className="mt-2">{porMotivo.length ? <BarrasHorizontales datos={porMotivo} formato={(v) => miles(v)} /> : <p className="text-[15px] text-tinta-500">Ninguna en el período.</p>}</div>
+    </Panel>
   )
 }

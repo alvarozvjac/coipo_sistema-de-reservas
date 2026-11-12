@@ -26,7 +26,7 @@ asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro)
 
 | Perfil | Qué se puede probar |
 |---|---|
-| Encargada regional | Panel de control de su región (por aprobar, por confirmar, llegadas y salidas, inventario); Reservas con tablero de ocupación de todo el país y listado: registra en las casas de su región lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), aprueba lo que registró el encargado nacional en su región, gestiona postulaciones y desistimientos; Inventario |
+| Encargada regional | Panel de control de su región (por aprobar, por confirmar, llegadas y salidas, inventario); Reservas con tablero de ocupación de todo el país y listado: registra en un panel lateral, en las casas de su región, lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), viendo antes sus antecedentes, o deja constancia de la solicitud no atendida, aprueba lo que registró el encargado nacional en su región, gestiona postulaciones y desistimientos; Inventario |
 | Encargado nacional | Panel nacional; Reservas con tablero de todo el país (registra en cualquier casa, queda por aprobar por la encargada de la región); Cobros (nómina de descuentos y transferencias); Temporadas y sorteo; Dashboard; Configuración (casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas y Administración, en construcción) |
 
 Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María

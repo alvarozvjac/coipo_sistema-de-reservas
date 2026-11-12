@@ -247,6 +247,21 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   `cnunez`, Panel con sus cifras y enlaces, Reservas con el tablero marcando hoy; consola sin
   errores. No lo recorrí en teléfono contra la URL pública (sí en local).
 
+### Panel lateral de registro, no atendidas y antecedentes (12-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 12-11-2026 (mejoras elegidas). Decisiones en `fuente/docs/DECISIONES.md`.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844: e2e16 24 comprobaciones (agrega
+  no atendidas, derivar desde el tablero, antecedentes, Escape y dashboard), e2e15 26 y
+  e2e14 60 (registro en el panel, con exigencias de autorización, vía y declaración, y el
+  aviso de anticipación de otro servicio), 0 fallas; e2e4 17/0 y e2e9 26/0 en escritorio.
+- axe-core 4.10.2: 0 infracciones WCAG 2.2 AA en 15 pantallas (incluido el panel abierto),
+  claro y oscuro.
+- Capturas miradas en escritorio y teléfono. Corregido tras mirarlas: el panel repetía la
+  tarjeta de la persona; la numeración de los pasos se duplicaba («2. Persona» + «1. ¿A
+  nombre de quién?»); el selector de casa se cortaba.
+- Jueces: 0 bloqueantes. Con `adopta: interfaz`: j13 OK; j16 avisa COD-1 en `casas.js`,
+  `servicio.js` y `Casas.jsx` (todos bajo 1000 líneas).
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la

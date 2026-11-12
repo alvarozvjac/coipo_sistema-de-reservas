@@ -64,10 +64,11 @@ Bienestar si el sorteo de temporada alta debe estar en la primera puesta en marc
 | Pantalla | Perfil | Decisión que permite | Criterios |
 |---|---|---|---|
 | Ingreso con el COIPO IAM (simulado) | Encargados | Entrar; a cualquier otra persona se le indica que pida su reserva a la encargada | C1 |
-| Registrar reserva: persona, casa, calendario, quiénes van, pago y declaración | Encargada, encargado nacional | Registrar la reserva que la persona pidió, con fechas válidas para ella | C2 a C7 |
 | Comprobante de la reserva | Encargados | Ver estado, direcciones, datos de transferencia y ficha; aprobar o no aprobar; registrar el desistimiento | C2, C6, C7, C8, C19, C21 |
 | Panel (antes Inicio) | Encargada (su región), encargado nacional (país) | Ver de un vistazo lo que pide acción hoy: por aprobar, por confirmar o pagos por registrar, llegadas y salidas, inventario; aprobar desde ahí | C19, C22 |
 | Reservas: tablero de ocupación + listado (fusiona Reservas y Disponibilidad) | Encargada, encargado nacional | Ver la ocupación por casa y noche en una o todas las regiones, elegir un tramo libre y registrarlo, o abrir una reserva para gestionarla | C10, C19, C20, C23 |
+| Registrar reserva (panel lateral en Reservas) | Encargada, encargado nacional | Registrar lo que la persona pidió sin perder de vista la ocupación, viendo antes sus antecedentes | C2 a C7, C23, C25 |
+| Solicitud no atendida (diálogo y listado en Reservas) | Encargada, encargado nacional | Dejar constancia de la demanda que no se pudo atender y por qué | C24 |
 | Configuración › Casas › otras direcciones | Encargado nacional | Mantener las direcciones que salen en la ficha | C21 |
 | Registrar postulación | Encargada, encargado nacional | Registrar, ver o retirar la postulación de una persona; registrar su respuesta a un cupo | C9, C18 |
 | Inventario | Encargada regional | Actualizar el inventario que va en la ficha | C10 |
@@ -173,6 +174,15 @@ correspondencia está en `02-RASTRO.md`.
   sin vía elegida, cuando el encargado pulsa «Confirmar reserva», entonces ve «Indique por
   qué vía le pidió la reserva» y no se registra; con «Teléfono» elegido, la vía queda en la
   reserva, en el detalle, en el listado y en la ficha («a pedido de la persona (teléfono)»).
+- **C24 · Solicitud no atendida (decisión 12-11-2026, tarde).** Dada la encargada de
+  Valparaíso, cuando registra un pedido de «Inés Tapia Rojas» por WhatsApp con motivo «sin
+  cupo», entonces queda en Reservas › No atendidas con región Valparaíso y su nombre como
+  quien la registró; y si elige una noche libre de Toconao, «Registrar como derivada» abre
+  el diálogo con esa casa y el motivo «otra región» ya marcados.
+- **C25 · Antecedentes de la persona (decisión 12-11-2026, tarde).** Dada una persona con una
+  reserva por confirmar en diciembre, cuando la encargada escribe su RUT en el registro,
+  entonces antes del formulario ve «Ya tiene una reserva en diciembre 2026» y «transferencia
+  sin registrar», y la lista de sus reservas de los últimos 12 meses.
 
 ## Instrumentos de datos candidatos para la fábrica
 

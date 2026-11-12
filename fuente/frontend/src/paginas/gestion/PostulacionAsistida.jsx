@@ -11,7 +11,8 @@ import { rutaFoto } from '../../componentes/fotos.js'
 import { ResumenCalendarios, TarjetaPostulacion, salidaTurno } from '../../componentes/Postulacion.jsx'
 import { Aviso, Boton, Campo, Tarjeta, claseEntrada } from '../../componentes/ui.jsx'
 import { INICIO, useSesion } from '../../componentes/Perfil.jsx'
-import { Persona } from './ReservaAsistida.jsx'
+import { Persona } from './Persona.jsx'
+import { AntecedentesPersona } from './AntecedentesPersona.jsx'
 
 const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? ''
 
@@ -65,6 +66,7 @@ export function PostulacionAsistida() {
             ) : (
               <>
                 <Persona persona={persona} onPersona={setPersona} soloConaf />
+                {persona && <AntecedentesPersona persona={persona} />}
                 {persona && <EstadoPersona sorteo={s} persona={persona} gestor={gestor} abierta={abierta} onListo={setNueva} />}
               </>
             )}

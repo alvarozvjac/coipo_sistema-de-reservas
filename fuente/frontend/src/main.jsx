@@ -18,7 +18,6 @@ import { InicioCentral } from './paginas/central/Inicio.jsx'
 import { Cobros } from './paginas/central/Cobros.jsx'
 import { CasasTarifas } from './paginas/central/Casas.jsx'
 import { Dashboard } from './paginas/central/Dashboard.jsx'
-import { ReservaAsistida } from './paginas/gestion/ReservaAsistida.jsx'
 
 /** Exige sesión y, si se indica, un perfil. Sin sesión lleva al ingreso. */
 function Requiere({ perfil, children }) {
@@ -39,10 +38,16 @@ function AlInicio() {
 const gestion = (el) => <Requiere perfil={['encargada', 'central']}>{el}</Requiere>
 
 /** La versión publicada como página de claude.ai navega en memoria: su dirección no se puede cambiar. */
-/** Disponibilidad se fusionó con Reservas (decisión 12-11-2026). */
-function IrAReservas() {
+/** Disponibilidad y el registro de reservas se fusionaron con Reservas (decisión 12-11-2026). */
+function IrAReservas({ nueva = false }) {
   const { usuario } = useSesion()
-  return <Navigate to={usuario?.perfil === 'central' ? '/central/reservas' : '/encargada/reservas'} replace />
+  const { search } = useLocation()
+  if (!usuario) return <Navigate to="/ingreso" replace />
+  // El registro se hace en el panel lateral de Reservas (decisión 12-11-2026): se conservan casa y fechas.
+  const q = new URLSearchParams(search)
+  if (nueva) q.set('nueva', '1')
+  const destino = usuario.perfil === 'central' ? '/central/reservas' : '/encargada/reservas'
+  return <Navigate to={`${destino}${q.size ? `?${q}` : ''}`} replace />
 }
 
 const Enrutador = import.meta.env.MODE === 'pagina' ? MemoryRouter : BrowserRouter
@@ -76,7 +81,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="central/dashboard" element={<Requiere perfil="central"><Dashboard /></Requiere>} />
             <Route path="central/sorteo" element={<Requiere perfil="central"><SorteoCentral /></Requiere>} />
             <Route path="central/administracion" element={<Navigate to="/central/configuracion?pestana=administracion" replace />} />
-            <Route path="gestion/reservar" element={gestion(<ReservaAsistida />)} />
+            <Route path="gestion/reservar" element={<IrAReservas nueva />} />
             <Route path="gestion/disponibilidad" element={<IrAReservas />} />
             <Route path="gestion/reserva/:codigo" element={gestion(<Comprobante />)} />
             <Route path="gestion/postular" element={gestion(<PostulacionAsistida />)} />

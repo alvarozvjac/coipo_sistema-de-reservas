@@ -37,7 +37,7 @@ export function InicioEncargada() {
             {plural(casas.length, 'casa', 'casas')} a su cargo · {fechaCorta(hoy, true)}
           </p>
         </div>
-        <AccionesRegistro />
+        <AccionesRegistro reservas="/encargada/reservas" />
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
