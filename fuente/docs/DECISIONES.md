@@ -379,6 +379,36 @@ Bienestar le planteó a la UIA, transmitido por Álvaro Zegers el 12-11-2026.
   encargado en su nombre. [PENDIENTE: confirmar con Bienestar si eso basta o si se necesita
   una firma o un correo de la persona.]
 
+## Rediseño: Panel, Reservas con tablero y vía de la solicitud (decisión 12-11-2026, tarde)
+
+Fuente: Álvaro Zegers (UIA), 12-11-2026 15:35: el foco es gestionar las reservas que las
+personas piden a la encargada regional o al encargado nacional por cualquier vía.
+
+- **Reservas y Disponibilidad se fusionan** en una sola pantalla, «Reservas»: arriba un
+  tablero de ocupación (una fila por casa, una columna por noche, 28 noches en escritorio y
+  14 en teléfono) y abajo el listado con filtros. Una reserva se gestiona tocando su barra
+  (detalle con vía, historial, ficha y, si le corresponde, aprobar o no aprobar). Para
+  registrar se toca la primera noche libre y luego la última. La encargada puede mirar
+  cualquier región, pero solo registra en la suya. El filtro «Personas» cierra las casas
+  que no alcanzan. Con teclado, el tablero es una sola parada de tabulación; las flechas
+  recorren las noches y Enter elige o abre. `/gestion/disponibilidad` lleva a Reservas.
+- **Inicio pasa a ser un Panel de control**: solo lo que pide acción hoy (por aprobar, por
+  confirmar o pagos por registrar, llegadas y salidas, inventario o extintores), cada cifra
+  con enlace a donde se resuelve. Se quitó el aviso «¿Alguien le pidió una reserva…?»: el
+  botón «Nueva solicitud» (y «Registrar postulación» con la postulación abierta) está en
+  la cabecera del Panel y de Reservas. La franja de ocupación pasó al tablero.
+- **Vía de la solicitud, obligatoria**: teléfono, correo electrónico, presencial, WhatsApp u
+  otra. Queda en la reserva (`via`), el detalle, el listado, el comprobante y la ficha. Las
+  reservas de la demostración tienen una vía ficticia repartida. Clave de almacenamiento
+  `reserva_veraneo_v15`.
+- **Menú del encargado nacional agrupado**: Panel · Reservas · Cobros · Temporadas ·
+  Dashboard · Configuración. Configuración reúne Casas, Tarifas, Bloqueos de fechas y
+  Administración (las rutas antiguas `/central/casas` y `/central/administracion` llevan ahí).
+- **Inventario** queda como estaba (Álvaro Zegers: «el inventario está correcto»).
+- [PENDIENTE: Bienestar] Si la postulación al sorteo también debe registrar la vía (hoy no).
+- [PENDIENTE: Bienestar] Si «WhatsApp» es un canal aceptado institucionalmente para pedir
+  reservas, o se reemplaza por «Mensajería».
+
 ## Perfiles (2 desde el 12-11-2026)
 
 Los asigna el rol del COIPO IAM (sección «Ingreso con el COIPO IAM»).

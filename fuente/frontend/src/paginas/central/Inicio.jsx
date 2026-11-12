@@ -4,11 +4,18 @@ import { REGIONES } from '../../datos/casas.js'
 import { inventarioDe, listarCasas, pagosPorRegistrar, todasLasReservas, useDatos } from '../../datos/servicio.js'
 import { diasEntre, fechaCorta, hoyISO, sumarDias } from '../../lib/fechas.js'
 import { plural } from '../../lib/formato.js'
+import { estadoReserva } from '../../lib/reglas.js'
 import { Tarjeta } from '../../componentes/ui.jsx'
-import { BannerReservaAsistida } from '../gestion/ReservaAsistida.jsx'
 import { PanelPorAprobar } from '../../componentes/Aprobacion.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
+import { AccionesRegistro, Indicador, Movimientos, ocupacion } from '../../componentes/Panel.jsx'
 
+const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? ''
+
+/**
+ * Panel de control del encargado nacional (decisión 12-11-2026, reemplaza al
+ * inicio): lo que pide acción hoy en el país y la ocupación por región.
+ */
 export function InicioCentral() {
   useDatos()
   const { usuario } = useSesion()
@@ -43,18 +50,30 @@ export function InicioCentral() {
     }
   }).filter(Boolean)
 
+  const porAprobar = reservas.filter((r) => estadoReserva(r) === 'por_aprobar')
+  const llegadas = reservas.filter((r) => ['por_confirmar', 'confirmada'].includes(estadoReserva(r)) && (r.entrada === hoy || r.entrada === sumarDias(hoy, 1)))
+
   return (
     <>
-      <h1 className="text-2xl font-bold">Panel nacional</h1>
-      <p className="mt-1 text-[15px] text-tinta-500">
-        {plural(casas.filter((c) => c.activa).length, 'casa activa', 'casas activas')} en {resumen.length} regiones · {fechaCorta(hoy, true)}
-      </p>
-      <div className="mt-4">
-        <BannerReservaAsistida />
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold">Panel nacional</h1>
+          <p className="mt-1 text-[15px] text-tinta-500">
+            {plural(casas.filter((c) => c.activa).length, 'casa activa', 'casas activas')} en {resumen.length} regiones · {fechaCorta(hoy, true)}
+          </p>
+        </div>
+        <AccionesRegistro />
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <Indicador cifra={porAprobar.length} texto="por aprobar en el país" tono="alerta" a="/central/reservas?estado=por_aprobar" />
+        <Indicador cifra={pagosPorRegistrar().length} texto="pagos por registrar" a="/central/cobros" />
+        <Indicador cifra={llegadas.length} texto="llegadas hoy y mañana" />
+        <Indicador cifra={`${Math.round(ocupacion(casas.filter((c) => c.activa), reservas, hoy) * 100)}%`} texto="ocupación nacional, próximos 30 días" a="/central/reservas" />
       </div>
       <PanelPorAprobar gestor={usuario} />
 
-      <section className="mt-6" aria-labelledby="t-alertas">
+      <section className="mt-8" aria-labelledby="t-alertas">
         <h2 id="t-alertas" className="text-lg font-semibold">
           Requiere atención
         </h2>
@@ -106,6 +125,7 @@ export function InicioCentral() {
         </Tarjeta>
       </section>
 
+      <Movimientos reservas={reservas} hoy={hoy} conRegion={nombreRegion} />
     </>
   )
 }

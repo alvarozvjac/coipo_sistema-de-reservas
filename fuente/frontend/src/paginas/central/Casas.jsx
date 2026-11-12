@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { AlertTriangle, CheckCircle2, Download, FileSpreadsheet, Keyboard, Lock, RotateCcw, Trash2, Upload } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
 import {
@@ -28,19 +29,23 @@ import { Aviso, Boton, Campo, Tarjeta, claseEntrada, claseFiltro } from '../../c
 import { useSesion } from '../../componentes/Perfil.jsx'
 import { Dialogo, nombreRegion } from '../encargada/comun.jsx'
 import { DialogoDirecciones } from './DireccionesCasa.jsx'
+import { Administracion } from './Administracion.jsx'
 
 const PESTANAS = [
   ['casas', 'Casas'],
   ['tarifas', 'Tarifas'],
   ['bloqueos', 'Bloqueos de fechas'],
+  ['administracion', 'Administración'],
 ]
 
+/** Configuración del encargado nacional (decisión 12-11-2026): casas, tarifas, bloqueos y administración. */
 export function CasasTarifas() {
   useDatos()
-  const [pestana, setPestana] = useState('casas')
+  const [params] = useSearchParams()
+  const [pestana, setPestana] = useState(PESTANAS.some(([k]) => k === params.get('pestana')) ? params.get('pestana') : 'casas')
   return (
     <>
-      <h1 className="text-2xl font-bold">Casas y tarifas</h1>
+      <h1 className="text-2xl font-bold">Configuración</h1>
       <div className="mt-4 flex gap-1 overflow-x-auto border-b border-borde" role="tablist">
         {PESTANAS.map(([k, t]) => (
           <button
@@ -59,6 +64,7 @@ export function CasasTarifas() {
         {pestana === 'casas' && <Casas />}
         {pestana === 'tarifas' && <Tarifas />}
         {pestana === 'bloqueos' && <Bloqueos />}
+        {pestana === 'administracion' && <Administracion />}
       </div>
     </>
   )

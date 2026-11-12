@@ -26,8 +26,8 @@ asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro)
 
 | Perfil | Qué se puede probar |
 |---|---|
-| Encargada regional | Llegadas y salidas, ocupación, reservas de la región, inventario; registrar reservas en las casas de su región (a nombre de cualquier persona de la nómina o de otro servicio público), aprobar las que registró el encargado nacional en su región, postulaciones al sorteo y desistimientos; consultar la disponibilidad de todo el país |
-| Encargado nacional | Registrar en cualquier casa del país (queda por aprobar por la encargada de la región), más alertas, nómina de descuentos, registro de transferencias (confirma la reserva), casas, tarifas (digitadas o por planilla Excel/CSV), bloqueos de fechas, temporadas altas y su sorteo (con las respuestas a los cupos ofrecidos), otras direcciones de cada casa (estacionamiento, retiro de llaves…), dashboard y Administración (en construcción) |
+| Encargada regional | Panel de control de su región (por aprobar, por confirmar, llegadas y salidas, inventario); Reservas con tablero de ocupación de todo el país y listado: registra en las casas de su región lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), aprueba lo que registró el encargado nacional en su región, gestiona postulaciones y desistimientos; Inventario |
+| Encargado nacional | Panel nacional; Reservas con tablero de todo el país (registra en cualquier casa, queda por aprobar por la encargada de la región); Cobros (nómina de descuentos y transferencias); Temporadas y sorteo; Dashboard; Configuración (casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas y Administración, en construcción) |
 
 Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María
 Fuentes, afiliada), 16.882.409-2 (Paula Ortiz, plazo fijo) o 6.884.215-8 (Hernán Soto,

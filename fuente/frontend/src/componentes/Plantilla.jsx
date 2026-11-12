@@ -9,20 +9,17 @@ import { INICIO, PERFIL_ETIQUETA, useSesion } from './Perfil.jsx'
 /** Menú de cada perfil. Desde el 12-11-2026 solo ingresan los encargados. */
 const NAV = {
   encargada: [
-    { a: '/encargada', texto: 'Inicio', fin: true },
+    { a: '/encargada', texto: 'Panel', fin: true },
     { a: '/encargada/reservas', texto: 'Reservas' },
-    { a: '/gestion/disponibilidad', texto: 'Disponibilidad' },
     { a: '/encargada/inventario', texto: 'Inventario' },
   ],
   central: [
-    { a: '/central', texto: 'Inicio', fin: true },
+    { a: '/central', texto: 'Panel', fin: true },
     { a: '/central/reservas', texto: 'Reservas' },
-    { a: '/gestion/disponibilidad', texto: 'Disponibilidad' },
     { a: '/central/cobros', texto: 'Cobros' },
-    { a: '/central/casas', texto: 'Casas y tarifas' },
     { a: '/central/sorteo', texto: 'Temporadas' },
     { a: '/central/dashboard', texto: 'Dashboard' },
-    { a: '/central/administracion', texto: 'Administración' },
+    { a: '/central/configuracion', texto: 'Configuración' },
   ],
 }
 

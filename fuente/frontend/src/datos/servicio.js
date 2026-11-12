@@ -41,7 +41,7 @@ import { hoyISO, mesDe, primerDiaMes, sumarDias, sumarMeses } from '../lib/fecha
 import { ADICIONAL_TARIFA, PARAMETROS, cargoDesistimiento, glosaTransferencia, noches, porConfirmar, tarifaPara, tarifaTramo, temporadaAltaDe } from '../lib/reglas.js'
 import { HORAS_OFERTA, calendarioTemporada, inicioTemporada, nochesTurno, puedePostular, sortear, turnosDe } from '../lib/sorteo.js'
 
-const CLAVE = 'reserva_veraneo_v14'
+const CLAVE = 'reserva_veraneo_v15'
 
 const ahora = () => new Date().toISOString().slice(0, 19)
 
@@ -226,7 +226,7 @@ export const obtenerReserva = (codigo) => conCasa(estado.reservas.find((r) => r.
  * su declaración (la persona la pidió, conoce el reglamento y, si paga por
  * planilla, autorizó el descuento) reemplaza la aceptación de la persona.
  */
-export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocupantes, contacto, perro_asistencia, forma_pago, titular_viaja = true, a_cargo, registrada_por }) {
+export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocupantes, contacto, perro_asistencia, forma_pago, titular_viaja = true, a_cargo, registrada_por, via }) {
   const choca = ocupacionesDe(casa.id).some((o) => entrada < o.salida && o.entrada < salida)
   if (choca) return null
   const codigo = nuevoCodigo()
@@ -247,6 +247,7 @@ export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocu
     forma_pago,
     acepta_reglamento: true,
     ...(registrada_por && { registrada_por, declaracion_encargado: ahora() }),
+    ...(via && { via }),
     estado: 'confirmada',
     creada_en: ahora(),
     notificaciones: [],

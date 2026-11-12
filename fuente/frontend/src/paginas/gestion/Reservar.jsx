@@ -17,6 +17,7 @@ import {
   noches,
   tarifaPara,
   validarFechas,
+  VIAS,
 } from '../../lib/reglas.js'
 import { Calendario } from '../../componentes/Calendario.jsx'
 import { rutaFoto } from '../../componentes/fotos.js'
@@ -66,6 +67,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
   const [cuotas, setCuotas] = useState(1)
   const [autoriza, setAutoriza] = useState(false)
   const [acepta, setAcepta] = useState(false)
+  const [via, setVia] = useState('')
   const [intento, setIntento] = useState(false)
   const [ocupada, setOcupada] = useState(false)
 
@@ -99,7 +101,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
       : null
 
   const pagoValido = pago === 'planilla' ? autoriza : pago === 'transferencia' ? vioCuenta : false
-  const pasoValido = [erroresFechas.length === 0, !excede && !otrosConError && !contactoError && !errorGrupo && !errorPerro, acepta && pagoValido]
+  const pasoValido = [erroresFechas.length === 0, !excede && !otrosConError && !contactoError && !errorGrupo && !errorPerro, acepta && pagoValido && (!asistida || Boolean(via))]
   const glosa = glosaTransferencia(casa, proximoCodigo())
   const elegirTransferencia = () => {
     setPago('transferencia')
@@ -136,6 +138,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
           : { tipo: 'transferencia', anticipado: true, glosa },
       ...(asistida && {
         registrada_por: { nombre: gestor.nombre, perfil: gestor.perfil, region: gestor.region ?? null },
+        via,
       }),
     })
     if (!codigo) {
@@ -415,6 +418,20 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
                     ))}
                   </ul>
                 </details>
+                {asistida && (
+                  <fieldset className="mt-4">
+                    <legend className="text-[15px] font-medium text-tinta-900">¿Por qué vía le pidió la reserva?</legend>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {Object.entries(VIAS).map(([k, t]) => (
+                        <label key={k} className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg px-3 text-[15px] ring-1 ring-inset ${via === k ? 'bg-verde-50 font-semibold text-verde-800 ring-verde-600' : 'bg-white text-tinta-700 ring-borde hover:bg-stone-50'}`}>
+                          <input type="radio" name="via" value={k} checked={via === k} onChange={() => setVia(k)} className="size-4 accent-verde-700" />
+                          {t}
+                        </label>
+                      ))}
+                    </div>
+                    {intento && !via && <div className="mt-2"><Aviso tipo="error">Indique por qué vía le pidió la reserva.</Aviso></div>}
+                  </fieldset>
+                )}
                 <label className="mt-4 flex cursor-pointer items-start gap-3">
                   <input type="checkbox" className="mt-0.5 size-5 accent-verde-700" checked={acepta} onChange={(e) => setAcepta(e.target.checked)} />
                   <span className="text-[15px]">

@@ -14,9 +14,8 @@ const PUNTOS = [
  */
 export function Administracion() {
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-bold">Administración</h1>
-      <Tarjeta className="mt-4 p-6">
+    <div className="max-w-2xl">
+      <Tarjeta className="p-6">
         <p className="text-[13px] font-semibold uppercase tracking-wide text-verde-700">En construcción</p>
         <p className="mt-2 text-[15px] text-tinta-700">Desde aquí el encargado nacional administrará el sistema:</p>
         <ul className="mt-2 list-disc space-y-1.5 pl-5 text-[15px] text-tinta-700">

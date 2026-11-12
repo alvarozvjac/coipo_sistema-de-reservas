@@ -9,7 +9,7 @@ import { correoEncargada } from '../../datos/usuarios.js'
 import { CATEGORIAS_INVENTARIO } from '../../datos/inventarios.js'
 import { fechaCorta, fechaLarga, nombreMes } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
-import { PARAMETROS, cargoDesistimiento, estadoReserva, glosaTransferencia, limiteDesistimiento, noches } from '../../lib/reglas.js'
+import { PARAMETROS, cargoDesistimiento, estadoReserva, glosaTransferencia, limiteDesistimiento, noches, VIAS } from '../../lib/reglas.js'
 import { PERFIL_ETIQUETA } from '../../componentes/Perfil.jsx'
 import { Dialogo } from '../encargada/comun.jsx'
 import { Aviso, Boton, Estado, Tarjeta } from '../../componentes/ui.jsx'
@@ -93,7 +93,7 @@ export function Comprobante() {
           <Dato t="Llegada" v={fechaLarga(r.entrada)} d={`Desde las ${PARAMETROS.hora_ingreso}`} />
           <Dato t="Salida" v={fechaLarga(r.salida)} d={`Hasta las ${PARAMETROS.hora_salida}`} />
           {r.ocupantes.length > 0 && <Dato t="Personas" v={plural(r.ocupantes.length, 'persona', 'personas')} d={r.ocupantes.map((o) => o.nombre).join(', ')} />}
-          {r.registrada_por && <Dato t="Registrada por" v={r.registrada_por.nombre} d={`${PERFIL_ETIQUETA[r.registrada_por.perfil] ?? 'Encargado/a'}, a pedido de ${r.titular.nombre}, que conoce y acepta el reglamento`} />}
+          {r.registrada_por && <Dato t="Registrada por" v={r.registrada_por.nombre} d={`${PERFIL_ETIQUETA[r.registrada_por.perfil] ?? 'Encargado/a'}, a pedido de ${r.titular.nombre}${r.via ? ` (${VIAS[r.via].toLowerCase()})` : ''}, que conoce y acepta el reglamento`} />}
           {r.aprobada_por && r.registrada_por && <Dato t="Aprobada por" v={r.aprobada_por} d={r.aprobada_en ? fechaCorta(r.aprobada_en.slice(0, 10), true) : undefined} />}
           {r.titular_viaja === false && <Dato t="A cargo en la casa" v={r.a_cargo} d={`${r.titular.nombre} no viaja y sigue siendo el usuario/a responsable`} />}
           {r.perro_asistencia && <Dato t="Perro de asistencia" v="Sí (Ley 20.422)" d={r.perro_asistencia.credencial ? 'Credencial y certificado sanitario adjuntos' : undefined} />}

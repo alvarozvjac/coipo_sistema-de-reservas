@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { HeartHandshake, Search, Ticket, UserCheck } from "lucide-react";
+import { Search, UserCheck } from "lucide-react";
 import { REGIONES } from "../../datos/casas.js";
 import {
   buscarPersona,
   listarCasas,
   obtenerCasa,
-  postulacionAbierta,
-  sorteoVigente,
   useDatos,
 } from "../../datos/servicio.js";
 import { formatearRut, rutValido } from "../../lib/formato.js";
@@ -23,59 +21,6 @@ import { INICIO, useSesion } from "../../componentes/Perfil.jsx";
 import { Reservar } from "./Reservar.jsx";
 
 const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? "—";
-
-/**
- * Acceso a registrar reservas (y, con la postulación abierta, postulaciones)
- * en el inicio y en Reservas de los encargados. Desde el 12-11-2026 es la
- * única forma de reservar: los afiliados/as no ingresan al sistema.
- */
-export function BannerReservaAsistida() {
-  const s = sorteoVigente();
-  const abierta = postulacionAbierta();
-  const { usuario } = useSesion();
-  const regional = usuario?.perfil === "encargada";
-  return (
-    <div className="flex flex-col gap-3 rounded-xl border border-verde-200 bg-verde-50 p-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-start gap-3">
-        <HeartHandshake
-          className="mt-0.5 size-6 shrink-0 text-verde-700"
-          aria-hidden
-        />
-        <div>
-          <p className="font-semibold text-verde-800">
-            ¿Alguien le pidió una reserva
-            {abierta ? " o postular al sorteo" : ""}?
-          </p>
-          <p className="text-[15px] text-verde-800">
-            {regional
-              ? "Regístrela a su nombre, en las casas de su región; para otras regiones, consulte la disponibilidad y derive a la encargada de esa región."
-              : "Regístrela a su nombre, en cualquier casa del país; la aprueba la encargada de la región de la casa."}{" "}
-            La persona recibe la ficha de la reserva por correo.
-            {abierta
-              ? ` La postulación a ${s.nombre.toLowerCase()} está abierta.`
-              : ""}
-          </p>
-        </div>
-      </div>
-      <div className="flex shrink-0 flex-wrap gap-2">
-        {abierta && (
-          <Link
-            to="/gestion/postular"
-            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-white px-4 text-[15px] font-semibold text-verde-800 ring-1 ring-verde-600 hover:bg-verde-100"
-          >
-            <Ticket className="size-4" aria-hidden /> Registrar postulación
-          </Link>
-        )}
-        <Link
-          to="/gestion/reservar"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-verde-700 px-4 text-[15px] font-semibold text-white hover:bg-verde-800"
-        >
-          Registrar reserva
-        </Link>
-      </div>
-    </div>
-  );
-}
 
 /**
  * Registro de una reserva: la encargada regional o el encargado nacional

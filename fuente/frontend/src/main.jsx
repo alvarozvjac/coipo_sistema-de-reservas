@@ -11,16 +11,14 @@ import { Callback } from './paginas/iam/Callback.jsx'
 import { Comprobante } from './paginas/gestion/Comprobante.jsx'
 import { PostulacionAsistida } from './paginas/gestion/PostulacionAsistida.jsx'
 import { SorteoCentral } from './paginas/central/Sorteo.jsx'
-import { Administracion } from './paginas/central/Administracion.jsx'
 import { InicioEncargada } from './paginas/encargada/Inicio.jsx'
-import { ReservasEncargada } from './paginas/encargada/Reservas.jsx'
+import { Reservas } from './paginas/gestion/Reservas.jsx'
 import { InventarioEncargada } from './paginas/encargada/Inventario.jsx'
 import { InicioCentral } from './paginas/central/Inicio.jsx'
 import { Cobros } from './paginas/central/Cobros.jsx'
 import { CasasTarifas } from './paginas/central/Casas.jsx'
 import { Dashboard } from './paginas/central/Dashboard.jsx'
 import { ReservaAsistida } from './paginas/gestion/ReservaAsistida.jsx'
-import { Disponibilidad } from './paginas/gestion/Disponibilidad.jsx'
 
 /** Exige sesión y, si se indica, un perfil. Sin sesión lleva al ingreso. */
 function Requiere({ perfil, children }) {
@@ -41,6 +39,12 @@ function AlInicio() {
 const gestion = (el) => <Requiere perfil={['encargada', 'central']}>{el}</Requiere>
 
 /** La versión publicada como página de claude.ai navega en memoria: su dirección no se puede cambiar. */
+/** Disponibilidad se fusionó con Reservas (decisión 12-11-2026). */
+function IrAReservas() {
+  const { usuario } = useSesion()
+  return <Navigate to={usuario?.perfil === 'central' ? '/central/reservas' : '/encargada/reservas'} replace />
+}
+
 const Enrutador = import.meta.env.MODE === 'pagina' ? MemoryRouter : BrowserRouter
 
 aplicarTema(temaGuardado())
@@ -62,17 +66,18 @@ createRoot(document.getElementById('root')).render(
           >
             <Route index element={<AlInicio />} />
             <Route path="encargada" element={<Requiere perfil="encargada"><InicioEncargada /></Requiere>} />
-            <Route path="encargada/reservas" element={<Requiere perfil="encargada"><ReservasEncargada /></Requiere>} />
+            <Route path="encargada/reservas" element={<Requiere perfil="encargada"><Reservas /></Requiere>} />
             <Route path="encargada/inventario" element={<Requiere perfil="encargada"><InventarioEncargada /></Requiere>} />
             <Route path="central" element={<Requiere perfil="central"><InicioCentral /></Requiere>} />
             <Route path="central/cobros" element={<Requiere perfil="central"><Cobros /></Requiere>} />
-            <Route path="central/casas" element={<Requiere perfil="central"><CasasTarifas /></Requiere>} />
-            <Route path="central/reservas" element={<Requiere perfil="central"><ReservasEncargada /></Requiere>} />
+            <Route path="central/configuracion" element={<Requiere perfil="central"><CasasTarifas /></Requiere>} />
+            <Route path="central/casas" element={<Navigate to="/central/configuracion" replace />} />
+            <Route path="central/reservas" element={<Requiere perfil="central"><Reservas /></Requiere>} />
             <Route path="central/dashboard" element={<Requiere perfil="central"><Dashboard /></Requiere>} />
             <Route path="central/sorteo" element={<Requiere perfil="central"><SorteoCentral /></Requiere>} />
-            <Route path="central/administracion" element={<Requiere perfil="central"><Administracion /></Requiere>} />
+            <Route path="central/administracion" element={<Navigate to="/central/configuracion?pestana=administracion" replace />} />
             <Route path="gestion/reservar" element={gestion(<ReservaAsistida />)} />
-            <Route path="gestion/disponibilidad" element={gestion(<Disponibilidad />)} />
+            <Route path="gestion/disponibilidad" element={<IrAReservas />} />
             <Route path="gestion/reserva/:codigo" element={gestion(<Comprobante />)} />
             <Route path="gestion/postular" element={gestion(<PostulacionAsistida />)} />
           </Route>

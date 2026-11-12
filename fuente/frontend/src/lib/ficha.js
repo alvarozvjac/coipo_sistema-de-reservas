@@ -18,6 +18,7 @@ import {
   PARENTESCOS,
   glosaTransferencia,
   noches,
+  VIAS,
 } from "./reglas.js";
 import { fechaCorta, fechaLarga } from "./fechas.js";
 import { pesos } from "./formato.js";
@@ -157,7 +158,7 @@ export async function descargarFicha(reserva, acta) {
       [
         "Registrada por",
         reserva.registrada_por
-          ? `${reserva.registrada_por.nombre}, a pedido de la persona`
+          ? `${reserva.registrada_por.nombre}, a pedido de la persona${reserva.via ? ` (${VIAS[reserva.via].toLowerCase()})` : ""}`
           : "—",
       ],
       [

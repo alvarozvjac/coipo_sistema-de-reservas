@@ -225,6 +225,25 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   líneas al separar las semillas. Ficha PDF mirada página por página (se corrigió un
   subtítulo que se montaba sobre la fecha).
 
+### Rediseño: Panel, Reservas con tablero y vía (12-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 12-11-2026 15:35. Decisiones en `fuente/docs/DECISIONES.md`.
+- Pruebas de punta a punta (Playwright, fecha fija 02-11-2026), en 1366×900 y 390×844:
+  e2e16 (rediseño: panel, enlaces de las cifras, búsqueda, teclado del tablero, aprobar
+  desde la barra, filtro de personas, rutas antiguas) 16 comprobaciones, 0 fallas;
+  e2e15 (aprobación, ficha y tablero por región) 26/0; e2e14 (registro con vía) 55/0;
+  e2e4 17/0 y e2e9 26/0 en escritorio.
+- axe-core 4.10.2: 0 infracciones WCAG 2.2 AA en 14 pantallas, tema claro y oscuro.
+- Capturas miradas en escritorio y teléfono, claro y oscuro. Lo visto y corregido: la barra
+  de selección fija tapaba noches del tablero en el teléfono (se dejó en su lugar, bajo el
+  tablero); «En curso» y «Confirmada» no se distinguían (se juntaron en la leyenda); faltaba
+  marcar hoy (se marca en la cabecera); la cabecera de fechas se perdía al bajar con todo el
+  país (el tablero tiene alto máximo y la cabecera queda fija).
+- Jueces de `coipo_jueces` (perfil aplicacion): 0 bloqueantes. Sobre una copia con
+  `adopta: interfaz`: j13 OK; j16 avisa COD-1 en `datos/casas.js` y `datos/servicio.js`
+  (bajo 1000 líneas; brecha ya declarada en `CUMPLIMIENTO-FABRICA.md`).
+- No lo comprobé contra la URL pública: no se ha publicado.
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la

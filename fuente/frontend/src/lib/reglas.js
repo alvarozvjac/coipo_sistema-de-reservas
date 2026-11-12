@@ -228,3 +228,15 @@ export const ESTADOS = {
   anulada: { etiqueta: 'Anulada por Bienestar', clase: 'bg-error-50 text-error-700' },
   desistida: { etiqueta: 'Desistida', clase: 'bg-stone-100 text-tinta-500 line-through decoration-1' },
 }
+
+/**
+ * Vía por la que la persona pidió la reserva al encargado (decisión 12-11-2026):
+ * el sistema registra lo que llega por cualquier canal. Obligatoria al registrar.
+ */
+export const VIAS = {
+  telefono: 'Teléfono',
+  correo: 'Correo electrónico',
+  presencial: 'Presencial',
+  whatsapp: 'WhatsApp',
+  otra: 'Otra',
+}

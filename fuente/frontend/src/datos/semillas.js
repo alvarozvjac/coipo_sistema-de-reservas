@@ -92,9 +92,13 @@ function nuevaReserva(codigo, casaId, entrada, nochesN, titular, extra = {}) {
     estado: 'confirmada',
     creada_en: sumarDias(entrada, -21) + 'T10:15:00',
     notificaciones: [],
+    // Vía ficticia y repartida, para que el dashboard tenga qué contar.
+    via: VIAS_SEMILLA[codigo.charCodeAt(codigo.length - 1) % VIAS_SEMILLA.length],
     ...extra,
   }
 }
+
+const VIAS_SEMILLA = ['telefono', 'correo', 'telefono', 'presencial', 'whatsapp', 'correo', 'telefono']
 
 /** Cabañas 02 y 10 de P.N. Puyehue: calendario propio de sábado a viernes (Memo 6188/2026). */
 const CABANAS_PUYEHUE = [22, 23]
@@ -135,6 +139,7 @@ export function semillas(hoy) {
     estado: 'pendiente_aprobacion',
     creada_en: creada,
     registrada_por: { nombre: 'Patricia Herrera Muñoz', perfil: 'central', region: null },
+    via: 'telefono',
     declaracion_encargado: creada,
     notificaciones: [{ tipo: 'solicitud', en: creada, detalle: 'Reserva registrada por el encargado nacional: por aprobar' }],
   })
