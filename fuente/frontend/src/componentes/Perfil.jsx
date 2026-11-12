@@ -1,14 +1,16 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-import { PERFILES_CON_INGRESO, porId } from '../datos/usuarios.js'
+import { porId } from '../datos/usuarios.js'
+import { nominaDeClaims, perfilDeClaims } from '../datos/iam.js'
 
-const CLAVE = 'reserva_veraneo_sesion_v3'
+const CLAVE = 'reserva_veraneo_sesion_v4'
 const Contexto = createContext(null)
 
 /**
- * Sesión de la maqueta: guarda el id de la persona de la nómina que ingresó.
- * Solo ingresan los encargados (regional y nacional); cualquier otra sesión
- * guardada se descarta. En producción la sesión la emite el backend tras
- * validar el código.
+ * Sesión de la maqueta: guarda los datos que el COIPO IAM (simulado) entregó
+ * al ingresar (`claims`: sub, username, email, role, region_id). El perfil sale
+ * del rol del IAM y la región, de `region_id`; la nómina solo aporta el nombre
+ * y el cargo. Una sesión guardada sin rol válido se descarta. En producción la
+ * sesión la emite el backend tras canjear el código del IAM (patrón BFF).
  */
 function leer() {
   try {
@@ -19,8 +21,10 @@ function leer() {
 }
 
 function resolver(s) {
-  const p = s?.id ? porId(s.id) : null
-  return p && PERFILES_CON_INGRESO.includes(p.perfil) ? p : null
+  const perfil = perfilDeClaims(s?.claims)
+  const persona = porId(nominaDeClaims(s?.claims))
+  if (!perfil || !persona) return null
+  return { ...persona, perfil, region: s.claims.region_id ?? null, correo: s.claims.email, usuario_iam: s.claims.username }
 }
 
 export function ProveedorSesion({ children }) {

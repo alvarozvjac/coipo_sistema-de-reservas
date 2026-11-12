@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import { Banner } from './Banner.jsx'
+import { BotonTema } from './BotonTema.jsx'
 import { reiniciarDemo } from '../datos/servicio.js'
 import { INICIO, PERFIL_ETIQUETA, useSesion } from './Perfil.jsx'
 
@@ -38,10 +39,13 @@ export function Plantilla() {
 
   return (
     <div className="flex min-h-dvh flex-col">
+      <a href="#contenido" className="salto-al-contenido no-imprimir">
+        Saltar al contenido
+      </a>
       <header className="no-imprimir border-b border-borde bg-white">
         <Banner />
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-          <NavLink to={INICIO[usuario.perfil]} className="mr-auto leading-tight lg:sr-only">
+          <NavLink to={INICIO[usuario.perfil]} className="mr-auto flex min-h-11 flex-col justify-center leading-tight lg:sr-only">
             <span className="block text-[17px] font-bold text-verde-800">Casas de Veraneo</span>
             <span className="block text-[13px] text-tinta-500">Servicio de Bienestar · CONAF</span>
           </NavLink>
@@ -53,7 +57,7 @@ export function Plantilla() {
                 to={n.a}
                 end={n.fin}
                 className={({ isActive }) =>
-                  `shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-[15px] font-medium ${isActive ? 'bg-verde-50 text-verde-800' : 'text-tinta-700 hover:bg-stone-100'}`
+                  `inline-flex shrink-0 items-center whitespace-nowrap rounded-lg px-3 py-2 text-[15px] font-medium pointer-coarse:min-h-11 ${isActive ? 'bg-verde-50 text-verde-800' : 'text-tinta-700 hover:bg-stone-100'}`
                 }
               >
                 {n.texto}
@@ -72,7 +76,7 @@ export function Plantilla() {
                 salir()
                 navegar('/ingreso', { replace: true })
               }}
-              className="grid size-10 place-items-center rounded-lg text-tinta-500 ring-1 ring-borde hover:bg-stone-50 hover:text-tinta-900"
+              className="grid size-11 place-items-center rounded-lg text-tinta-500 ring-1 ring-borde hover:bg-stone-50 hover:text-tinta-900"
               aria-label="Cerrar sesión"
               title="Cerrar sesión"
             >
@@ -82,7 +86,7 @@ export function Plantilla() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:py-8">
+      <main id="contenido" tabIndex={-1} className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:py-8">
         <Outlet />
       </main>
 
@@ -98,6 +102,7 @@ export function Plantilla() {
             <button type="button" onClick={reiniciarDemo} className="rounded px-2 py-1 font-medium text-verde-700 hover:bg-verde-50">
               Reiniciar datos de prueba
             </button>
+            <BotonTema />
           </span>
         </div>
       </footer>

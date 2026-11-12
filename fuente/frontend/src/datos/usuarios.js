@@ -9,7 +9,9 @@
  * calidad: afiliado | jubilado | no_afiliado   (otro_servicio no está en nómina)
  * grado:   grado del trabajador/a activo/a (04 a 19); define el
  *          tramo de tarifa (Memo 6188/2026). Jubilados/as no tienen grado.
- * perfil:  solicitante (beneficiario/a, no ingresa) | encargada (regional) | central (encargado nacional)
+ * perfil:  solicitante (beneficiario/a, no ingresa) | encargada | central. Es
+ *          referencial: quién ingresa y con qué perfil lo decide el rol del
+ *          COIPO IAM (datos/iam.js), no esta nómina.
  */
 
 export const NOMINA = [
@@ -117,43 +119,11 @@ export const EXTERNO_DEMO = {
   telefono: '+56 9 6234 1187',
 }
 
-/** Accesos rápidos de la maqueta, en el orden en que se muestran. */
-export const ACCESOS_DEMO = [
-  { etiqueta: 'Encargada regional', id: 5 },
-  { etiqueta: 'Encargado nacional', id: 6 },
-]
-
-/**
- * Perfiles que ingresan al sistema en la primera etapa (decisión de Bienestar,
- * 12-11-2026): solo los encargados. Las demás personas de la nómina son
- * beneficiarias: los encargados registran sus reservas y postulaciones.
- */
-export const PERFILES_CON_INGRESO = ['encargada', 'central']
-
 const normalizarRut = (r) => String(r).replace(/[^0-9kK]/g, '').toUpperCase()
 
 export const buscarEnNomina = (rut) => NOMINA.find((p) => normalizarRut(p.rut) === normalizarRut(rut)) ?? null
 
 export const porId = (id) => NOMINA.find((p) => p.id === id) ?? null
-
-const palabras = (t) =>
-  String(t)
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .split(/\s+/)
-    .filter((x) => x.length > 1)
-
-/**
- * El nombre escrito coincide con la nómina si tiene al menos nombre y un
- * apellido, y todas sus palabras están en el nombre registrado
- * (sin distinguir tildes ni mayúsculas).
- */
-export function nombreCoincide(escrito, registrado) {
-  const e = palabras(escrito)
-  const r = new Set(palabras(registrado))
-  return e.length >= 2 && e.every((x) => r.has(x))
-}
 
 /**
  * Correo de la encargada regional, al que el usuario envía las observaciones

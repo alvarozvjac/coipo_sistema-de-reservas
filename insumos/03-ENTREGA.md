@@ -19,7 +19,8 @@ los afiliados/as no ingresan).
 ## En una frase, qué NO hace
 
 No administra las casas de huéspedes, ni cobra en línea, ni registra check-in/check-out,
-ni sanciona usuarios; en la maqueta, correos, nóminas e IAM son simulados.
+ni sanciona usuarios; en la maqueta, correos, nóminas y el inicio de sesión del COIPO IAM
+son simulados.
 
 ## Gerencia / banner
 
@@ -46,25 +47,25 @@ viajan; credencial de perro de asistencia (sensible); descuentos por persona. To
 Ver la tabla de `00-PROBLEMA.md` (P1 a P10) y «Por confirmar con Bienestar» en
 `fuente/docs/DECISIONES.md`. Todos tienen persona a quien preguntar.
 
-## Lo que el estándar de interfaz no trajo, o en que la maqueta se aparta
+## Cumplimiento del estándar de la fábrica
 
-Leído `identidad/ESTANDAR_UI.md` @ `0853a0e` (2026-10-30). La maqueta no está sembrada,
-así que nada de esto la bloquea; sí lo tendrá que resolver la aplicación sembrada:
+Revisado el 2026-11-12 contra `coipo_master_produccion` @ `7f67bcd` y `coipo_jueces` @
+`1bd9ad5`: detalle regla por regla en `fuente/docs/CUMPLIMIENTO-FABRICA.md`.
 
-- Verde de interfaz `#185530` (botones, enlaces) en vez del institucional `#064928`
-  (UI-2).
-- Letra del sistema en vez de Instrument Sans / Fraunces / JetBrains Mono (enmienda del
-  2026-10-24).
-- Tamaños, espacios y radios escritos con clases de Tailwind, no con la capa de tokens
-  (UI-7).
-- Sin tema oscuro (UI-3 y UI-10 no se pueden evaluar en oscuro).
-- El título sobre la franja se ubica con un porcentaje del contenedor (UI-1 lo prohíbe);
-  desde 1024 px la imagen ocupa todo el ancho y el texto cae en el campo plano, pero no se
-  comprobó con `verificar-titulo.ts`.
-- Estados de error, aviso e información con colores propios: el estándar declara que no
-  tiene color de estado (§7, hueco 2).
-- Cumple: viewport sin bloqueo de zoom (UI-16), `prefers-reduced-motion` global (UI-15),
-  anillo de foco único (UI-10 en claro), sin scroll horizontal a 390 px (UI-20).
+- **Interfaz:** se corrigió lo que bloquea (tema oscuro con los valores del estándar, foco
+  como token, movimiento reducido completo, título del banner en la zona medida, banner
+  corto en teléfono, focos suprimidos). `j13` sale OK con 3 comprobaciones (antes no podía
+  evaluar el tema oscuro) y axe-core no encuentra violaciones AA en claro ni en oscuro.
+  Quedan como aviso: tamaños literales de Tailwind (UI-7), cortes de Tailwind (UI-17) y
+  áreas de toque dentro de tablas y gráficos (UI-18).
+- **Código:** la maqueta no cumple `ESTANDAR_CODIGO.md` (JavaScript, sin capas, tres
+  archivos sobre 800 líneas). No se reescribe: la aplicación sembrada nace en TypeScript y
+  hexagonal; el informe dice qué partes pasan tal cual al dominio.
+- **Ingreso:** simulado con el COIPO IAM (rol y `region_id`); propuesta `iam.uso: activo`
+  con roles `encargado_regional` y `encargado_nacional` [PENDIENTE: nombres, al preparar el
+  alta].
+- **Banner:** la maqueta usa el de la UIA; el de la gerencia queda como dice «Gerencia /
+  banner» arriba.
 
 ## Lo que este tramo NO decidió (para Luis)
 

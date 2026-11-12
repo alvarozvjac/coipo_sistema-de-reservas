@@ -16,9 +16,13 @@ Bienestar de CONAF, elaborada por la Unidad de Información y Análisis (UIA).
 
 Desde el 12-11-2026 la primera etapa es solo para los encargados de Bienestar: los
 afiliados/as no ingresan, y la encargada regional o el encargado nacional (antes Oficina
-Central) registra sus reservas y postulaciones. En la pantalla de ingreso, el recuadro
-**«Maqueta · probar como»** carga a cada encargado; presione **Continuar** y use el código
-que aparece en pantalla (la maqueta no envía correos).
+Central) registra sus reservas y postulaciones.
+
+El ingreso es con el **COIPO IAM, simulado**: pulse **«Ingresar con COIPO IAM»** y, en la
+pantalla del IAM, elija una cuenta de prueba (contraseña «maqueta»): `cnunez` (encargada
+regional de Valparaíso), `pherrera` (encargado nacional) o `mfuentes` (afiliada sin rol en
+esta aplicación, para ver el rechazo). El perfil y la región salen del rol que el IAM
+asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro).
 
 | Perfil | Qué se puede probar |
 |---|---|
@@ -47,8 +51,10 @@ respuesta de la persona a ese cupo.
 - `index.html`: la maqueta completa en un solo archivo (código, estilos e imágenes
   incluidos). Se genera desde `fuente/` con `npm run build:pagina` (archivo
   `fuente/frontend/dist-pagina/github-pages/index.html`).
-- `fuente/`: código fuente de la maqueta (React 19 + Vite + Tailwind 4, sin backend) y
-  `fuente/docs/DECISIONES.md` con las decisiones y los pendientes con Bienestar.
+- `fuente/`: código fuente de la maqueta (React 19 + Vite + Tailwind 4, sin backend),
+  `fuente/docs/DECISIONES.md` con las decisiones y los pendientes con Bienestar, y
+  `fuente/docs/CUMPLIMIENTO-FABRICA.md` con la revisión contra el estándar de
+  `coipo_master_produccion`.
 
 ## Cómo actualizar la maqueta publicada
 

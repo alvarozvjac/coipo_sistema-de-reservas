@@ -1,6 +1,19 @@
 @import 'tailwindcss';
 
-/* Paleta institucional. Se usa como bg-verde-700, text-tinta-600, etc. */
+/* Capa de color de la maqueta, alineada con identidad/ESTANDAR_UI.md de
+   coipo_master_produccion (firmado el 2026-09-07) y con su implementación en
+   semilla/ESQUELETO/frontend/src/estilos/interfaz.css.
+
+   La maqueta usa Tailwind: cada color de abajo es una utilidad (bg-verde-700,
+   text-tinta-500…). Para cumplir UI-3 («todo token de color usado como texto,
+   borde o foco se redefine en los dos temas») el tema oscuro REDEFINE estas
+   mismas variables más abajo, en vez de parchar selector por selector (UI-4).
+
+   En el tema oscuro el par «fondo verde + texto blanco» de los botones se
+   invierte: el verde pasa a ser el paso derivado #4fb37a (UI-4 del estándar) y
+   `white` pasa a ser la superficie oscura, así que el texto del botón queda
+   oscuro sobre verde claro (5,6:1). Lo único que no se invierte es el texto
+   sobre el banner, que va sobre la imagen y usa `sobre-banner`. */
 @theme {
   --color-verde-50: #eef6f0;
   --color-verde-100: #d6eadc;
@@ -9,11 +22,17 @@
   --color-verde-600: #1f6b3b;
   --color-verde-700: #185530;
   --color-verde-800: #123f24;
+  /* UI-2: el verde institucional medido en el banner. */
   --color-banner: #064928;
+  --color-sobre-banner: #ffffff;
 
   --color-fondo: #f7f6f2;
+  /* Separa; no identifica un control (sin umbral). */
   --color-borde: #e3e0d8;
-  --color-tinta-400: #8a877f;
+  /* Borde que SÍ identifica un control (campos): 3:1 (WCAG 1.4.11). */
+  --color-control: #7d7a73;
+  /* Antes #8a877f (3,59:1 sobre blanco): no llegaba a 4,5:1 como texto. */
+  --color-tinta-400: #74716a;
   --color-tinta-500: #6b6862;
   --color-tinta-700: #3d3b37;
   --color-tinta-900: #1d1c1a;
@@ -26,8 +45,92 @@
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+:root {
+  /* UI-10: el foco es un token y cumple 3:1 en los dos temas. */
+  --foco-color: var(--color-verde-500);
+  --foco-ancho: 3px;
+  --foco-separacion: 2px;
+  /* UI-8: una sola curva de movimiento (la del estándar). */
+  --curva: cubic-bezier(0.16, 0.85, 0.2, 1);
+}
+
+/* ── Tema oscuro ──────────────────────────────────────────────────────────────
+   Los dos selectores llevan lo mismo: el explícito para quien eligió el tema y
+   la consulta de medio para quien no eligió (como interfaz.css de la semilla).
+   Superficie #232b27 y fondo #1a1f1c son los del estándar. Contrastes medidos
+   sobre la superficie: tinta-900 12,0 · tinta-700 9,6 · tinta-500 6,8 ·
+   tinta-400 5,1 · verde-700 5,6 · alerta-700 7,5 · error-700 6,0 · sky-800 6,8. */
+[data-theme='oscuro'] {
+  --color-white: #232b27;
+  --color-fondo: #1a1f1c;
+  --color-borde: #2f3a34;
+  --color-control: #717e77;
+  --color-tinta-400: #95a19a;
+  --color-tinta-500: #aab4ae;
+  --color-tinta-700: #cdd3cf;
+  --color-tinta-900: #e8eae9;
+  --color-verde-50: #1f3328;
+  --color-verde-100: #24402f;
+  --color-verde-200: #2f5a3d;
+  --color-verde-500: #4fb37a;
+  --color-verde-600: #5cbf86;
+  --color-verde-700: #4fb37a;
+  --color-verde-800: #7fd1a0;
+  --color-alerta-50: #33290f;
+  --color-alerta-700: #e8b23f;
+  --color-error-50: #3a1f1d;
+  --color-error-700: #f08a7a;
+  --color-sky-100: #17344a;
+  --color-sky-800: #7ab8e0;
+  --color-stone-50: #1f2622;
+  --color-stone-100: #29312d;
+  --color-stone-200: #333d37;
+  --color-stone-300: #46524b;
+  --color-stone-400: #7d8a83;
+  --color-stone-500: #9aa5a0;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='claro']) {
+    --color-white: #232b27;
+    --color-fondo: #1a1f1c;
+    --color-borde: #2f3a34;
+    --color-control: #717e77;
+    --color-tinta-400: #95a19a;
+    --color-tinta-500: #aab4ae;
+    --color-tinta-700: #cdd3cf;
+    --color-tinta-900: #e8eae9;
+    --color-verde-50: #1f3328;
+    --color-verde-100: #24402f;
+    --color-verde-200: #2f5a3d;
+    --color-verde-500: #4fb37a;
+    --color-verde-600: #5cbf86;
+    --color-verde-700: #4fb37a;
+    --color-verde-800: #7fd1a0;
+    --color-alerta-50: #33290f;
+    --color-alerta-700: #e8b23f;
+    --color-error-50: #3a1f1d;
+    --color-error-700: #f08a7a;
+    --color-sky-100: #17344a;
+    --color-sky-800: #7ab8e0;
+    --color-stone-50: #1f2622;
+    --color-stone-100: #29312d;
+    --color-stone-200: #333d37;
+    --color-stone-300: #46524b;
+    --color-stone-400: #7d8a83;
+    --color-stone-500: #9aa5a0;
+    color-scheme: dark;
+  }
+}
+
+[data-theme='claro'] {
+  color-scheme: light;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
+  color-scheme: light dark;
 }
 
 body {
@@ -36,16 +139,66 @@ body {
   font-family: var(--font-sans);
 }
 
+/* El salto al contenido: se saca de la vista y vuelve al enfocarlo. */
+.salto-al-contenido {
+  position: absolute;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: var(--color-fondo);
+  color: var(--color-tinta-900);
+  border-radius: 4px;
+  text-decoration: underline;
+  transition: top 0.2s var(--curva);
+}
+.salto-al-contenido:focus-visible {
+  top: 1rem;
+}
+
+/* UI-10: el anillo de foco, una sola vez y desde el token. */
 :focus-visible {
-  outline: 3px solid var(--color-verde-500);
-  outline-offset: 2px;
+  outline: var(--foco-ancho) solid var(--foco-color);
+  outline-offset: var(--foco-separacion);
   border-radius: 4px;
 }
 
+/* UI-8: las transiciones de Tailwind usan la curva del estándar. */
+*,
+*::before,
+*::after {
+  transition-timing-function: var(--curva);
+}
+
+/* UI-15: el movimiento reducido apaga TODO el movimiento, también el inline. */
 @media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    animation: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* §8 del estándar: en iOS un campo con letra menor de 16 px amplía la página al
+   enfocarlo; se corrige con el tamaño, nunca con maximum-scale (UI-16). */
+@media (hover: none) and (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1rem);
+  }
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
   }
 }
 

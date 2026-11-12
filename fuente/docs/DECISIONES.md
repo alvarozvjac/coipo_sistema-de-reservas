@@ -50,7 +50,35 @@ cuando se contradicen.
 - En el código: `porConfirmar(r)` en `lib/reglas.js` (transferencia sin pago registrado) y
   `registrarPago` en `datos/servicio.js`, que confirma y envía el acta.
 
-## Ingreso (ajuste 1, 20-10-2026)
+## Ingreso con el COIPO IAM (decisión 12-11-2026)
+
+Reemplaza al ingreso con RUT y código de la sección siguiente. Pedido por Álvaro Zegers el
+12-11-2026: «El login debe ser simulado con el IAM». Sigue el flujo de la fábrica
+(`prompts/15-registrar-en-el-iam.md` e `IdentidadLocal` de la semilla).
+
+- «Ingresar con COIPO IAM» → pantalla del IAM, rotulada como simulada, con usuario
+  institucional y contraseña → vuelta a `/auth/callback` con un código de un solo uso.
+- El perfil sale **solo** del rol que el IAM asigna para esta aplicación
+  (`encargado_regional` → encargada, `encargado_nacional` → encargado nacional) y la región
+  de la encargada, del atributo `region_id`. La nómina ya no decide quién entra.
+- Cuenta sin rol en la aplicación: «Su cuenta no tiene acceso a esta aplicación», sin
+  sesión. Cancelar en el IAM o un `state` que no corresponde también terminan sin sesión.
+- Se eliminaron el RUT, el nombre y el código por correo del ingreso, y el recuadro
+  «Probar como» (las cuentas de prueba están en la pantalla del IAM).
+- La sesión guardada pasó a `reserva_veraneo_sesion_v4`.
+- [PENDIENTE] Nombres definitivos de los roles y del atributo de región: se fijan al
+  preparar el alta en el IAM (`registro-iam/preparar_alta.py`), con Luis Monsalve.
+- En el producto el canje lo hace el backend (patrón BFF) y el token no llega al navegador;
+  en la maqueta todo ocurre en el navegador (`datos/iam.js`).
+
+## Tema oscuro y estándar de interfaz (12-11-2026)
+
+La maqueta adopta las reglas de `identidad/ESTANDAR_UI.md` que bloquean: tema oscuro
+(sistema, claro u oscuro, con la clave `coipo_tema` de la semilla), foco como token,
+movimiento reducido completo, título del banner en la zona medida y banner corto en
+teléfono. Detalle y brechas que quedan: `CUMPLIMIENTO-FABRICA.md`.
+
+## Ingreso (ajuste 1, 20-10-2026) — reemplazado el 12-11-2026
 
 1. Pregunta inicial: "¿Es usted funcionario/a de CONAF?"
    - **Sí** (incluye afiliados jubilados): RUT y nombre. El sistema busca el RUT en las
@@ -315,6 +343,8 @@ Bienestar le planteó a la UIA, transmitido por Álvaro Zegers el 12-11-2026.
   una firma o un correo de la persona.]
 
 ## Perfiles (2 desde el 12-11-2026)
+
+Los asigna el rol del COIPO IAM (sección «Ingreso con el COIPO IAM»).
 
 1. **Encargada regional**: las casas de su región; registra reservas, postulaciones y
    desistimientos.

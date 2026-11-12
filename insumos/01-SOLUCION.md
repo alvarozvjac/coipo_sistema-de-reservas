@@ -29,7 +29,7 @@ maqueta sin backend.
 - Casas solo de huéspedes (fuera de alcance desde la decisión de octubre de 2026).
 - Ingreso de los afiliados/as: en la primera etapa no entran al sistema (2026-11-12).
 - Pago en línea: el pago es por planilla o por transferencia que el encargado nacional registra.
-- Envío real de correos y del código de ingreso (simulado: se muestra en pantalla).
+- Envío real de correos (simulado) y el COIPO IAM real: en la maqueta el inicio de sesión del IAM está simulado.
 - Integración con las nóminas de afiliados y de personal, IAM o ClaveÚnica (simulado).
 - Persistencia: todo queda en el navegador de quien usa la maqueta (localStorage).
 - Check-in y check-out registrados por la encargada (solicitud, req. 16): hoy el acta se
@@ -63,7 +63,7 @@ Bienestar si el sorteo de temporada alta debe estar en la primera puesta en marc
 
 | Pantalla | Perfil | Decisión que permite | Criterios |
 |---|---|---|---|
-| Ingreso (RUT + código) | Encargados | Entrar; a cualquier otra persona se le indica que pida su reserva a la encargada | C1 |
+| Ingreso con el COIPO IAM (simulado) | Encargados | Entrar; a cualquier otra persona se le indica que pida su reserva a la encargada | C1 |
 | Registrar reserva: persona, casa, calendario, quiénes van, pago y declaración | Encargada, encargado nacional | Registrar la reserva que la persona pidió, con fechas válidas para ella | C2 a C7 |
 | Comprobante de la reserva | Encargados | Ver estado, datos de transferencia, acta; registrar el desistimiento | C2, C6, C7, C8 |
 | Registrar postulación | Encargada, encargado nacional | Registrar, ver o retirar la postulación de una persona; registrar su respuesta a un cupo | C9, C18 |
@@ -80,10 +80,12 @@ Todos con datos ficticios de la maqueta. Cada uno tiene una prueba automática
 (Playwright) que se corre en computador (1366 px) y en teléfono (390 × 844); la tabla de
 correspondencia está en `02-RASTRO.md`.
 
-- **C1 · Ingreso (decisión 12-11-2026).** Dada la encargada regional, cuando ingresa el
-  código de 6 dígitos, entonces entra a su inicio; si escribe «000000», ve «El código no
-  coincide»; y dado el RUT de la afiliada María (13.457.902-1), el sistema no la deja entrar
-  y le indica que pida su reserva a la encargada de su región.
+- **C1 · Ingreso con el COIPO IAM (decisiones 12-11-2026).** Dada la cuenta `cnunez` del
+  IAM con el rol `encargado_regional` y `region_id` 05, cuando ingresa con su contraseña,
+  entonces entra al inicio de la Región de Valparaíso; con una contraseña equivocada el IAM
+  muestra «Usuario o contraseña incorrectos»; y dada la cuenta `mfuentes`, sin rol en esta
+  aplicación, el sistema muestra «Su cuenta no tiene acceso a esta aplicación» y no abre
+  sesión.
 - **C2 · Reserva con planilla.** Dada la encargada que registra una reserva para la
   afiliada con fechas libres en diciembre, cuando elige 2 noches, descuento por planilla en
   2 cuotas, marca que la persona autorizó el descuento y hace la declaración, entonces ve

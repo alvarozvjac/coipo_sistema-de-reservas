@@ -61,9 +61,9 @@ export function ReservasEncargada() {
             role="tab"
             aria-selected={filtro === f}
             onClick={() => setFiltro(f)}
-            className={`rounded-full px-3 py-1.5 text-sm ring-1 ring-inset ${filtro === f ? 'bg-verde-700 font-semibold text-white ring-verde-700' : 'bg-white text-tinta-700 ring-borde hover:bg-stone-50'}`}
+            className={`rounded-full px-3 py-1.5 text-sm pointer-coarse:min-h-11 ring-1 ring-inset ${filtro === f ? 'bg-verde-700 font-semibold text-white ring-verde-700' : 'bg-white text-tinta-700 ring-borde hover:bg-stone-50'}`}
           >
-            {f === 'todas' ? 'Todas' : ESTADOS[f].etiqueta} <span className="opacity-70">{cuenta(f)}</span>
+            {f === 'todas' ? 'Todas' : ESTADOS[f].etiqueta} <span className="tabular-nums">{cuenta(f)}</span>
           </button>
         ))}
       </div>

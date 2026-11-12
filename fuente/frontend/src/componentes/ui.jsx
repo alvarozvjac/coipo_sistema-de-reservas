@@ -51,7 +51,7 @@ export function Campo({ etiqueta, ayuda, error, children, className = '' }) {
 
 /** Selector de filtro de ancho propio (no ocupa toda la fila). */
 export const claseFiltro =
-  'block min-h-11 rounded-lg border border-borde bg-white px-3 text-[15px] text-tinta-900 focus:border-verde-600 focus:outline-none focus:ring-2 focus:ring-verde-200'
+  'block min-h-11 rounded-lg border border-control bg-white px-3 text-[15px] text-tinta-900 focus:border-verde-600'
 
 export const claseEntrada =
-  'block min-h-11 w-full rounded-lg border border-borde bg-white px-3 text-[15px] text-tinta-900 placeholder:text-tinta-400 focus:border-verde-600 focus:outline-none focus:ring-2 focus:ring-verde-200'
+  'block min-h-11 w-full rounded-lg border border-control bg-white px-3 text-[15px] text-tinta-900 placeholder:text-tinta-400 focus:border-verde-600'

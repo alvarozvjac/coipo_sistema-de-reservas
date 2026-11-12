@@ -1,3 +1,9 @@
 Claude outputs/
 .DS_Store
 Thumbs.db
+
+# Variables de entorno: nunca se versionan (G8-8 de coipo_jueces)
+/.env
+.env
+.env.*
+!.env.example

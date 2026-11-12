@@ -25,7 +25,7 @@ export function Cobros() {
   return (
     <>
       <h1 className="text-2xl font-bold">Cobros</h1>
-      <div className="mt-4 flex gap-1 border-b border-borde" role="tablist">
+      <div className="mt-4 flex gap-1 overflow-x-auto border-b border-borde" role="tablist">
         {[
           ['nomina', 'Nómina de descuentos'],
           ['pagos', `Pagos por registrar (${pagos.length})`],
@@ -89,7 +89,7 @@ function Nomina() {
             role="tab"
             aria-selected={periodo === p}
             onClick={() => setPeriodo(p)}
-            className={`rounded-full px-3 py-1.5 text-sm capitalize ring-1 ring-inset ${periodo === p ? 'bg-verde-700 font-semibold text-white ring-verde-700' : 'bg-white text-tinta-700 ring-borde hover:bg-stone-50'}`}
+            className={`rounded-full px-3 py-1.5 text-sm pointer-coarse:min-h-11 capitalize ring-1 ring-inset ${periodo === p ? 'bg-verde-700 font-semibold text-white ring-verde-700' : 'bg-white text-tinta-700 ring-borde hover:bg-stone-50'}`}
           >
             {nombreMes(p + '-01')}
           </button>

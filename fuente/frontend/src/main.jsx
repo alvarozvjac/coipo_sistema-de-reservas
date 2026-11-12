@@ -4,7 +4,10 @@ import { BrowserRouter, MemoryRouter, Navigate, Route, Routes, useLocation } fro
 import './index.css'
 import { INICIO, ProveedorSesion, useSesion } from './componentes/Perfil.jsx'
 import { Plantilla } from './componentes/Plantilla.jsx'
+import { aplicarTema, temaGuardado } from './componentes/BotonTema.jsx'
 import { Ingreso } from './paginas/Ingreso.jsx'
+import { IamSimulado } from './paginas/iam/IamSimulado.jsx'
+import { Callback } from './paginas/iam/Callback.jsx'
 import { Comprobante } from './paginas/gestion/Comprobante.jsx'
 import { PostulacionAsistida } from './paginas/gestion/PostulacionAsistida.jsx'
 import { SorteoCentral } from './paginas/central/Sorteo.jsx'
@@ -39,12 +42,16 @@ const gestion = (el) => <Requiere perfil={['encargada', 'central']}>{el}</Requie
 /** La versión publicada como página de claude.ai navega en memoria: su dirección no se puede cambiar. */
 const Enrutador = import.meta.env.MODE === 'pagina' ? MemoryRouter : BrowserRouter
 
+aplicarTema(temaGuardado())
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Enrutador>
       <ProveedorSesion>
         <Routes>
           <Route path="ingreso" element={<Ingreso />} />
+          <Route path="iam/autorizar" element={<IamSimulado />} />
+          <Route path="auth/callback" element={<Callback />} />
           <Route
             element={
               <Requiere>

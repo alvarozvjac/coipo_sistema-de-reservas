@@ -41,7 +41,7 @@ export function BarrasHorizontales({ datos, formato, detalle }) {
       {datos.map((d, i) => (
         <li
           key={d.etiqueta}
-          className="relative grid grid-cols-[minmax(0,10rem)_1fr] items-center gap-3 rounded-md px-1 py-0.5 outline-none hover:bg-stone-50 focus-visible:bg-stone-50 sm:grid-cols-[minmax(0,12rem)_1fr]"
+          className="relative grid grid-cols-[minmax(0,10rem)_1fr] items-center gap-3 rounded-md px-1 py-0.5 hover:bg-stone-50 focus-visible:bg-stone-50 sm:grid-cols-[minmax(0,12rem)_1fr]"
           tabIndex={0}
           onMouseEnter={() => setActivo(i)}
           onMouseLeave={() => setActivo(null)}
@@ -93,7 +93,7 @@ export function Columnas({ datos, formato, formatoEje, detalle }) {
             {datos.map((d, i) => (
               <div
                 key={d.etiqueta}
-                className="relative flex flex-1 flex-col items-center outline-none"
+                className="relative flex flex-1 flex-col items-center"
                 tabIndex={0}
                 onMouseEnter={() => setActivo(i)}
                 onMouseLeave={() => setActivo(null)}

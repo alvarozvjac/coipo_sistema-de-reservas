@@ -63,6 +63,13 @@ aprobación trazable de quien decide.
 
 ## Decisiones
 
+- 2026-11-12 · El ingreso se simula con el COIPO IAM: el perfil y la región salen del rol
+  y de `region_id`; se quitan el RUT y el código · Álvaro Zegers. [PENDIENTE: nombres de
+  roles, con Luis Monsalve al preparar el alta.]
+- 2026-11-12 · Alcance de «cumplir el estándar de la fábrica»: se corrige la interfaz
+  (UI-1 a UI-20) y se informa la brecha de código sin reescribir; se corren los jueces ·
+  Álvaro Zegers · `fuente/docs/CUMPLIMIENTO-FABRICA.md`.
+
 - 2026-11-12 · Solo encargados en la primera etapa: los afiliados/as no ingresan; el
   encargado registra reservas, postulaciones al sorteo y desistimientos; su declaración
   reemplaza la aceptación de la persona; Mantenimiento UIA pasa a la pestaña
@@ -188,6 +195,14 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   y manual); en el Chrome del usuario: ingreso del encargado nacional, panel con «Registrar
   postulación» y «Registrar reserva», Administración y reservas de todo el país; 0 errores
   de consola.
+- 2026-11-12 · local (`vite preview`), fecha fijada en el 02-11-2026 · `e2e14` con 48
+  comprobaciones (9 nuevas del ingreso con el IAM y 5 del tema) en 1366 × 900 y 390 × 844:
+  0 fallas; `e2e4` y `e2e9`: 0 fallas. axe-core 4.10.2 (WCAG 2.0/2.1/2.2 A y AA) en 14
+  pantallas, tema claro y oscuro: 0 violaciones tras corregir un contador con opacidad.
+  Jueces `coipo_jueces` @ `1bd9ad5`: 0 bloqueantes y 0 avisos (se corrigió `.env` en
+  `.gitignore`); con `adopta: interfaz` en una copia, `j13` OK en 3 comprobaciones y `j16`
+  AVISA `COD-1` × 3. Banner medido a 390, 768, 1024, 1366 y 1920 px. Capturas del
+  ingreso, del IAM, del rechazo sin rol y del tema oscuro miradas.
 
 ## Validación
 
@@ -196,6 +211,10 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   versión mostrada (URL + commit), observaciones clasificadas y aprobación.
 
 ## Aprendizajes
+
+- 2026-11-12 · CON001 · Un juez que no encuentra lo que busca puede no decirlo: `j16`
+  no evaluó TypeScript ni capas porque el frontend vive en `fuente/frontend/`, y su
+  resumen no lo marcó como SIN_EVALUAR. Leer qué comprobó cada juez, no solo su veredicto.
 
 - 2026-11-12 · CON001 · Una comprobación envuelta en «si el botón existe…, si no, OK»
   pasaba sin probar nada: la aceptación de un cupo de la lista de espera nunca se ejercía,
