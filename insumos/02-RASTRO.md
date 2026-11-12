@@ -63,10 +63,6 @@ aprobación trazable de quien decide.
 
 ## Decisiones
 
-- 2026-11-12 · El sistema se llama «Sistema de Gestión de Reservas»; cabecera con el
-  formato de Gestión de Flota y banner oficial `5_banner_DESARROLLO_PERSONAS`, con la línea
-  «Departamento de Bienestar» agregada bajo la gerencia · Álvaro Zegers · detalle en
-  `fuente/docs/DECISIONES.md`.
 - 2026-11-12 · Módulo de registro de reservas: la encargada regional registra solo en su
   región; lo que registra el nacional lo aprueba la encargada de la región de la casa (con
   fechas apartadas); al aprobar se envía una ficha única (reemplaza comprobante y acta) con
@@ -118,14 +114,6 @@ Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/D
   documentación (regla 8 de la metodología).
 
 ## Verificación de la maqueta
-
-- 2026-11-12 (noche) · local, página única · cabecera nueva: capturas de viewport miradas
-  en 1920, 1440, 768 y 390 px, en el ingreso y con sesión iniciada (encargada nacional);
-  la línea «Departamento de Bienestar» queda alineada con el texto oficial del banner;
-  título visible en la zona libre del banner y, en 390 px, en franja propia; sin
-  desborde horizontal ni errores de consola. Barrido de RUT: sólo los RUT ficticios de la
-  semilla y el RUT institucional de CONAF, iguales a la versión anterior. Contra la URL
-  pública: no lo comprobé aún.
 
 Estándar leído: `coipo_master_produccion/identidad/ESTANDAR_UI.md` @ `0853a0e`
 (2026-10-30). La maqueta no está sembrada (no tiene `.semilla`), así que el estándar no la

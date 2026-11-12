@@ -4,7 +4,7 @@ import { KeyRound } from 'lucide-react'
 import { CLAVE_MAQUETA, CLIENT_ID, CUENTAS, autenticarEnIam, urlDeCancelacion } from '../../datos/iam.js'
 import { Aviso, Boton, Campo, claseEntrada } from '../../componentes/ui.jsx'
 
-const NOMBRE_APP = { [CLIENT_ID]: 'Sistema de Gestión de Reservas' }
+const NOMBRE_APP = { [CLIENT_ID]: 'Reservas de Casas de Veraneo' }
 
 /**
  * Pantalla de inicio de sesión del COIPO IAM, SIMULADA en la maqueta. Es otro
@@ -53,7 +53,7 @@ export function IamSimulado() {
           <Aviso tipo="error">
             La solicitud de inicio de sesión no es válida: falta la aplicación de origen.{' '}
             <Link to="/ingreso" className="font-medium underline">
-              Volver al Sistema de Gestión de Reservas
+              Volver a Casas de Veraneo
             </Link>
           </Aviso>
         ) : (

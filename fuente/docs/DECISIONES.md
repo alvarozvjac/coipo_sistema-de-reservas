@@ -50,22 +50,6 @@ cuando se contradicen.
 - En el código: `porConfirmar(r)` en `lib/reglas.js` (transferencia sin pago registrado) y
   `registrarPago` en `datos/servicio.js`, que confirma y envía el acta.
 
-## Título del sistema y banner de la gerencia (decisión 12-11-2026, noche)
-
-- El sistema se llama **Sistema de Gestión de Reservas** (antes «Casas de Veraneo ·
-  Servicio de Bienestar · CONAF»). Decidido por Álvaro Zegers el 12-11-2026.
-- La cabecera sigue el formato de la maqueta de Gestión de Flota: banner oficial de la
-  gerencia a todo el ancho, con el título del sistema sobre la zona libre del banner; en
-  teléfono (< 560 px) el título baja a una franja propia del color del banner.
-- Banner: `5_banner_DESARROLLO_PERSONAS` de `coipo_master_produccion/identidad/`, copiado
-  sin modificar a `src/assets/banner-personas(-corto).jpg`.
-- Junto a «UIA» el banner dice «Gerencia de Desarrollo de las Personas»; se agregó encima,
-  en el mismo tipo y tamaño de letra (minúsculas, como los banners oficiales), la línea
-  «Departamento de Bienestar» (`.rotulo-depto` en `index.css`). Es una superposición de la
-  maqueta, no un banner oficial: [PENDIENTE: variante oficial con el departamento, a Luis
-  Monsalve].
-- En el código: `TITULO_SISTEMA` en `componentes/Banner.jsx`.
-
 ## Registro, aprobación y ficha de la reserva (decisión 12-11-2026, tarde)
 
 Pedido por Álvaro Zegers el 12-11-2026 («crear un módulo de registro de reservas

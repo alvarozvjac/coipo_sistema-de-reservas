@@ -210,15 +210,3 @@ body {
     background: white;
   }
 }
-
-/* Tercera línea del rótulo del banner (Banner.jsx): mismo cuerpo que el rótulo oficial, escalado con la altura
-   pintada de la imagen, que es max(68 px, 100vw / 17,1299). En el asset de 177 px el texto mide ~19,5 px. */
-.rotulo-depto {
-  --alto-banner: max(68px, calc(100vw / 17.1299));
-  top: calc(var(--alto-banner) * 95 / 177);
-  font-size: calc(var(--alto-banner) * 17.5 / 177);
-  line-height: 1;
-  color: #fff;
-  font-weight: 400;
-  white-space: nowrap;
-}

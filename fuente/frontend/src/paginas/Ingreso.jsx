@@ -25,8 +25,8 @@ export function Ingreso() {
       <Banner />
 
       <main className="mx-auto w-full max-w-md flex-1 px-4 py-8 sm:py-12">
-        <p className="text-[13px] font-semibold uppercase tracking-wide text-verde-700">CONAF</p>
-        <h1 className="mt-1 text-[26px] font-bold leading-tight text-tinta-900">Sistema de Gestión de Reservas</h1>
+        <p className="text-[13px] font-semibold uppercase tracking-wide text-verde-700">Servicio de Bienestar · CONAF</p>
+        <h1 className="mt-1 text-[26px] font-bold leading-tight text-tinta-900">Casas de Veraneo</h1>
         <p className="mt-1 text-[15px] text-tinta-700">Gestión de reservas y sorteos para los encargados de Bienestar.</p>
 
         <div className="mt-6 rounded-2xl border border-borde bg-white p-5 sm:p-6">
