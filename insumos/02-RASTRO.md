@@ -267,3 +267,9 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - 2026-11-02 · CON001 · La maqueta se construyó antes de levantar el problema con la
   contraparte (anti-patrón del objetivo 0): faltó preguntar desde el inicio quién aprueba
   y cuántas reservas hay por año.
+
+### Verificación pública del módulo de registro, aprobación y ficha (12-11-2026)
+
+- VERIFICADO: GitHub Pages sirve el commit `fd19f0a` (sha256 del `index.html` público igual al local, 7.926.375 bytes).
+- Recorrido en la URL pública, en Chrome de escritorio: ingreso por el IAM simulado como `cnunez` (encargada regional de Valparaíso); en «Reservas por aprobar» aparece R-2026-0197 (registrada por el encargado nacional); «Aprobar» la confirma y avisa «se envió la ficha de la reserva»; «Disponibilidad» lista las casas del país, con «Registrar reserva» solo en las de Valparaíso y «Solo consulta» en las de otras regiones. Consola: 0 errores.
+- No lo comprobé en teléfono contra la URL pública (sí en local: e2e15 y e2e14 en 390×844).
