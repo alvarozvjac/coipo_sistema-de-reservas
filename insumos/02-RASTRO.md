@@ -63,6 +63,15 @@ aprobación trazable de quien decide.
 
 ## Decisiones
 
+- 2026-11-12 · Módulo de registro de reservas: la encargada regional registra solo en su
+  región; lo que registra el nacional lo aprueba la encargada de la región de la casa (con
+  fechas apartadas); al aprobar se envía una ficha única (reemplaza comprobante y acta) con
+  acompañantes, direcciones e inventario; con transferencia, la ficha sale con el pago;
+  consulta de disponibilidad nacional (buscador y calendario); direcciones ficticias de
+  ejemplo y editables · Álvaro Zegers · detalle en `fuente/docs/DECISIONES.md`.
+  [PENDIENTE: quién aprueba en regiones sin encargada; direcciones reales; si las
+  postulaciones también se restringen por región.]
+
 - 2026-11-12 · El ingreso se simula con el COIPO IAM: el perfil y la región salen del rol
   y de `region_id`; se quitan el RUT y el código · Álvaro Zegers. [PENDIENTE: nombres de
   roles, con Luis Monsalve al preparar el alta.]
@@ -207,6 +216,14 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   Chrome del usuario: ingreso con el COIPO IAM simulado (cuenta `cnunez`) hasta el inicio de
   la Región de Valparaíso, cambio de tema hasta oscuro (fondo `#1a1f1c`) y vuelta a
   Sistema; 0 errores de consola.
+- 2026-11-12 · local, fecha fijada en el 02-11-2026 · prueba nueva `e2e15` (25
+  comprobaciones: por aprobar, fechas apartadas, no aprobar con motivo y fechas liberadas,
+  consulta nacional, registro solo en la región, aprobación desde el comprobante, edición de
+  direcciones y texto del PDF de la ficha) en 1366 × 900 y 390 × 844: 0 fallas. `e2e14` (55,
+  adaptada a la aprobación) en ambos tamaños, `e2e4` y `e2e9`: 0 fallas. axe-core, 15
+  pantallas por tema: 0 violaciones. Jueces: 0 bloqueantes; `servicio.js` bajó de 1154 a 976
+  líneas al separar las semillas. Ficha PDF mirada página por página (se corrigió un
+  subtítulo que se montaba sobre la fecha).
 
 ## Validación
 

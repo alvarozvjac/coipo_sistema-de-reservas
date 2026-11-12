@@ -116,3 +116,10 @@ export const perfilDeClaims = (claims) => PERFIL_POR_ROL[claims?.role] ?? null
 
 /** La persona de la nómina que corresponde a la cuenta del IAM. */
 export const nominaDeClaims = (claims) => CUENTAS.find((c) => c.sub === claims?.sub)?.nomina ?? null
+
+/**
+ * ¿La región tiene una encargada con rol en el IAM? Si no, las reservas por
+ * aprobar de esa región las aprueba el encargado nacional. En la maqueta solo
+ * Valparaíso tiene encargada (cuenta `cnunez`).
+ */
+export const regionConEncargada = (region) => CUENTAS.some((c) => c.role === 'encargado_regional' && c.region_id === region)

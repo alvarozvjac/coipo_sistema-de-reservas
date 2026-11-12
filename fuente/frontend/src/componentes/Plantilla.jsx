@@ -11,11 +11,13 @@ const NAV = {
   encargada: [
     { a: '/encargada', texto: 'Inicio', fin: true },
     { a: '/encargada/reservas', texto: 'Reservas' },
+    { a: '/gestion/disponibilidad', texto: 'Disponibilidad' },
     { a: '/encargada/inventario', texto: 'Inventario' },
   ],
   central: [
     { a: '/central', texto: 'Inicio', fin: true },
     { a: '/central/reservas', texto: 'Reservas' },
+    { a: '/gestion/disponibilidad', texto: 'Disponibilidad' },
     { a: '/central/cobros', texto: 'Cobros' },
     { a: '/central/casas', texto: 'Casas y tarifas' },
     { a: '/central/sorteo', texto: 'Temporadas' },

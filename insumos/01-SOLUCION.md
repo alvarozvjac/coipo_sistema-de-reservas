@@ -65,7 +65,10 @@ Bienestar si el sorteo de temporada alta debe estar en la primera puesta en marc
 |---|---|---|---|
 | Ingreso con el COIPO IAM (simulado) | Encargados | Entrar; a cualquier otra persona se le indica que pida su reserva a la encargada | C1 |
 | Registrar reserva: persona, casa, calendario, quiénes van, pago y declaración | Encargada, encargado nacional | Registrar la reserva que la persona pidió, con fechas válidas para ella | C2 a C7 |
-| Comprobante de la reserva | Encargados | Ver estado, datos de transferencia, acta; registrar el desistimiento | C2, C6, C7, C8 |
+| Comprobante de la reserva | Encargados | Ver estado, direcciones, datos de transferencia y ficha; aprobar o no aprobar; registrar el desistimiento | C2, C6, C7, C8, C19, C21 |
+| Reservas por aprobar (en el inicio) | Encargada de la región de la casa (o nacional si no hay encargada) | Aprobar o no aprobar lo que registró el encargado nacional | C19 |
+| Disponibilidad | Encargada, encargado nacional | Ver qué casas del país están libres y derivar o registrar | C20 |
+| Casas y tarifas › otras direcciones | Encargado nacional | Mantener las direcciones que salen en la ficha | C21 |
 | Registrar postulación | Encargada, encargado nacional | Registrar, ver o retirar la postulación de una persona; registrar su respuesta a un cupo | C9, C18 |
 | Inicio, Reservas, Inventario | Encargada regional | Preparar llegadas y salidas, actualizar inventario | C10 |
 | Inicio nacional, Reservas (todo el país), Cobros | Encargado nacional | Registrar pagos, informar la nómina | C6, C11 |
@@ -149,6 +152,19 @@ correspondencia está en `02-RASTRO.md`.
   el encargado nacional pulsa «Habilitar postulación», entonces la temporada queda
   «Postulación abierta» hasta el 21-05-2027 y el encargado puede registrar postulaciones
   con código P-I27-NNNN.
+- **C19 · Aprobación (decisión 12-11-2026).** Dada una reserva que el encargado nacional
+  registra en el Departamento Viña del Mar, cuando la guarda, entonces queda «Por aprobar»
+  con las fechas apartadas y sin envío a la persona; cuando la encargada de Valparaíso la
+  aprueba, queda «Confirmada» con «Aprobada por» y se envía la ficha; y si no la aprueba
+  (con motivo), queda «No aprobada», se liberan las fechas y se avisa a la persona.
+- **C20 · Consulta y región (decisión 12-11-2026).** Dada la encargada de Valparaíso,
+  cuando consulta la disponibilidad del 14 al 17-12-2026 para 2 personas en todo el país,
+  entonces ve las casas libres de todas las regiones primero, con «Registrar reserva» solo
+  en las de Valparaíso; y al registrar, el selector de región queda fijo en Valparaíso.
+- **C21 · Ficha y direcciones (decisión 12-11-2026).** Dado el Departamento Viña del Mar con
+  su estacionamiento en «6 Norte 1045, Viña del Mar», cuando se aprueba una reserva con
+  planilla, entonces la ficha PDF trae el solicitante, quienes viajan, la dirección
+  principal, el estacionamiento, el inventario y el acta de ingreso y salida.
 
 ## Instrumentos de datos candidatos para la fábrica
 

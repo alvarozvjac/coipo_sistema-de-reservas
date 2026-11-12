@@ -257,7 +257,7 @@ function Pagos({ pagos }) {
                 const confirmo = registrarPago(registrando.codigo, { comprobante: comprobante.trim() }, usuario)
                 setHecho(
                   `Pago de ${registrando.titular.nombre} registrado (${comprobante.trim()}).` +
-                    (confirmo ? ' La reserva quedó confirmada y se enviaron el comprobante y el acta de entrega.' : ' Se avisó al usuario.'),
+                    (confirmo ? ' La reserva quedó confirmada y se envió la ficha de la reserva.' : ' Se avisó al usuario.'),
                 )
                 setRegistrando(null)
               }}

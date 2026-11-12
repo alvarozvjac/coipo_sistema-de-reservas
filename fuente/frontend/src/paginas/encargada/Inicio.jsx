@@ -8,6 +8,7 @@ import { Tarjeta } from '../../componentes/ui.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
 import { antiguedad, nombreRegion } from './comun.jsx'
 import { BannerReservaAsistida } from '../gestion/ReservaAsistida.jsx'
+import { PanelPorAprobar } from '../../componentes/Aprobacion.jsx'
 
 const DIAS_FRANJA = 28
 
@@ -38,6 +39,7 @@ export function InicioEncargada() {
       <div className="mt-4">
         <BannerReservaAsistida />
       </div>
+      <PanelPorAprobar gestor={usuario} />
 
       {/* 1. Llegadas y salidas */}
       <section className="mt-6" aria-labelledby="t-mov">
@@ -149,7 +151,7 @@ function Franja({ casas, reservas, hoy }) {
   const dias = Array.from({ length: DIAS_FRANJA }, (_, i) => sumarDias(hoy, i))
   const estadoDe = (casa, d) => {
     if (bloqueosDe(casa.id).some((b) => d >= b.entrada && d < b.salida)) return 'bloqueo'
-    const r = reservas.find((x) => x.casa_id === casa.id && !['desistida', 'anulada'].includes(x.estado) && d >= x.entrada && d < x.salida)
+    const r = reservas.find((x) => x.casa_id === casa.id && !['desistida', 'anulada', 'rechazada'].includes(x.estado) && d >= x.entrada && d < x.salida)
     if (!r) return null
     return 'ocupada'
   }

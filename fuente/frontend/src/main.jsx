@@ -20,6 +20,7 @@ import { Cobros } from './paginas/central/Cobros.jsx'
 import { CasasTarifas } from './paginas/central/Casas.jsx'
 import { Dashboard } from './paginas/central/Dashboard.jsx'
 import { ReservaAsistida } from './paginas/gestion/ReservaAsistida.jsx'
+import { Disponibilidad } from './paginas/gestion/Disponibilidad.jsx'
 
 /** Exige sesión y, si se indica, un perfil. Sin sesión lleva al ingreso. */
 function Requiere({ perfil, children }) {
@@ -71,6 +72,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="central/sorteo" element={<Requiere perfil="central"><SorteoCentral /></Requiere>} />
             <Route path="central/administracion" element={<Requiere perfil="central"><Administracion /></Requiere>} />
             <Route path="gestion/reservar" element={gestion(<ReservaAsistida />)} />
+            <Route path="gestion/disponibilidad" element={gestion(<Disponibilidad />)} />
             <Route path="gestion/reserva/:codigo" element={gestion(<Comprobante />)} />
             <Route path="gestion/postular" element={gestion(<PostulacionAsistida />)} />
           </Route>

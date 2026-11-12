@@ -27,6 +27,7 @@ import { COLUMNAS, TARIFA_MAX, TARIFA_MIN, descargarFormatoCSV, descargarFormato
 import { Aviso, Boton, Campo, Tarjeta, claseEntrada, claseFiltro } from '../../componentes/ui.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
 import { Dialogo, nombreRegion } from '../encargada/comun.jsx'
+import { DialogoDirecciones } from './DireccionesCasa.jsx'
 
 const PESTANAS = [
   ['casas', 'Casas'],
@@ -69,7 +70,9 @@ function Casas() {
   const [region, setRegion] = useState('')
   const [retirar, setRetirar] = useState(null)
   const [reincorporar, setReincorporar] = useState(null)
+  const [direcciones, setDirecciones] = useState(null)
   const [hecho, setHecho] = useState(null)
+  const { usuario } = useSesion()
   const todas = listarCasas({ incluirInactivas: true })
   const casas = todas.filter((c) => !region || c.region === region)
   const retiradas = todas.filter((c) => !c.activa).length
@@ -97,13 +100,14 @@ function Casas() {
         <FiltroRegion valor={region} onCambio={setRegion} />
       </div>
       <Tarjeta className="relative mt-3 overflow-x-auto">
-        <table className="w-full min-w-[860px] text-left text-[15px]">
+        <table className="w-full min-w-[1000px] text-left text-[15px]">
           <thead className="border-b border-borde text-[13px] text-tinta-500">
             <tr>
               <th className="px-4 py-3 font-medium">Casa</th>
               <th className="px-4 py-3 text-right font-medium">Capacidad</th>
               <th className="px-4 py-3 text-right font-medium">Tarifa / noche (grados 04–14 · 15–19)</th>
               <th className="px-4 py-3 font-medium">Inventario</th>
+              <th className="px-4 py-3 font-medium">Otras direcciones</th>
               <th className="px-4 py-3 font-medium">Estado</th>
               <th className="px-4 py-3 font-medium">
                 <span className="sr-only">Acción</span>
@@ -138,6 +142,11 @@ function Casas() {
                     )}
                   </td>
                   <td className="px-4 py-2.5 text-sm">
+                    <button type="button" onClick={() => setDirecciones(c)} className="min-h-11 rounded px-1 text-left font-medium text-verde-700 hover:underline" aria-label={`Editar las direcciones de ${c.nombre}`}>
+                      {c.otras_direcciones?.length ? c.otras_direcciones.map((d) => d.tipo).join(', ') : 'Agregar'}
+                    </button>
+                  </td>
+                  <td className="px-4 py-2.5 text-sm">
                     {c.activa ? (
                       <span className="inline-flex rounded-full bg-verde-100 px-2.5 py-0.5 text-[13px] font-semibold text-verde-800">En servicio</span>
                     ) : (
@@ -169,6 +178,7 @@ function Casas() {
         </table>
       </Tarjeta>
       {retirar && <DialogoRetiro casa={retirar} onCerrar={() => setRetirar(null)} onListo={setHecho} />}
+      {direcciones && <DialogoDirecciones casa={direcciones} actor={usuario} onCerrar={() => setDirecciones(null)} onListo={setHecho} />}
       {reincorporar && <DialogoReincorporar casa={reincorporar} onCerrar={() => setReincorporar(null)} onListo={setHecho} />}
     </>
   )

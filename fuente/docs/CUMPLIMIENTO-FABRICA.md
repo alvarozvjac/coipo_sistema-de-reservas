@@ -79,7 +79,7 @@ autoalojada de la semilla (`tipografia.css`): la maqueta usa la del sistema.
 
 | Regla | Estado | Medición (VERIFICADO) |
 |---|---|---|
-| COD-1 ningún archivo sobre 1000 líneas; sobre 800, aviso | **Brecha** | `datos/servicio.js` 1154; `datos/casas.js` 972; `paginas/central/Casas.jsx` 837 |
+| COD-1 ningún archivo sobre 1000 líneas; sobre 800, aviso | **Brecha menor** | Ninguno pasa de 1000 desde el 12-11-2026 (se separaron las semillas de `datos/servicio.js` a `datos/semillas.js`). Sobre 800, aviso: `datos/servicio.js` 976, `datos/casas.js` 979 (dato), `paginas/central/Casas.jsx` 847 |
 | COD-2 TypeScript estricto | **Brecha** | 44 archivos `.js`/`.jsx` y 0 `.ts`/`.tsx` en `src/`; no hay `tsconfig.json`; el CI no corre `tsc` |
 | COD-3 hexagonal (dominio puro, puertos, adaptadores) | **Brecha parcial** | no hay `dominio/`, `aplicacion/` ni `adaptadores/`. Hay separación útil para migrar: `lib/reglas.js` y `lib/sorteo.js` son reglas puras; `datos/servicio.js` imita la API (es el futuro adaptador http); `datos/iam.js` imita el puerto de identidad |
 

@@ -50,6 +50,43 @@ cuando se contradicen.
 - En el código: `porConfirmar(r)` en `lib/reglas.js` (transferencia sin pago registrado) y
   `registrarPago` en `datos/servicio.js`, que confirma y envía el acta.
 
+## Registro, aprobación y ficha de la reserva (decisión 12-11-2026, tarde)
+
+Pedido por Álvaro Zegers el 12-11-2026 («crear un módulo de registro de reservas
+solicitadas…»), con sus respuestas a las preguntas de diseño.
+
+- **Dónde registra cada encargado.** El encargado nacional registra en todas las casas; la
+  encargada regional, **solo en las casas de su región** (antes podía en cualquiera).
+- **Aprobación.** Lo que registra el **encargado nacional** queda **«Por aprobar»** y lo
+  aprueba la **encargada regional de la región de la casa**. Lo que registra la propia
+  encargada en su región queda aprobado al registrarlo. Si la región no tiene encargada con
+  rol en el COIPO IAM, la aprueba el encargado nacional ([PENDIENTE] confirmar con Bienestar;
+  en la maqueta solo Valparaíso tiene encargada).
+- **Fechas apartadas.** Mientras está por aprobar, las fechas quedan apartadas. Si no se
+  aprueba (con motivo obligatorio), se liberan y se avisa a la persona.
+- **Correo con la ficha.** Al aprobar, se envía a la persona la **ficha de la reserva** en
+  PDF, que **reemplaza al comprobante y al acta de entrega**: reserva y aprobación,
+  solicitante, acompañantes (nombre, relación y edad), **todas las direcciones de la casa**,
+  pago, inventario y el acta para el ingreso y la salida (Anexo B). Con **transferencia**, al
+  aprobar se envían los datos para transferir y la ficha sale **cuando se registra el pago**.
+  Si la casa no tiene inventario, la ficha lo dice. Cada versión nueva del inventario
+  reenvía la ficha a las reservas confirmadas que aún no comienzan.
+- **Otras direcciones.** Cada casa puede tener direcciones además de la principal
+  (estacionamiento en otro edificio, retiro de llaves, acceso vehicular, bodega). Las edita
+  el encargado nacional en *Casas y tarifas*; rigen para las fichas que se emitan desde
+  entonces. Las de ejemplo (Departamento Viña del Mar, Bahía Inglesa 1 y Cabaña 02 de
+  Puyehue) son **ficticias**. [PENDIENTE: direcciones reales, con Bienestar.]
+- **Autocompletar por RUT.** Ya existía: al escribir el RUT se buscan en la nómina nombre,
+  calidad, región, correo y teléfono.
+- **Consulta de disponibilidad nacional** (pestaña *Disponibilidad*, ambos perfiles):
+  fechas, personas y región opcional; muestra primero las casas libres, el motivo de las que
+  no lo están (ocupada o bloqueada, temporada alta, capacidad) y el calendario de cada una.
+  La encargada consulta todo el país, pero solo registra en su región. No aplica las reglas
+  de la persona (anticipación, una por mes), que se revisan al registrar.
+- Postulaciones al sorteo: sin cambio (cualquier encargado registra en cualquier casa).
+  [PENDIENTE: confirmar si también se restringen por región.]
+- La clave de datos pasó a `reserva_veraneo_v14`.
+
 ## Ingreso con el COIPO IAM (decisión 12-11-2026)
 
 Reemplaza al ingreso con RUT y código de la sección siguiente. Pedido por Álvaro Zegers el
@@ -195,7 +232,7 @@ El sorteo se describe en la sección siguiente.
 - Reglas de cálculo documentadas en `frontend/src/lib/indicadores.js`, para replicarlas en
   el backend.
 
-## Reserva asistida (20-10-2026)
+## Reserva asistida (20-10-2026) — ajustada el 12-11-2026 (ver arriba)
 
 Hay personas que no manejan el computador y piden la reserva a la encargada regional o a
 Oficina Central. Ambas tienen en su inicio el aviso **«¿Alguien le pidió una reserva?»**

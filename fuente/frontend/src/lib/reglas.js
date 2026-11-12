@@ -151,7 +151,7 @@ export function estadoNoche(iso, noDisponibles, hoy = hoyISO(), calidad, liberad
   return 'disponible'
 }
 
-const vigente = (r, hoy) => !['desistida', 'anulada'].includes(r.estado) && r.salida > hoy
+const vigente = (r, hoy) => !['desistida', 'anulada', 'rechazada'].includes(r.estado) && r.salida > hoy
 
 /**
  * Valida un rango de fechas para un solicitante.
@@ -210,12 +210,17 @@ export const porConfirmar = (r) => r.estado === 'confirmada' && r.forma_pago?.ti
 /** Estado visible de una reserva según la fecha de hoy. */
 export function estadoReserva(r, hoy = hoyISO()) {
   if (['desistida', 'anulada'].includes(r.estado)) return r.estado
+  // Decisión 12-11-2026: lo que registra el encargado nacional espera la aprobación de la encargada de la región.
+  if (r.estado === 'pendiente_aprobacion') return 'por_aprobar'
+  if (r.estado === 'rechazada') return 'rechazada'
   if (r.salida <= hoy) return 'finalizada'
   if (r.entrada <= hoy) return 'en_curso'
   return porConfirmar(r) ? 'por_confirmar' : 'confirmada'
 }
 
 export const ESTADOS = {
+  por_aprobar: { etiqueta: 'Por aprobar', clase: 'bg-alerta-50 text-alerta-700 ring-1 ring-inset ring-alerta-700/40' },
+  rechazada: { etiqueta: 'No aprobada', clase: 'bg-error-50 text-error-700' },
   por_confirmar: { etiqueta: 'Por confirmar', clase: 'bg-alerta-50 text-alerta-700' },
   confirmada: { etiqueta: 'Confirmada', clase: 'bg-verde-100 text-verde-800' },
   en_curso: { etiqueta: 'En curso', clase: 'bg-sky-100 text-sky-800' },

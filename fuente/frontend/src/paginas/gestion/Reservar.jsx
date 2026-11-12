@@ -45,7 +45,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
 
   const entrada = p.get('entrada')
   const salida = p.get('salida')
-  const [paso, setPaso] = useState(entrada && salida ? 1 : 0)
+  const [paso, setPaso] = useState(entrada && salida && !gestor ? 1 : 0)
   const [viaja, setViaja] = useState(true)
   const [aCargo, setACargo] = useState('')
   const [otros, setOtros] = useState([])
@@ -389,12 +389,19 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
               <Tarjeta className="p-5">
                 <h2 className="text-lg font-semibold">Antes de enviar</h2>
                 <ul className="mt-2 list-disc space-y-1.5 pl-5 text-[15px] text-tinta-700">
+                  {gestor?.perfil === 'central' && (
+                    <li>
+                      Si las fechas siguen disponibles, quedan apartadas y la reserva queda <strong>por aprobar</strong>: la aprueba la encargada regional de la casa (decisión del 12-11-2026). A la persona no se le envía nada hasta entonces.
+                    </li>
+                  )}
                   {pago === 'transferencia' ? (
                     <li>
-                      Si las fechas siguen disponibles, quedan apartadas y la reserva queda <strong>por confirmar</strong>. Cuando Bienestar compruebe la transferencia, se confirma y {asistida ? 'se envían' : 'le enviamos'} el comprobante y el acta de entrega por correo.
+                      {gestor?.perfil === 'central' ? 'Al aprobarla' : 'Si las fechas siguen disponibles, quedan apartadas y'} la reserva queda <strong>por confirmar</strong> y se envían los datos para transferir. Cuando Bienestar compruebe la transferencia, se confirma y se envía por correo la <strong>ficha de la reserva</strong>.
                     </li>
                   ) : (
-                    <li>Si las fechas siguen disponibles, la reserva queda <strong>confirmada al instante</strong> y {asistida ? 'se envían' : 'le enviamos'} el comprobante y el acta de entrega por correo.</li>
+                    <li>
+                      {gestor?.perfil === 'central' ? 'Al aprobarla, la reserva queda' : 'Si las fechas siguen disponibles, la reserva queda'} <strong>confirmada</strong> y se envía por correo la <strong>ficha de la reserva</strong>: quienes viajan, las direcciones de la casa y el inventario.
+                    </li>
                   )}
                   <li>
                     Si desiste <strong>hasta el {fechaCorta(limiteDesistir, true)}</strong> ({PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles antes de la llegada) no tiene costo. Después, o si no se presenta, se paga la estadía completa ({pesos(total)}), salvo fuerza mayor acreditada.
@@ -412,7 +419,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar }) {
                   <input type="checkbox" className="mt-0.5 size-5 accent-verde-700" checked={acepta} onChange={(e) => setAcepta(e.target.checked)} />
                   <span className="text-[15px]">
                     {asistida
-                      ? `Declaro que ${usuario.nombre} me pidió esta reserva y que conoce y acepta el Reglamento General de Uso de Casas de Veraneo o Descanso. Recibirá en ${correo} ${pago === 'transferencia' ? 'los datos para transferir y, cuando se compruebe el pago, ' : ''}el comprobante y el acta de entrega.`
+                      ? `Declaro que ${usuario.nombre} me pidió esta reserva y que conoce y acepta el Reglamento General de Uso de Casas de Veraneo o Descanso. Recibirá en ${correo} ${pago === 'transferencia' ? 'los datos para transferir y, cuando se compruebe el pago, ' : ''}la ficha de la reserva.`
                       : 'Conozco y acepto el Reglamento General de Uso de Casas de Veraneo o Descanso.'}
                   </span>
                 </label>

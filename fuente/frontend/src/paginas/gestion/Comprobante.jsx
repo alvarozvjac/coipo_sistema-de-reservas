@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { CheckCircle2, Clock, FileDown, Printer } from 'lucide-react'
+import { CheckCircle2, Clock, FileDown, Hourglass, Printer } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
-import { desistirReserva, obtenerReserva, useDatos } from '../../datos/servicio.js'
+import { desistirReserva, obtenerReserva, puedeAprobar, useDatos } from '../../datos/servicio.js'
+import { BotonesAprobacion } from '../../componentes/Aprobacion.jsx'
 import { INICIO, useSesion } from '../../componentes/Perfil.jsx'
 import { correoEncargada } from '../../datos/usuarios.js'
 import { CATEGORIAS_INVENTARIO } from '../../datos/inventarios.js'
@@ -23,7 +24,9 @@ const PAGO = {
 /**
  * Comprobante de una reserva, visto por el encargado que la registró o que la
  * gestiona. Desde el 12-11-2026 aquí se registra también el desistimiento que
- * la persona comunica a Bienestar.
+ * la persona comunica a Bienestar, y la encargada de la región aprueba lo que
+ * registró el encargado nacional. Lo que se envía a la persona es la ficha de
+ * la reserva (PDF), que reemplaza al comprobante y al acta de entrega.
  */
 export function Comprobante() {
   useDatos()
@@ -40,24 +43,34 @@ export function Comprobante() {
   const { usuario } = useSesion()
   const reservas = usuario.perfil === 'central' ? '/central/reservas' : '/encargada/reservas'
   const puedeDesistir = ['confirmada', 'por_confirmar'].includes(estado)
+  const ficha = r.fichas?.at(-1)
 
   return (
     <div className="mx-auto max-w-2xl">
+      {nueva && estado === 'por_aprobar' && (
+        <div className="mb-6 text-center">
+          <Hourglass className="mx-auto size-12 text-alerta-700" aria-hidden />
+          <h1 className="mt-3 text-2xl font-bold">Reserva registrada a nombre de {r.titular.nombre}, por aprobar</h1>
+          <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
+            Las fechas quedan apartadas. {puedeAprobar(usuario, r) ? 'Esta región no tiene encargada con rol en el sistema: apruébela usted más abajo.' : `La aprueba la encargada regional de ${region}.`} Recién al aprobarla se envía a {r.contacto?.correo} la ficha de la reserva.
+          </p>
+        </div>
+      )}
       {nueva && estado === 'por_confirmar' && (
         <div className="mb-6 text-center">
           <Clock className="mx-auto size-12 text-alerta-700" aria-hidden />
           <h1 className="mt-3 text-2xl font-bold">Reserva por confirmar a nombre de {r.titular.nombre}</h1>
           <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
-            Se enviaron a {r.contacto?.correo} los datos para transferir. Las fechas quedan apartadas: cuando Bienestar compruebe el pago, la reserva queda confirmada y se envían el comprobante y el acta de entrega.
+            Se enviaron a {r.contacto?.correo} los datos para transferir. Las fechas quedan apartadas: cuando Bienestar compruebe el pago, la reserva queda confirmada y se envía la ficha de la reserva.
           </p>
         </div>
       )}
-      {nueva && estado !== 'por_confirmar' && (
+      {nueva && !['por_confirmar', 'por_aprobar'].includes(estado) && (
         <div className="mb-6 text-center">
           <CheckCircle2 className="mx-auto size-12 text-verde-600" aria-hidden />
           <h1 className="mt-3 text-2xl font-bold">Reserva confirmada a nombre de {r.titular.nombre}</h1>
           <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
-            Se enviaron a {r.contacto?.correo} el comprobante{r.actas?.length ? ' y el acta de entrega' : ''}.{r.forma_pago.anticipado ? ' Debe pagar por transferencia antes de llegar.' : ''}
+            Se envió a {r.contacto?.correo} la ficha de la reserva, con quienes viajan, las direcciones de la casa y el inventario.
           </p>
         </div>
       )}
@@ -74,10 +87,14 @@ export function Comprobante() {
         <dl className="mt-4 grid gap-4 sm:grid-cols-2">
           <Dato t="Casa" v={r.casa.nombre} d={`${r.casa.localidad}, ${region}`} />
           <Dato t="Dirección" v={r.casa.direccion} />
+          {r.casa.otras_direcciones?.map((d) => (
+            <Dato key={d.tipo + d.direccion} t={d.tipo} v={d.direccion} d={d.indicacion} />
+          ))}
           <Dato t="Llegada" v={fechaLarga(r.entrada)} d={`Desde las ${PARAMETROS.hora_ingreso}`} />
           <Dato t="Salida" v={fechaLarga(r.salida)} d={`Hasta las ${PARAMETROS.hora_salida}`} />
           {r.ocupantes.length > 0 && <Dato t="Personas" v={plural(r.ocupantes.length, 'persona', 'personas')} d={r.ocupantes.map((o) => o.nombre).join(', ')} />}
           {r.registrada_por && <Dato t="Registrada por" v={r.registrada_por.nombre} d={`${PERFIL_ETIQUETA[r.registrada_por.perfil] ?? 'Encargado/a'}, a pedido de ${r.titular.nombre}, que conoce y acepta el reglamento`} />}
+          {r.aprobada_por && r.registrada_por && <Dato t="Aprobada por" v={r.aprobada_por} d={r.aprobada_en ? fechaCorta(r.aprobada_en.slice(0, 10), true) : undefined} />}
           {r.titular_viaja === false && <Dato t="A cargo en la casa" v={r.a_cargo} d={`${r.titular.nombre} no viaja y sigue siendo el usuario/a responsable`} />}
           {r.perro_asistencia && <Dato t="Perro de asistencia" v="Sí (Ley 20.422)" d={r.perro_asistencia.credencial ? 'Credencial y certificado sanitario adjuntos' : undefined} />}
           <Dato
@@ -97,6 +114,33 @@ export function Comprobante() {
           </div>
         )}
 
+        {estado === 'por_aprobar' && (
+          <div className="no-imprimir mt-5 border-t border-borde pt-4">
+            <h2 className="font-semibold">Por aprobar</h2>
+            {puedeAprobar(usuario, r) ? (
+              <>
+                <p className="mb-3 mt-1 text-[15px] text-tinta-700">
+                  La registró {r.registrada_por?.nombre}. Las fechas están apartadas hasta que usted la apruebe o no.
+                  {usuario.perfil === 'central' ? ' Esta región no tiene encargada con rol en el sistema, por eso le toca a usted.' : ''}
+                </p>
+                <BotonesAprobacion reserva={r} gestor={usuario} />
+              </>
+            ) : (
+              <p className="mt-1 text-[15px] text-tinta-700">La aprueba la encargada regional de {region}. Las fechas están apartadas mientras tanto; a la persona no se le ha enviado nada todavía.</p>
+            )}
+          </div>
+        )}
+
+        {estado === 'rechazada' && r.rechazo && (
+          <div className="mt-4 rounded-lg bg-error-50 px-4 py-3 text-[15px] text-error-700">
+            <p className="font-semibold">
+              No aprobada por {r.rechazo.por} el {fechaCorta(r.rechazo.en.slice(0, 10), true)}
+            </p>
+            <p className="mt-1">{r.rechazo.motivo}</p>
+            <p className="mt-1">Las fechas se liberaron y se avisó a la persona.</p>
+          </div>
+        )}
+
         {estado === 'anulada' && r.motivo_anulacion && (
           <div className="mt-4 rounded-lg bg-error-50 px-4 py-3 text-[15px] text-error-700">
             <p className="font-semibold">Bienestar anuló esta reserva</p>
@@ -111,23 +155,23 @@ export function Comprobante() {
         )}
       </Tarjeta>
 
-      {['confirmada', 'en_curso'].includes(estado) && r.actas?.length > 0 && (
+      {['confirmada', 'en_curso'].includes(estado) && ficha && (
         <>
           <Tarjeta className="no-imprimir mt-6 flex flex-wrap items-center justify-between gap-3 p-4">
             <p className="text-[15px]">
-              Se envió el <strong>acta de entrega</strong> a {r.actas.at(-1).enviada_a}. La persona debe llevarla o tenerla a mano al llegar.
+              Se envió la <strong>ficha de la reserva</strong> ({ficha.numero}) a {ficha.enviada_a}: quienes viajan, las direcciones de la casa, el inventario y el acta para el ingreso y la salida.
             </p>
             <Boton
               variante="secundario"
               onClick={async () => {
-                const { descargarActa } = await import('../../lib/acta.js')
-                descargarActa(r, r.actas.at(-1))
+                const { descargarFicha } = await import('../../lib/ficha.js')
+                descargarFicha(r, ficha)
               }}
             >
-              <FileDown className="size-4" aria-hidden /> Descargar acta (PDF)
+              <FileDown className="size-4" aria-hidden /> Descargar ficha (PDF)
             </Boton>
           </Tarjeta>
-          <InventarioCasa inv={r.actas.at(-1).inventario} correo={correoEncargada(r.casa.region)} />
+          {ficha.inventario && <InventarioCasa inv={ficha.inventario} correo={correoEncargada(r.casa.region)} />}
         </>
       )}
 
@@ -217,14 +261,14 @@ function InventarioCasa({ inv, correo }) {
       </p>
       <ol className="mt-3 list-decimal space-y-1 rounded-lg bg-stone-50 py-3 pl-9 pr-4 text-[15px] text-tinta-700">
         <li>
-          <strong>Al llegar:</strong> complete la sección 4 del acta y envíela a{' '}
+          <strong>Al llegar:</strong> complete la sección 6 de la ficha y envíela a{' '}
           <a href={`mailto:${correo}`} className="font-medium text-verde-700 underline">
             {correo}
           </a>{' '}
           dentro de las {PARAMETROS.plazo_observaciones_horas} horas.
         </li>
         <li>
-          <strong>Al salir:</strong> envíe el acta firmada al mismo correo.
+          <strong>Al salir:</strong> envíe la ficha firmada al mismo correo.
         </li>
       </ol>
       <p className="mt-1 text-[13px] text-tinta-500">Actualizado el {fechaCorta(inv.actualizado_en.slice(0, 10), true)} por {inv.actualizado_por}.</p>

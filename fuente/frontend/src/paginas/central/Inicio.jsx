@@ -6,9 +6,12 @@ import { diasEntre, fechaCorta, hoyISO, sumarDias } from '../../lib/fechas.js'
 import { plural } from '../../lib/formato.js'
 import { Tarjeta } from '../../componentes/ui.jsx'
 import { BannerReservaAsistida } from '../gestion/ReservaAsistida.jsx'
+import { PanelPorAprobar } from '../../componentes/Aprobacion.jsx'
+import { useSesion } from '../../componentes/Perfil.jsx'
 
 export function InicioCentral() {
   useDatos()
+  const { usuario } = useSesion()
   const hoy = hoyISO()
   const casas = listarCasas({ incluirInactivas: true })
   const reservas = todasLasReservas()
@@ -49,6 +52,7 @@ export function InicioCentral() {
       <div className="mt-4">
         <BannerReservaAsistida />
       </div>
+      <PanelPorAprobar gestor={usuario} />
 
       <section className="mt-6" aria-labelledby="t-alertas">
         <h2 id="t-alertas" className="text-lg font-semibold">
@@ -57,7 +61,7 @@ export function InicioCentral() {
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Alerta icono={Wallet} cifra={pagosUrgentes.length} texto="pagos anticipados sin registrar, con llegada en 7 días" a="/central/cobros" />
           <Alerta icono={FlameKindling} cifra={extintores.length} texto="extintores vencidos o por vencer en 30 días" detalle={extintores.map((x) => x.casa.nombre).join(', ')} />
-          <Alerta icono={ClipboardList} cifra={sinInventario.length} texto="casas sin inventario: no reciben acta de entrega" detalle={sinInventario.slice(0, 4).map((c) => c.nombre).join(', ') + (sinInventario.length > 4 ? '…' : '')} />
+          <Alerta icono={ClipboardList} cifra={sinInventario.length} texto="casas sin inventario: su ficha de reserva va sin inventario" detalle={sinInventario.slice(0, 4).map((c) => c.nombre).join(', ') + (sinInventario.length > 4 ? '…' : '')} />
           <Alerta icono={Undo2} cifra={devoluciones.length} texto="devoluciones pendientes por anulaciones de Bienestar" a="/central/cobros" />
         </div>
       </section>

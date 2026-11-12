@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { HeartHandshake, Search, Ticket, UserCheck } from "lucide-react";
 import { REGIONES } from "../../datos/casas.js";
 import {
   buscarPersona,
   listarCasas,
+  obtenerCasa,
   postulacionAbierta,
   sorteoVigente,
   useDatos,
@@ -31,6 +32,8 @@ const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? "—
 export function BannerReservaAsistida() {
   const s = sorteoVigente();
   const abierta = postulacionAbierta();
+  const { usuario } = useSesion();
+  const regional = usuario?.perfil === "encargada";
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-verde-200 bg-verde-50 p-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-start gap-3">
@@ -44,8 +47,10 @@ export function BannerReservaAsistida() {
             {abierta ? " o postular al sorteo" : ""}?
           </p>
           <p className="text-[15px] text-verde-800">
-            Regístrela a su nombre, en cualquier casa del país. La persona
-            recibe el comprobante y el acta por correo.
+            {regional
+              ? "Regístrela a su nombre, en las casas de su región; para otras regiones, consulte la disponibilidad y derive a la encargada de esa región."
+              : "Regístrela a su nombre, en cualquier casa del país; la aprueba la encargada de la región de la casa."}{" "}
+            La persona recibe la ficha de la reserva por correo.
             {abierta
               ? ` La postulación a ${s.nombre.toLowerCase()} está abierta.`
               : ""}
@@ -82,7 +87,13 @@ export function ReservaAsistida() {
   useDatos();
   const { usuario: gestor } = useSesion();
   const [persona, setPersona] = useState(null);
-  const [casaId, setCasaId] = useState("");
+  // Desde la consulta de disponibilidad llega ?casa=ID&entrada&salida.
+  const [busqueda] = useSearchParams();
+  const casaInicial = busqueda.get("casa") ?? "";
+  const [casaId, setCasaId] = useState(() => {
+    const c = casaInicial && obtenerCasa(Number(casaInicial));
+    return c && (gestor.perfil !== "encargada" || c.region === gestor.region) ? casaInicial : "";
+  });
   const [listo, setListo] = useState(false);
 
   if (listo && persona && casaId)
@@ -321,23 +332,32 @@ export function Persona({ persona, onPersona, soloConaf = false }) {
   );
 }
 
+/**
+ * Paso 2. Desde el 12-11-2026 la encargada regional solo registra en las casas
+ * de su región; el encargado nacional, en todas (y la reserva queda por
+ * aprobar por la encargada de la región de la casa).
+ */
 function ElegirCasa({ gestor, persona, casaId, onCasa, onListo }) {
-  const casas = listarCasas();
-  const [region, setRegion] = useState(
-    gestor.perfil === "encargada" ? gestor.region : "",
+  const regional = gestor.perfil === "encargada";
+  const casas = listarCasas().filter((c) => !regional || c.region === gestor.region);
+  const [region, setRegion] = useState(() =>
+    regional ? gestor.region : (obtenerCasa(Number(casaId))?.region ?? ""),
   );
   const visibles = casas.filter((c) => !region || c.region === region);
   return (
     <Tarjeta className="p-5">
       <h2 className="text-lg font-semibold">2. ¿Qué casa?</h2>
       <p className="mt-1 text-[13px] text-tinta-500">
-        Puede reservar en cualquier casa del país. Luego verá su calendario de
-        disponibilidad.
+        {regional
+          ? `Puede registrar en las casas de la Región de ${nombreRegion(gestor.region)}. Para otra región, la registra su encargada o el encargado nacional.`
+          : "Puede registrar en cualquier casa del país; quedará por aprobar por la encargada de la región de la casa."}{" "}
+        Luego verá su calendario de disponibilidad.
       </p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <Campo etiqueta="Región">
           <select
             className={claseEntrada}
+            disabled={regional}
             value={region}
             onChange={(e) => {
               setRegion(e.target.value);

@@ -10,6 +10,10 @@
  * `tarifa_noche` para grados 04 a 14 y `tarifa_noche_15_19` para grados
  * 15 a 19. Jubilados/as y otros servicios públicos no tienen grado en la
  * nómina: se les aplica la de grados 04 a 14 [PENDIENTE: confirmar con Bienestar].
+ *
+ * `otras_direcciones` (12-11-2026): direcciones de la casa además de la principal
+ * (estacionamiento en otro edificio, retiro de llaves, acceso). Las de ejemplo son
+ * FICTICIAS; el encargado nacional las edita en Casas y tarifas.
  */
 
 export const REGIONES = [
@@ -102,6 +106,7 @@ export const CASAS = [
     "region": "03",
     "localidad": "Bahía Inglesa",
     "direccion": "Av. El Morro 120, Bahía Inglesa, Caldera",
+    "otras_direcciones": [{ "tipo": "Retiro de llaves", "direccion": "Oficina CONAF Caldera, Gana 352, Caldera", "indicacion": "Lunes a viernes, de 9:00 a 17:00. Ficticia (maqueta)." }],
     "lat": -27.1049,
     "lng": -70.8626,
     "capacidad": 5,
@@ -232,6 +237,7 @@ export const CASAS = [
     "region": "05",
     "localidad": "Viña del Mar",
     "direccion": "5 Norte 820, Viña del Mar",
+    "otras_direcciones": [{ "tipo": "Estacionamiento", "direccion": "6 Norte 1045, Viña del Mar", "indicacion": "Subterráneo del edificio vecino, estacionamiento N° 12. Ficticia (maqueta)." }],
     "lat": -33.0153,
     "lng": -71.5503,
     "capacidad": 4,
@@ -737,6 +743,7 @@ export const CASAS = [
     "region": "10",
     "localidad": "P.N. Puyehue",
     "direccion": "Sector Aguas Calientes, P.N. Puyehue, Puyehue",
+    "otras_direcciones": [{ "tipo": "Retiro de llaves", "direccion": "Guardería Aguas Calientes, P.N. Puyehue", "indicacion": "Pedir las llaves al guardaparque de turno. Ficticia (maqueta)." }, { "tipo": "Acceso vehicular", "direccion": "Ruta 215 km 76, desvío Aguas Calientes", "indicacion": "Camino de ripio de 4 km. Ficticia (maqueta)." }],
     "lat": -40.7381,
     "lng": -72.3086,
     "capacidad": 6,

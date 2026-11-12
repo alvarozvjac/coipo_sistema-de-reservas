@@ -14,7 +14,9 @@ reservas y las postulaciones al sorteo de las 22 casas de veraneo a nombre de
 funcionarios/as de CONAF, jubilados/as y funcionarios/as de otros servicios públicos,
 según la disponibilidad y el reglamento, y que gestionen ocupación, inventario, cobros,
 tarifas, casas y los sorteos de temporada alta (primera etapa, decisión del 12-11-2026:
-los afiliados/as no ingresan).
+los afiliados/as no ingresan). La encargada regional registra en su región y aprueba lo
+que el encargado nacional registra en ella; al aprobarse, la persona recibe una ficha con
+acompañantes, direcciones e inventario; ambos consultan la disponibilidad de todo el país.
 
 ## En una frase, qué NO hace
 

@@ -20,7 +20,7 @@ export function InventarioEncargada() {
     <>
       <h1 className="text-2xl font-bold">Inventario de las casas</h1>
       <p className="mt-1 max-w-3xl text-[15px] text-tinta-500">
-        Al guardar, se genera el acta de entrega con este inventario y se envía al correo de cada reserva confirmada que aún no comienza. El usuario lo revisa al llegar y tiene 12 horas para informar daños o faltantes (Art. 13, Anexo B).
+        Al guardar, se genera la ficha de la reserva actualizada con este inventario y se envía al correo de cada reserva confirmada que aún no comienza. El usuario lo revisa al llegar y tiene 12 horas para informar daños o faltantes (Art. 13, Anexo B).
       </p>
 
       <div className="mt-5 grid gap-6 lg:grid-cols-[280px_1fr]">
@@ -140,7 +140,7 @@ function Editor({ casa, usuario }) {
       {resultado !== null && (
         <Aviso tipo="info">
           Inventario guardado.{' '}
-          {resultado > 0 ? `Se envió el acta de entrega actualizada a ${plural(resultado, 'reserva confirmada', 'reservas confirmadas')} de esta casa.` : 'No hay reservas confirmadas próximas a las que enviar el acta.'}
+          {resultado > 0 ? `Se envió la ficha de la reserva actualizada a ${plural(resultado, 'reserva confirmada', 'reservas confirmadas')} de esta casa.` : 'No hay reservas confirmadas próximas a las que enviar el acta.'}
         </Aviso>
       )}
 
@@ -266,7 +266,7 @@ function Editor({ casa, usuario }) {
       <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center justify-between gap-3 border-t border-borde bg-fondo/95 px-4 py-3 backdrop-blur">
         <p className="text-sm text-tinta-500">
           {cambios ? 'Cambios sin guardar. ' : ''}
-          {destinatarios > 0 ? `Se enviará el acta a ${plural(destinatarios, 'reserva confirmada', 'reservas confirmadas')}.` : 'Sin reservas confirmadas próximas.'}
+          {destinatarios > 0 ? `Se enviará la ficha actualizada a ${plural(destinatarios, 'reserva confirmada', 'reservas confirmadas')}.` : 'Sin reservas confirmadas próximas.'}
         </p>
         <Boton onClick={guardar} disabled={!cambios}>
           <Send className="size-4" aria-hidden /> Guardar y enviar

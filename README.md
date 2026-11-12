@@ -26,8 +26,8 @@ asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro)
 
 | Perfil | Qué se puede probar |
 |---|---|
-| Encargada regional | Llegadas y salidas, ocupación, reservas de la región, inventario y acta de entrega; registrar reservas (a nombre de cualquier persona de la nómina o de otro servicio público), postulaciones al sorteo y desistimientos |
-| Encargado nacional | Lo mismo para todo el país, más alertas, nómina de descuentos, registro de transferencias (confirma la reserva), casas, tarifas (digitadas o por planilla Excel/CSV), bloqueos de fechas, temporadas altas y su sorteo (con las respuestas a los cupos ofrecidos), dashboard y Administración (en construcción) |
+| Encargada regional | Llegadas y salidas, ocupación, reservas de la región, inventario; registrar reservas en las casas de su región (a nombre de cualquier persona de la nómina o de otro servicio público), aprobar las que registró el encargado nacional en su región, postulaciones al sorteo y desistimientos; consultar la disponibilidad de todo el país |
+| Encargado nacional | Registrar en cualquier casa del país (queda por aprobar por la encargada de la región), más alertas, nómina de descuentos, registro de transferencias (confirma la reserva), casas, tarifas (digitadas o por planilla Excel/CSV), bloqueos de fechas, temporadas altas y su sorteo (con las respuestas a los cupos ofrecidos), otras direcciones de cada casa (estacionamiento, retiro de llaves…), dashboard y Administración (en construcción) |
 
 Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María
 Fuentes, afiliada), 16.882.409-2 (Paula Ortiz, plazo fijo) o 6.884.215-8 (Hernán Soto,
@@ -39,6 +39,11 @@ como encargado nacional, entre a «Temporadas»: ahí puede habilitar la postula
 invierno y usar «Realizar sorteo» (en la maqueta se puede adelantar). Desde ahí también se
 registra un desistimiento, para ver cómo el cupo se ofrece a la lista de espera, y la
 respuesta de la persona a ese cupo.
+
+**Aprobación y ficha:** lo que registra el encargado nacional queda «Por aprobar»; la encargada de
+la región lo aprueba en su inicio y la persona recibe la ficha de la reserva (PDF con
+acompañantes, direcciones e inventario). Hay dos de ejemplo: R-2026-0197 (Valparaíso, la
+aprueba `cnunez`) y R-2026-0198 (Atacama, sin encargada en el IAM: la aprueba `pherrera`).
 
 **Reiniciar datos de prueba**, en el pie de página, vuelve todo al estado inicial.
 

@@ -10,13 +10,13 @@ import { BannerReservaAsistida } from '../gestion/ReservaAsistida.jsx'
 import { useSesion } from '../../componentes/Perfil.jsx'
 import { Dialogo, antiguedad } from './comun.jsx'
 
-const FILTROS = ['todas', 'por_confirmar', 'confirmada', 'en_curso', 'finalizada', 'desistida', 'anulada']
+const FILTROS = ['todas', 'por_aprobar', 'por_confirmar', 'confirmada', 'en_curso', 'finalizada', 'desistida', 'anulada']
 const PAGO = { planilla: 'Planilla', transferencia: 'Transferencia' }
-const NOTIF = { confirmacion: 'el comprobante de reserva', por_confirmar: 'los datos para transferir', pago: 'el registro del pago', anulacion: 'aviso de anulación por Bienestar', devolucion: 'aviso de devolución', desistimiento: 'aviso de desistimiento' }
+const NOTIF = { solicitud: null, rechazo: 'el aviso de reserva no aprobada', confirmacion: 'el comprobante de reserva', por_confirmar: 'los datos para transferir', pago: 'el registro del pago', anulacion: 'aviso de anulación por Bienestar', devolucion: 'aviso de devolución', desistimiento: 'aviso de desistimiento' }
 
 async function descargar(reserva, numero) {
-  const { descargarActa } = await import('../../lib/acta.js')
-  await descargarActa(reserva, reserva.actas.find((a) => a.numero === numero))
+  const { descargarFicha } = await import('../../lib/ficha.js')
+  await descargarFicha(reserva, reserva.fichas.find((a) => a.numero === numero))
 }
 
 /**
@@ -181,18 +181,22 @@ export function ReservasEncargada() {
 
           <p className="mt-4 text-[13px] font-medium text-tinta-500">Historial</p>
           <ul className="mt-1 space-y-0.5 text-sm text-tinta-700">
-            <li>Reservada {antiguedad(detalle.creada_en)} · {detalle.confirmada_por ?? 'confirmada'}</li>
+            <li>Reservada {antiguedad(detalle.creada_en)} · {detalle.estado === 'pendiente_aprobacion' ? 'por aprobar' : detalle.estado === 'rechazada' ? `no aprobada por ${detalle.rechazo?.por}: ${detalle.rechazo?.motivo}` : detalle.aprobada_por && detalle.registrada_por?.perfil === 'central' ? `aprobada por ${detalle.aprobada_por}` : (detalle.confirmada_por ?? 'confirmada')}</li>
             {(detalle.notificaciones ?? []).map((n, i) =>
-              n.tipo === 'acta' ? (
+              n.tipo === 'ficha' ? (
                 <li key={i} className="flex flex-wrap items-center gap-x-2">
-                  <span>{fechaCorta(n.en.slice(0, 10), true)}: se envió el acta de entrega a {detalle.contacto?.correo ?? 'su correo'}</span>
+                  <span>{fechaCorta(n.en.slice(0, 10), true)}: se envió la ficha de la reserva a {detalle.contacto?.correo ?? 'su correo'}</span>
                   <button
                     type="button"
-                    onClick={() => descargar(detalle, n.acta)}
+                    onClick={() => descargar(detalle, n.ficha)}
                     className="inline-flex items-center gap-1 rounded px-1 font-medium text-verde-700 hover:bg-verde-50 hover:underline"
                   >
-                    <FileDown className="size-4" aria-hidden /> {n.acta}.pdf
+                    <FileDown className="size-4" aria-hidden /> {n.ficha}.pdf
                   </button>
+                </li>
+              ) : n.tipo === 'solicitud' ? (
+                <li key={i}>
+                  {fechaCorta(n.en.slice(0, 10), true)}: registrada por {detalle.registrada_por?.nombre ?? 'el encargado nacional'}, por aprobar
                 </li>
               ) : (
                 <li key={i}>
