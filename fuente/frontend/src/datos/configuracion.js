@@ -118,31 +118,31 @@ export const PLANTILLAS_BASE = {
     nombre: 'Ficha de la reserva',
     cuando: 'Al aprobar con planilla o al registrar el pago',
     asunto: 'Ficha de su reserva {codigo} · {casa}',
-    cuerpo: 'Estimado/a {nombre}:\n\nSu reserva en {casa} quedó confirmada para el {fechas}. Adjuntamos la ficha de la reserva, con quienes viajan, las direcciones de la casa y su inventario.\n\nEl ingreso es desde las {hora_ingreso}. Al llegar revise el inventario e informe cualquier diferencia dentro de {plazo_observaciones} horas.\n\nServicio de Bienestar · CONAF',
+    cuerpo: 'Estimado/a {nombre}:\n\nSu reserva en {casa} quedó confirmada para el {fechas}. Adjuntamos la ficha de la reserva, con quienes viajan, las direcciones de la casa y su inventario.\n\nEl ingreso es desde las {hora_ingreso}. Al llegar revise el inventario e informe cualquier diferencia dentro de {plazo_observaciones} horas.\n\nDepartamento de Bienestar · CONAF',
   },
   por_confirmar: {
     nombre: 'Datos para transferir',
     cuando: 'Al aprobar una reserva que se paga por transferencia',
     asunto: 'Datos para transferir · reserva {codigo}',
-    cuerpo: 'Estimado/a {nombre}:\n\nSu reserva en {casa} ({fechas}) quedó por confirmar. Transfiera {monto} a la cuenta corriente de CONAF con la glosa {glosa}. Cuando registremos el pago le enviaremos la ficha de la reserva.\n\nServicio de Bienestar · CONAF',
+    cuerpo: 'Estimado/a {nombre}:\n\nSu reserva en {casa} ({fechas}) quedó por confirmar. Transfiera {monto} a la cuenta corriente de CONAF con la glosa {glosa}. Cuando registremos el pago le enviaremos la ficha de la reserva.\n\nDepartamento de Bienestar · CONAF',
   },
   rechazo: {
     nombre: 'Reserva no aprobada',
     cuando: 'Al no aprobar una reserva registrada por el encargado nacional',
     asunto: 'Su solicitud de reserva no fue aprobada',
-    cuerpo: 'Estimado/a {nombre}:\n\nLa solicitud de reserva en {casa} para el {fechas} no fue aprobada. Motivo: {motivo}\n\nPuede pedir otras fechas a la encargada de Bienestar de su región.\n\nServicio de Bienestar · CONAF',
+    cuerpo: 'Estimado/a {nombre}:\n\nLa solicitud de reserva en {casa} para el {fechas} no fue aprobada. Motivo: {motivo}\n\nPuede pedir otras fechas a la encargada de Bienestar de su región.\n\nDepartamento de Bienestar · CONAF',
   },
   desistimiento: {
     nombre: 'Desistimiento registrado',
     cuando: 'Al registrar que la persona desiste',
     asunto: 'Registro de su desistimiento · {codigo}',
-    cuerpo: 'Estimado/a {nombre}:\n\nRegistramos su desistimiento de la reserva {codigo} en {casa} ({fechas}).\n\nServicio de Bienestar · CONAF',
+    cuerpo: 'Estimado/a {nombre}:\n\nRegistramos su desistimiento de la reserva {codigo} en {casa} ({fechas}).\n\nDepartamento de Bienestar · CONAF',
   },
   anulacion: {
     nombre: 'Anulación por Bienestar',
     cuando: 'Al bloquear fechas o retirar una casa con reservas',
     asunto: 'Anulación de su reserva {codigo}',
-    cuerpo: 'Estimado/a {nombre}:\n\nLamentamos informarle que su reserva {codigo} en {casa} ({fechas}) fue anulada. {motivo}\n\nServicio de Bienestar · CONAF',
+    cuerpo: 'Estimado/a {nombre}:\n\nLamentamos informarle que su reserva {codigo} en {casa} ({fechas}) fue anulada. {motivo}\n\nDepartamento de Bienestar · CONAF',
   },
 }
 

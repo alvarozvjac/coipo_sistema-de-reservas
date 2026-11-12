@@ -46,8 +46,8 @@ export function Plantilla() {
         <Banner />
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
           <NavLink to={INICIO[usuario.perfil]} className="mr-auto flex min-h-11 flex-col justify-center leading-tight lg:sr-only">
-            <span className="block text-[17px] font-bold text-verde-800">Casas de Veraneo</span>
-            <span className="block text-[13px] text-tinta-500">Servicio de Bienestar · CONAF</span>
+            <span className="block text-[17px] font-bold text-verde-800">Sistema de Gestión de Reservas</span>
+            <span className="block text-[13px] text-tinta-500">Departamento de Bienestar · CONAF</span>
           </NavLink>
 
           <nav aria-label="Principal" className="order-3 -mx-1 flex w-full gap-1 overflow-x-auto px-1 sm:order-none sm:mx-0 sm:w-auto sm:px-0 lg:ml-auto">

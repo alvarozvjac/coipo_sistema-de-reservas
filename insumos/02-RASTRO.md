@@ -295,6 +295,17 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `a9ae7d6` (sha256 igual al local, 7.968.139 bytes) y el HTML
   publicado no contiene «no atendid».
 
+### Nombre «Sistema de Gestión de Reservas» y banner de la gerencia (12-11-2026, local)
+
+- Pedido: Álvaro Zegers, 12-11-2026 17:07. Formato tomado de `alvarozvjac/coipo_gestion_flota_vehiculos`
+  (commit `bff6570`, `index.html` líneas 87-95 y 770-773): banner de la gerencia y título
+  superpuesto desde el píxel 875 del asset.
+- Capturas miradas a 1920, 1366, 1024 y 390 px de ancho: el título y el departamento quedan en
+  la zona plana, sin pisar la marca ni el remate; en el teléfono el banner corto muestra la
+  gerencia y el nombre va en la cabecera. Sin desborde horizontal en ningún ancho.
+- e2e16 24/0 y e2e14 60/0 en 1366×900 y 390×844 (agregan el título, el departamento y el
+  `alt` del banner); e2e15 26/0 y e2e17 25/0; axe 0 infracciones en 19 pantallas.
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la

@@ -1,4 +1,6 @@
-# coipo_sistema-de-reservas — Maqueta del sistema de reservas de casas de veraneo
+# coipo_sistema-de-reservas — Sistema de Gestión de Reservas (maqueta)
+
+Departamento de Bienestar · Gerencia de Desarrollo de las Personas · CONAF.
 
 Maqueta de validación del sistema de reservas de las casas de veraneo del Servicio de
 Bienestar de CONAF, elaborada por la Unidad de Información y Análisis (UIA).

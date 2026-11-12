@@ -470,6 +470,24 @@ lleva a Usuarios y encargadas.
 - [PENDIENTE: Bienestar] Quién aprueba en las regiones sin encargada (hoy el nacional) y
   cuántos días se conserva el registro de actividad.
 
+## Nombre del sistema y banner (decisión 12-11-2026, 17:07)
+
+Fuente: Álvaro Zegers (UIA), 12-11-2026: «El título del sistema debe ser: Sistema de Gestión
+de Reservas […] Usa el mismo formato de la maqueta de Gestión de flota», y «al lado de UIA
+debe decir Gerencia de Desarrollo de las Personas, Departamento de Bienestar».
+
+- Nombre: **Sistema de Gestión de Reservas**, con «Departamento de Bienestar» debajo (antes
+  «Casas de Veraneo · Servicio de Bienestar · CONAF»). Cambia en el banner, la cabecera del
+  teléfono, el ingreso, el IAM simulado, el título de la pestaña del navegador y la firma de
+  las plantillas de correo. «Casas de Veraneo o Descanso» se mantiene donde es el nombre del
+  reglamento.
+- Banner: el de la **Gerencia de Desarrollo de las Personas** de la fábrica
+  (`coipo_master_produccion/identidad/5_banner_DESARROLLO_PERSONAS.jpg` y su versión corta,
+  copiados sin modificar a `src/assets/`), como Gestión de Flota usa el de su gerencia. La
+  imagen trae «Gerencia de desarrollo de las personas» junto a UIA; «Departamento de
+  Bienestar» va bajo el título, en la zona del título (UI-1), porque el banner oficial no lo
+  trae y editar el activo de identidad no corresponde (elegido por Álvaro Zegers).
+
 ## Perfiles (2 desde el 12-11-2026)
 
 Los asigna el rol del COIPO IAM (sección «Ingreso con el COIPO IAM»).
