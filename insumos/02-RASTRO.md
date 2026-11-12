@@ -312,7 +312,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   departamento; consola sin errores. Ojo: Chrome mostró primero la versión anterior desde su
   caché; con la dirección `?v=` cargó la nueva.
 
-### Sin temporadas altas ni sorteo (12-11-2026, local, sin publicar)
+### Sin temporadas altas ni sorteo (12-11-2026, publicado en `3eaf7d7`)
 
 - Pedido: Álvaro Zegers, 12-11-2026 17:29; respuestas: verano como cualquier fecha, todas las
   reglas de la persona siguen, quitar las reservas de prueba del sorteo.
@@ -322,6 +322,10 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   temporadas ni sorteos). axe-core: 0 infracciones en 17 pantallas, claro y oscuro.
 - Capturas miradas: Panel nacional sin «Registrar postulación» y tablero de enero de 2027 con
   reservas normales y la leyenda sin «Temporada alta».
+- Pública: GitHub Pages sirve `3eaf7d7` (sha256 igual al local, 1.614.106 bytes; el HTML no
+  contiene «Realizar sorteo» ni «Registrar postulación»); consola sin errores. La página bajó
+  de 8 MB a 1,6 MB porque las fotos de las casas solo se mostraban en el formulario de tres
+  pasos, que ya no existe.
 
 ## Validación
 
