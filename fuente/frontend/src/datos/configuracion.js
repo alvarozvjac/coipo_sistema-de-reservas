@@ -19,7 +19,6 @@ import { PARAMETROS, glosaTransferencia } from '../lib/reglas.js'
  */
 
 const ahora = () => new Date().toISOString().slice(0, 19)
-const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? '—'
 
 /* ---------- Usuarios y encargadas (solo lectura: se editan en el IAM) ---------- */
 
@@ -197,7 +196,7 @@ export const reservaEjemplo = () => todasLasReservas().find((r) => r.registrada_
 
 /* ---------- Registro de actividad (se arma con lo que ya queda registrado) ---------- */
 
-export const AREAS = { reservas: 'Reservas', cobros: 'Cobros', casas: 'Casas y tarifas', temporadas: 'Temporadas', configuracion: 'Configuración', inventario: 'Inventario', solicitudes: 'No atendidas' }
+export const AREAS = { reservas: 'Reservas', cobros: 'Cobros', casas: 'Casas y tarifas', temporadas: 'Temporadas', configuracion: 'Configuración', inventario: 'Inventario' }
 
 /**
  * Quién hizo qué y cuándo. No hay una bitácora aparte: se arma con los
@@ -232,7 +231,6 @@ export function actividad() {
     add(s.sorteado_en, s.sorteado_por, 'temporadas', 'Realizó el sorteo', s.nombre ?? s.id)
   }
   for (const [periodo, n] of Object.entries(e.nominas ?? {})) add(n.en, n.por, 'cobros', 'Cambió el estado de la nómina', `${periodo} · ${n.estado}`)
-  for (const s of e.solicitudes ?? []) add(s.creada_en, s.registrada_por, 'solicitudes', 'Registró una solicitud no atendida', `${s.id} · ${s.persona.nombre}${s.region ? ` · ${nombreRegion(s.region)}` : ''}`)
   for (const p of e.parametros ?? []) {
     const def = EDITABLES.find((d) => d.clave === p.clave)
     add(p.en, p.por, 'configuracion', 'Cambió un parámetro', `${def?.etiqueta ?? p.clave}: ${p.anterior} → ${p.valor}, desde ${p.vigente_desde} · ${p.respaldo}`)

@@ -1,5 +1,5 @@
 import { AlertTriangle, History } from 'lucide-react'
-import { antecedentesPersona, MOTIVOS_NO_ATENDIDA } from '../../datos/solicitudes.js'
+import { antecedentesPersona } from '../../datos/antecedentes.js'
 import { useDatos } from '../../datos/servicio.js'
 import { fechaCorta, nombreMes, rangoFechas } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
@@ -21,14 +21,14 @@ export function AntecedentesPersona({ persona }) {
     ...a.cargos.map((r) => `${r.codigo}: desistió fuera de plazo; cargo de ${pesos(r.cargo_desistimiento)}.`),
     ...a.reservas.filter((r) => r.pierde_sorteo_siguiente).map((r) => `${r.codigo}: no podrá postular al próximo sorteo.`),
   ]
-  const vacio = !a.reservas.length && !a.postulaciones.length && !a.noAtendidas.length
+  const vacio = !a.reservas.length && !a.postulaciones.length
 
   return (
     <Tarjeta className="p-5">
       <h3 className="flex items-center gap-2 font-semibold">
         <History className="size-5 text-tinta-500" aria-hidden /> Antecedentes de {persona.nombre.split(' ')[0]}
       </h3>
-      {vacio && <p className="mt-2 text-[15px] text-tinta-500">Sin reservas, postulaciones ni pedidos en los últimos 12 meses.</p>}
+      {vacio && <p className="mt-2 text-[15px] text-tinta-500">Sin reservas ni postulaciones en los últimos 12 meses.</p>}
       {avisos.length > 0 && (
         <ul className="mt-3 space-y-2">
           {avisos.map((t) => (
@@ -62,18 +62,6 @@ export function AntecedentesPersona({ persona }) {
             {a.postulaciones.slice(0, MAX).map((p) => (
               <li key={p.codigo}>
                 {p.sorteo.nombre} · {p.casa?.nombre} <span className="text-tinta-500">· {p.estado}</span>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-      {a.noAtendidas.length > 0 && (
-        <>
-          <p className="mt-4 text-[13px] font-medium text-tinta-500">Pedidos no atendidos ({a.noAtendidas.length})</p>
-          <ul className="mt-1 text-[15px]">
-            {a.noAtendidas.slice(0, MAX).map((s) => (
-              <li key={s.id}>
-                {fechaCorta(s.creada_en.slice(0, 10), true)} · {MOTIVOS_NO_ATENDIDA[s.motivo]}
               </li>
             ))}
           </ul>

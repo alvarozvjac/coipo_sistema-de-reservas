@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import {
   ChevronLeft,
   ChevronRight,
-  MessageSquareX,
   Plus,
   Search,
   Ticket,
@@ -36,9 +35,6 @@ import { useSesion } from "../../componentes/Perfil.jsx";
 import { LeyendaTablero, Tablero } from "../../componentes/Tablero.jsx";
 import { DetalleReserva } from "./DetalleReserva.jsx";
 import { RegistroLateral } from "./RegistroLateral.jsx";
-import { DialogoNoAtendida } from "./NoAtendida.jsx";
-import { ListaNoAtendidas } from "./ListaNoAtendidas.jsx";
-import { noAtendidas } from "../../datos/solicitudes.js";
 
 const FILTROS = [
   "todas",
@@ -83,7 +79,6 @@ export function Reservas() {
   );
   const [casaLista, setCasaLista] = useState("");
   const [mensaje, setMensaje] = useState(null);
-  const [vista, setVista] = useState("reservas");
   // Panel lateral de registro: se abre con «Nueva solicitud», con el tramo del tablero o desde /gestion/reservar.
   const [registro, setRegistro] = useState(() =>
     params.get("nueva")
@@ -94,7 +89,6 @@ export function Reservas() {
         }
       : null,
   );
-  const [noAtendida, setNoAtendida] = useState(null);
   const abierta = params.get("codigo");
   const abrir = (codigo) =>
     setParams(
@@ -159,12 +153,6 @@ export function Reservas() {
   const puedeRegistrar =
     casaSel && (!regional || casaSel.region === usuario.region);
   const postular = postulacionAbierta();
-  const solicitudes = noAtendidas(region).filter(
-    (x) =>
-      !q ||
-      x.persona.nombre.toLowerCase().includes(q) ||
-      (x.persona.rut ?? "").replace(/\./g, "").includes(q.replace(/\./g, "")),
-  );
   const nuevaSolicitud = (inicial = {}) => {
     setRegistro(inicial);
     setParams(
@@ -195,10 +183,6 @@ export function Reservas() {
               <Ticket className="size-4" aria-hidden /> Registrar postulación
             </Boton>
           )}
-          <Boton variante="secundario" onClick={() => setNoAtendida({})}>
-            <MessageSquareX className="size-4" aria-hidden /> Solicitud no
-            atendida
-          </Boton>
           <Boton onClick={() => nuevaSolicitud()}>
             <Plus className="size-4" aria-hidden /> Nueva solicitud
           </Boton>
@@ -388,22 +372,7 @@ export function Reservas() {
                 >
                   Registrar reserva
                 </Boton>
-              ) : (
-                <Boton
-                  variante="secundario"
-                  onClick={() =>
-                    setNoAtendida({
-                      casa_id: casaSel.id,
-                      region: casaSel.region,
-                      entrada: seleccion.entrada,
-                      salida: seleccion.salida,
-                      motivo: "otra_region",
-                    })
-                  }
-                >
-                  Registrar como derivada
-                </Boton>
-              )}
+              ) : null}
             </div>
           </div>
         )}
@@ -415,32 +384,8 @@ export function Reservas() {
             Listado{" "}
             {region ? `· Región de ${nombreRegion(region)}` : "· todo el país"}
           </h2>
-          <div
-            className="inline-flex rounded-lg bg-white p-1 ring-1 ring-inset ring-borde"
-            role="tablist"
-            aria-label="Qué listar"
-          >
-            {[
-              ["reservas", `Reservas (${listaBase.length})`],
-              ["no_atendidas", `No atendidas (${solicitudes.length})`],
-            ].map(([k, t]) => (
-              <button
-                key={k}
-                type="button"
-                role="tab"
-                aria-selected={vista === k}
-                onClick={() => setVista(k)}
-                className={`min-h-11 rounded-md px-3 text-sm font-medium ${vista === k ? "bg-verde-700 text-white" : "text-tinta-700 hover:bg-stone-50"}`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
         </div>
-        {vista === "no_atendidas" ? (
-          <ListaNoAtendidas solicitudes={solicitudes} />
-        ) : (
-          <>
+        <>
             <div
               className="mt-3 flex flex-wrap gap-2"
               role="tablist"
@@ -538,8 +483,7 @@ export function Reservas() {
             <p className="mt-2 text-[13px] text-tinta-500">
               {plural(lista.length, "reserva", "reservas")}
             </p>
-          </>
-        )}
+        </>
       </section>
 
       {registro && (
@@ -568,23 +512,6 @@ export function Reservas() {
                 </button>
               </>,
             );
-          }}
-          onNoAtendida={(previo) => {
-            setRegistro(null);
-            setNoAtendida(previo);
-          }}
-        />
-      )}
-      {noAtendida && (
-        <DialogoNoAtendida
-          gestor={usuario}
-          previo={noAtendida}
-          onCerrar={() => setNoAtendida(null)}
-          onListo={(m) => {
-            setNoAtendida(null);
-            setSeleccion(null);
-            setMensaje(m);
-            setVista("no_atendidas");
           }}
         />
       )}

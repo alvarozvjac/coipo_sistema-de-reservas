@@ -282,6 +282,17 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   consola. Visto ahí y no en las capturas locales: las filas de pestañas (Configuración,
   Cobros, Temporadas) mostraban una barra de desplazamiento vertical; se corrigió.
 
+### Se quitan las solicitudes no atendidas (12-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 12-11-2026 16:45: solo se ingresan las solicitudes con disponibilidad.
+- Se quitaron el diálogo, la lista, el botón del tablero, el conteo del Dashboard, la sección
+  de los antecedentes, el área de la actividad, las semillas y `datos/solicitudes.js` (lo que
+  quedaba, los antecedentes de la persona, pasó a `datos/antecedentes.js`).
+- Playwright, 1366×900 y 390×844: e2e16 22, e2e17 25, e2e15 26, e2e14 60, 0 fallas (e2e16
+  comprueba ahora que otra región es solo consulta, que no aparece nada de «no atendidas» y
+  que, si las reglas no lo permiten, el panel no deja registrar); e2e4 17/0 y e2e9 26/0.
+  axe-core: 0 infracciones en 19 pantallas, claro y oscuro.
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la

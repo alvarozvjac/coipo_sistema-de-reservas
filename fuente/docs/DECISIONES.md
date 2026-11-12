@@ -418,21 +418,18 @@ Fuente: Álvaro Zegers (UIA), 12-11-2026, eligiendo entre mejoras propuestas.
   fechas (vienen del tramo del tablero y se pueden cambiar), persona por RUT con sus
   antecedentes, quiénes van, contacto, pago, vía y declaración. Al registrar, el panel se
   cierra y Reservas dice el resultado. Si las reglas de la persona no lo permiten, el panel
-  lo dice y ofrece «Registrar como solicitud no atendida». `/gestion/reservar` y «Nueva
+  lo dice (desde el 12-11-2026, 16:45, sin ofrecer registrar el pedido). `/gestion/reservar` y «Nueva
   solicitud» del Panel abren este panel.
-- **Solicitudes no atendidas**: se registra el pedido que no terminó en reserva, con nombre
-  (RUT opcional), vía, región o casa pedida, fechas, personas y motivo (sin cupo, otra región
-  derivada, fuera de plazo o de las reglas, temporada alta, otro con detalle). No aparta
-  fechas ni avisa a la persona. Se registran desde «Solicitud no atendida», desde una casa de
-  otra región en el tablero («Registrar como derivada») o desde el panel de registro. Se ven
-  en Reservas › Listado › No atendidas y se cuentan en el Dashboard («Cómo llegan las
-  solicitudes»: vía de las reservas y no atendidas por motivo). Clave `reserva_veraneo_v16`.
+- ~~Solicitudes no atendidas~~ **(quitado el 12-11-2026, 16:45)**: Álvaro Zegers: «quita todo lo
+  que tenga que ver con las solicitudes no atendidas; la lógica es que solo se ingresen las
+  que sí tengan disponibilidad». No hay registro de pedidos no atendidos, ni lista, ni conteo
+  en el Dashboard, ni en los antecedentes ni en la actividad. Si las reglas de la persona no
+  permiten registrar, el panel lo dice y pide elegir otras fechas u otra casa. Clave
+  `reserva_veraneo_v17`.
 - **Antecedentes de la persona**: al encontrarla por RUT (en el registro y en la postulación)
   se muestran avisos primero (ya tiene reserva ese mes, transferencia sin registrar, cargo
   por desistimiento, no podrá postular al próximo sorteo) y luego sus reservas de los últimos
-  12 meses y próximas, sus postulaciones y sus pedidos no atendidos.
-- [PENDIENTE: Bienestar] Plazo de conservación de las solicitudes no atendidas y si el RUT
-  debe pedirse (hoy es opcional): es un tratamiento de datos personales (Ley 21.719).
+  12 meses y próximas y sus postulaciones.
 - Deuda técnica declarada: `Reservar.jsx` conserva el modo de tres pasos sin uso; se limpia
   en la próxima iteración.
 
@@ -466,7 +463,7 @@ lleva a Usuarios y encargadas.
   cada reserva muestra el correo tal como habría salido. En la maqueta no se envía nada.
 - **Actividad**: quién hizo qué y cuándo (reservas registradas, aprobadas o no, desistimientos,
   pagos y devoluciones, bloqueos, tarifas, casas retiradas o reincorporadas, direcciones,
-  inventarios, temporadas y sorteos, nómina, no atendidas, parámetros y plantillas), con
+  inventarios, temporadas y sorteos, nómina, parámetros y plantillas), con
   búsqueda, filtros por área y persona, y descarga CSV. No es una bitácora aparte: se arma con
   el «quién y cuándo» que cada acción ya deja, así no puede desviarse de los datos. Las
   tarifas diferenciadas (Art. 19) aún no dejan quién las cambió, y no aparecen.

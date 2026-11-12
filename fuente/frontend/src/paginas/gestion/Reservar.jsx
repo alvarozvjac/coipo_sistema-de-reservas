@@ -438,9 +438,7 @@ export function Reservar({ titular, gestor, casaId, onCambiar, panel }) {
                 <Aviso tipo="error">{e}</Aviso>
               </div>
             ))}
-            <Boton variante="secundario" className="mt-4" onClick={panel.onNoAtendida}>
-              Registrar como solicitud no atendida
-            </Boton>
+            <p className="mt-3 text-[15px] text-tinta-700">Elija otras fechas u otra casa con disponibilidad: solo se registran las reservas que se pueden dar.</p>
           </Tarjeta>
         )}
         {erroresFechas.length === 0 && cuerpo()}

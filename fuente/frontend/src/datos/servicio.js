@@ -41,7 +41,7 @@ import { hoyISO, mesDe, primerDiaMes, sumarDias, sumarMeses } from '../lib/fecha
 import { ADICIONAL_TARIFA, PARAMETROS, cargoDesistimiento, glosaTransferencia, noches, porConfirmar, tarifaPara, tarifaTramo, temporadaAltaDe } from '../lib/reglas.js'
 import { HORAS_OFERTA, calendarioTemporada, inicioTemporada, nochesTurno, puedePostular, sortear, turnosDe } from '../lib/sorteo.js'
 
-const CLAVE = 'reserva_veraneo_v16'
+const CLAVE = 'reserva_veraneo_v17'
 
 const ahora = () => new Date().toISOString().slice(0, 19)
 
@@ -89,7 +89,7 @@ function guardar() {
   oyentes.forEach((f) => f())
 }
 
-/** Para los módulos de datos que viven aparte (solicitudes.js): el mismo estado y el mismo guardado. */
+/** Para los módulos de datos que viven aparte (configuracion.js): el mismo estado y el mismo guardado. */
 export const almacen = { leer: () => estado, guardar: () => guardar() }
 
 /** Las tarifas diferenciadas vigentes se aplican a las reglas de cálculo. */

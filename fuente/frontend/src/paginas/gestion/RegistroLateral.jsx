@@ -19,7 +19,7 @@ const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? ''
  * antecedentes, quiénes van, contacto, pago, vía y declaración. En el teléfono
  * ocupa la pantalla completa. La encargada solo elige casas de su región.
  */
-export function RegistroLateral({ gestor, inicial, onCerrar, onListo, onNoAtendida }) {
+export function RegistroLateral({ gestor, inicial, onCerrar, onListo }) {
   const regional = gestor.perfil === 'encargada'
   const casas = listarCasas().filter((c) => !regional || c.region === gestor.region)
   const manana = sumarDias(hoyISO(), 1)
@@ -44,9 +44,6 @@ export function RegistroLateral({ gestor, inicial, onCerrar, onListo, onNoAtendi
     window.addEventListener('keydown', tecla)
     return () => window.removeEventListener('keydown', tecla)
   }, [onCerrar])
-
-  const noAtendida = (motivo) =>
-    onNoAtendida({ persona: persona ? { nombre: persona.nombre, rut: persona.rut } : undefined, casa_id: casa?.id, region: casa?.region, entrada, salida, motivo })
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onClick={onCerrar}>
@@ -105,7 +102,7 @@ export function RegistroLateral({ gestor, inicial, onCerrar, onListo, onNoAtendi
               titular={persona}
               gestor={gestor}
               casaId={casa.id}
-              panel={{ entrada, salida, onListo, onCancelar: onCerrar, onNoAtendida: () => noAtendida('fuera_plazo') }}
+              panel={{ entrada, salida, onListo, onCancelar: onCerrar }}
             />
           )}
         </div>

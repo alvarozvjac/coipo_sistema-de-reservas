@@ -226,7 +226,7 @@ export function semillas(hoy) {
   const sorteo = semillaSorteo(hoy, personas, lista, hernan, temporadas[0])
   sorteo.abierta_por = 'Patricia Herrera Muñoz'
   sorteo.abierta_en = sorteo.postulacion.desde + 'T09:00:00'
-  const estado = { reservas: lista, correlativo: n, inventarios, bloqueos, tarifas: {}, inactivas: [], retiros: [], historial_tarifas: [], adicionales: { ...ADICIONAL_BASE }, nominas: {}, sorteos: [sorteo], temporadas, solicitudes: solicitudesIniciales(hoy, personas) }
+  const estado = { reservas: lista, correlativo: n, inventarios, bloqueos, tarifas: {}, inactivas: [], retiros: [], historial_tarifas: [], adicionales: { ...ADICIONAL_BASE }, nominas: {}, sorteos: [sorteo], temporadas }
   return estado
 }
 
@@ -311,27 +311,4 @@ export function aleatorio(semilla) {
     s = (s * 9301 + 49297) % 233280
     return s / 233280
   }
-}
-
-/**
- * Solicitudes no atendidas de la demostración (decisión 12-11-2026): pedidos que
- * llegaron a un encargado y no terminaron en reserva. Personas ficticias.
- */
-function solicitudesIniciales(hoy, personas) {
-  const encargada = 'Carolina Núñez Vidal'
-  const nacional = 'Patricia Herrera Muñoz'
-  const s = (dias, i, datos, por) => ({
-    id: `S-${String(i).padStart(4, '0')}`,
-    creada_en: sumarDias(hoy, -dias) + 'T11:20:00',
-    registrada_por: por,
-    persona: { nombre: personas[20 + i].nombre, rut: personas[20 + i].rut },
-    ...datos,
-  })
-  return [
-    s(1, 1, { via: 'telefono', region: '05', casa_id: 6, entrada: sumarDias(hoy, 12), salida: sumarDias(hoy, 15), personas: 4, motivo: 'sin_cupo' }, encargada),
-    s(3, 2, { via: 'correo', region: '10', casa_id: null, entrada: sumarDias(hoy, 30), salida: sumarDias(hoy, 34), personas: 3, motivo: 'otra_region', detalle: 'Se derivó a la encargada de Los Lagos.' }, encargada),
-    s(6, 3, { via: 'whatsapp', region: '05', casa_id: 7, entrada: '2027-01-12', salida: '2027-01-18', personas: 5, motivo: 'temporada_alta', detalle: 'Se le explicó la postulación al sorteo.' }, encargada),
-    s(9, 4, { via: 'presencial', region: '08', casa_id: null, entrada: sumarDias(hoy, 100), salida: sumarDias(hoy, 103), personas: 2, motivo: 'fuera_plazo', detalle: 'Pidió con más de 90 días de anticipación.' }, nacional),
-    s(15, 5, { via: 'telefono', region: '05', casa_id: 6, entrada: sumarDias(hoy, 3), salida: sumarDias(hoy, 5), personas: 6, motivo: 'sin_cupo', detalle: 'El departamento admite 4 personas.' }, encargada),
-  ]
 }

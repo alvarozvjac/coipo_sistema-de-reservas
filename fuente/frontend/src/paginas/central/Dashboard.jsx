@@ -1,4 +1,3 @@
-import { MOTIVOS_NO_ATENDIDA, noAtendidas } from '../../datos/solicitudes.js'
 import { useState } from 'react'
 import { ArrowDown, ArrowUp, Download, Lightbulb } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
@@ -255,21 +254,16 @@ export function Dashboard() {
 }
 
 /**
- * Cómo llegan los pedidos y cuáles no se atendieron (decisión 12-11-2026): la
- * vía de las reservas registradas en el período y los motivos de las
- * solicitudes no atendidas. La vía de las reservas de la demostración es ficticia.
+ * Por qué vía llegan las solicitudes que se registraron (decisión 12-11-2026).
+ * La vía de las reservas de la demostración es ficticia.
  */
 function PanelSolicitudes({ reservas, desde, hasta, region }) {
   const enPeriodo = (iso) => iso >= desde && iso < hasta
   const conVia = reservas.filter((r) => r.via && enPeriodo(r.creada_en.slice(0, 10)) && (!region || r.casa.region === region))
   const porVia = Object.entries(VIAS).map(([k, t]) => ({ etiqueta: t, valor: conVia.filter((r) => r.via === k).length })).filter((x) => x.valor)
-  const na = noAtendidas(region).filter((x) => enPeriodo(x.creada_en.slice(0, 10)))
-  const porMotivo = Object.entries(MOTIVOS_NO_ATENDIDA).map(([k, t]) => ({ etiqueta: t, valor: na.filter((x) => x.motivo === k).length })).filter((x) => x.valor)
   return (
-    <Panel titulo="Cómo llegan las solicitudes" subtitulo="Vía de las reservas registradas en el período y pedidos no atendidos">
+    <Panel titulo="Cómo llegan las solicitudes" subtitulo="Vía de las reservas registradas en el período">
       <BarrasHorizontales datos={porVia} formato={(v) => `${miles(v)} (${pct(conVia.length ? v / conVia.length : 0)})`} />
-      <h3 className="mt-6 text-[14px] font-semibold text-tinta-900">No atendidas por motivo ({miles(na.length)})</h3>
-      <div className="mt-2">{porMotivo.length ? <BarrasHorizontales datos={porMotivo} formato={(v) => miles(v)} /> : <p className="text-[15px] text-tinta-500">Ninguna en el período.</p>}</div>
     </Panel>
   )
 }
