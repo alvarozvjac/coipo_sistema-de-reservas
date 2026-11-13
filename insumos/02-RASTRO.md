@@ -374,7 +374,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `9f30f03` (sha256 igual al local, 1.612.357 bytes); consola sin
   errores.
 
-### Sin efectivo: transferencia electrónica (13-11-2026, local, sin publicar)
+### Sin efectivo: transferencia electrónica (13-11-2026, publicado en `aabafe3`)
 
 - Pedido: Álvaro Zegers, 13-11-2026 15:00 («el pago no es en efectivo, es una transferencia
   electrónica»); respuestas: quitar el efectivo; confirmada con pago pendiente; registran la
@@ -387,6 +387,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   e2e17 31, e2e4 17, e2e9 20. axe-core: 0 infracciones; jueces: 0 bloqueantes.
 - Capturas miradas: Cobros nacional en escritorio y de la encargada en teléfono, antes y
   después de agregar la columna de pendientes.
+- Pública: GitHub Pages sirve `aabafe3` (sha256 igual al local, 1.609.622 bytes; el HTML trae
+  «Transferencias pendientes» y ya no «Registrar efectivo»); consola sin errores.
 
 ## Validación
 
