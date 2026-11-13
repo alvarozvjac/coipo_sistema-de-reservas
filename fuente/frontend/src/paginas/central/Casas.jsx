@@ -27,6 +27,7 @@ import { Aviso, Boton, Campo, Tarjeta, claseEntrada, claseFiltro } from '../../c
 import { useSesion } from '../../componentes/Perfil.jsx'
 import { Dialogo, nombreRegion } from '../encargada/comun.jsx'
 import { DialogoDirecciones } from './DireccionesCasa.jsx'
+import { CarrilTarifas, EntradaPesos } from './CarrilTarifas.jsx'
 
 /* ---------- Casas: en servicio o retiradas ---------- */
 
@@ -316,10 +317,12 @@ export function Tarifas() {
 function Digitar({ onListo }) {
   const { usuario } = useSesion()
   const [region, setRegion] = useState('')
+  const [busqueda, setBusqueda] = useState('')
   const [valores, setValores] = useState({})
   const [revisar, setRevisar] = useState(false)
   const casas = listarCasas({ incluirInactivas: true })
-  const visibles = casas.filter((c) => !region || c.region === region)
+  const texto = busqueda.trim().toLowerCase()
+  const visibles = casas.filter((c) => (!region || c.region === region) && (!texto || `${c.nombre} ${c.localidad ?? ''}`.toLowerCase().includes(texto)))
   const clave = (id, tramo) => `${id}|${tramo}`
   const cambios = casas.flatMap((c) =>
     ['a', 'b']
@@ -334,45 +337,13 @@ function Digitar({ onListo }) {
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-tinta-500">Escriba la nueva tarifa en los tramos que cambian y guarde todo junto.</p>
-        <FiltroRegion valor={region} onCambio={setRegion} />
+        <p className="text-sm text-tinta-500">Escriba la nueva tarifa en las tarjetas que cambian y guarde todo junto.</p>
+        <div className="flex flex-wrap gap-2">
+          <input type="search" className={claseFiltro} value={busqueda} onChange={(e) => setBusqueda(e.target.value)} placeholder="Buscar casa" aria-label="Buscar casa" />
+          <FiltroRegion valor={region} onCambio={setRegion} />
+        </div>
       </div>
-      <div className="mt-3 overflow-x-auto rounded-lg border border-borde">
-        <table className="w-full min-w-[640px] text-left text-[15px]">
-          <thead className="border-b border-borde bg-stone-50 text-[13px] text-tinta-500">
-            <tr>
-              <th className="px-4 py-2.5 font-medium">Casa</th>
-              <th className="px-4 py-2.5 font-medium">Grados 04 a 14</th>
-              <th className="px-4 py-2.5 font-medium">Grados 15 a 19</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-borde">
-            {visibles.map((c) => {
-              const cambia = cambios.some((x) => x.casa_id === c.id)
-              return (
-                <tr key={c.id} className={cambia ? 'bg-alerta-50/60' : ''}>
-                  <td className="px-4 py-2">
-                    <span className="font-medium">{c.nombre}</span>
-                    <span className="block text-[13px] text-tinta-500">{nombreRegion(c.region)}</span>
-                  </td>
-                  {['a', 'b'].map((tr) => (
-                    <td key={tr} className="px-4 py-2">
-                      <span className="block text-[13px] tabular-nums text-tinta-500">Vigente {pesos(tarifaTramo(c, tr))}</span>
-                      <div className="mt-1 w-36">
-                        <EntradaPesos
-                          value={valores[clave(c.id, tr)] ?? ''}
-                          onChange={(x) => setValores({ ...valores, [clave(c.id, tr)]: x })}
-                          etiqueta={`Nueva tarifa de ${c.nombre}, ${TRAMOS[tr].toLowerCase()}`}
-                        />
-                      </div>
-                    </td>
-                  ))}
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
+      <CarrilTarifas casas={visibles} valores={valores} onValor={(k, x) => setValores((v) => ({ ...v, [k]: x }))} cambian={new Set(cambios.map((x) => x.casa_id))} />
       {fuera.length > 0 && (
         <div className="mt-3">
           <Aviso tipo="error">
@@ -671,14 +642,6 @@ function TarifasDiferenciadas() {
   )
 }
 
-function EntradaPesos({ value, onChange, etiqueta }) {
-  return (
-    <div className="relative">
-      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-tinta-400">$</span>
-      <input className={`${claseEntrada} pl-7 tabular-nums`} type="number" min="0" step="1000" value={value} onChange={(e) => onChange(e.target.value)} aria-label={etiqueta} />
-    </div>
-  )
-}
 
 export function Bloqueos() {
   const { usuario } = useSesion()

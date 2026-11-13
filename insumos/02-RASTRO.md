@@ -125,6 +125,8 @@ Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/D
   encargado nacional registra transferencias · Álvaro Zegers.
 - 2026-11-13 · El límite de la misma casa pasa a ser por mes calendario de la llegada (1) y
   reemplaza la regla de una reserva por mes del Art. 7 · Álvaro Zegers.
+- 2026-11-13 · Tarifas por noche en un carril horizontal de tarjetas (4 a la vista), con la
+  nueva tarifa dentro de la tarjeta · Álvaro Zegers.
 - 2026-11-02 · Insumos en este repositorio público, con cargos en vez de nombres de
   Bienestar · Álvaro Zegers eligió el repositorio; el criterio de nombres es de esta
   documentación (regla 8 de la metodología).
@@ -418,6 +420,21 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Capturas miradas: fila del parámetro y el motivo en el panel de registro.
 - Pública: GitHub Pages sirve `d6701eb` (sha256 igual al local, 1.606.685 bytes); consola sin
   errores.
+
+### Tarifas en carril horizontal (13-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 13-11-2026 16:19; respuestas: carril horizontal, edición dentro de la
+  tarjeta.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844, 0 fallas: e2e9 28 (agrega: 22
+  tarjetas, «Casas 1–4 de 22», el carril mide menos de 520 px de alto, la flecha pasa a 5–8,
+  el punto final desactiva «siguientes», la búsqueda filtra y vuelve al inicio, la tarjeta
+  editada dice «Cambia», en el teléfono «Casa 1 de 22» sin desborde), e2e14 62, e2e15 21,
+  e2e16 23, e2e17 32, e2e4 17. axe-core: 0 infracciones (agrega la pestaña Tarifas);
+  jueces: 0 bloqueantes.
+- Capturas miradas en escritorio y teléfono. Corregido al mirarlas: el borde de la tarjeta
+  editada salía negro (color inexistente), el borde superior de las tarjetas se cortaba, y en
+  el teléfono los 22 puntos desbordaban la página (ahora los puntos se muestran desde
+  tableta).
 
 ## Validación
 

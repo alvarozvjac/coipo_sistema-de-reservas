@@ -87,6 +87,20 @@ transferencia electrónica». Respuestas del mismo día:
   traen la planilla y las transferencias, recibidas y pendientes.
 - La clave de datos pasó a `reserva_veraneo_v21`.
 
+## Tarifas por noche en un carril horizontal (decisión 13-11-2026, 16:19)
+
+Fuente: Álvaro Zegers (UIA), 13-11-2026, 16:19: que las tarifas por noche según grado «se
+desplacen como un carril, muestren las primeras 4 casas y luego baje». Respuestas del mismo
+día: carril horizontal; la nueva tarifa se escribe dentro de la tarjeta.
+
+- *Configuración › Tarifas › Digitar en pantalla* muestra una tarjeta por casa (nombre,
+  región, capacidad, las dos tarifas vigentes y un campo «Nueva tarifa» por tramo) en un
+  carril: 4 a la vista en escritorio, 2 en tableta y 1 en el teléfono, con flechas, puntos
+  por página (desde tableta) y «Casas 1–4 de 22». Se busca por nombre y se filtra por región;
+  al filtrar, el carril vuelve al inicio.
+- La tarjeta con cambios se marca «Cambia»; los cambios se siguen guardando juntos con
+  «Revisar y guardar», como antes.
+
 ## Misma casa: veces por mes, en lugar del Art. 7 (decisión 13-11-2026, 15:59)
 
 Fuente: Álvaro Zegers (UIA), 13-11-2026, 15:59: «esto debe ser en el "mes"», sobre el
