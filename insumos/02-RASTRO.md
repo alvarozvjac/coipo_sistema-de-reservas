@@ -354,7 +354,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `d373177` (sha256 igual al local, 1.611.270 bytes; el HTML
   contiene «Efectivo por recibir»); consola sin errores.
 
-### Parámetro de veces por la misma casa (13-11-2026, local, sin publicar)
+### Parámetro de veces por la misma casa (13-11-2026, publicado en `9f30f03`)
 
 - Pedido: Álvaro Zegers, 13-11-2026 14:33; respuestas: año calendario, valor 1, no permite
   registrar, cuentan vigentes y realizadas.
@@ -367,6 +367,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   estaba a nombre de «Nora Castillo Vergara» con un RUT que en la nómina era de otra persona
   (afiliada activa). Nora quedó en la nómina de demostración como jubilada, con RUT ficticio
   propio (7.215.346-4). La clave de datos pasó a `reserva_veraneo_v20`.
+- Pública: GitHub Pages sirve `9f30f03` (sha256 igual al local, 1.612.357 bytes); consola sin
+  errores.
 
 ## Validación
 
