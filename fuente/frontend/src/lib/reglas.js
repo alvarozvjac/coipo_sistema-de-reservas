@@ -20,8 +20,8 @@ export const PARAMETROS = {
   aviso_desistimiento_dias_habiles: 10, // Memo 6188/2026 (el reglamento propuesto dice 7 días corridos, Art. 10 a)
   aviso_retiro_anticipado_dias: 2, // Art. 10 e)
   dias_aseo_entre_reservas: 1, // decisión de Bienestar
-  reservas_por_mes: 1, // Art. 7
-  reservas_misma_casa_por_anio: 1, // decisión 13-11-2026: veces que una persona puede reservar la misma casa en un año calendario
+  // Decisión 13-11-2026 (15:59): reemplaza la regla del Art. 7 (una reserva por mes en cualquier casa).
+  reservas_misma_casa_por_mes: 1, // veces que una persona puede reservar la misma casa en un mes calendario
   cuotas_maximas_planilla: 3, // reserva directa: decisión de Bienestar (Anexo A pide el número de cuotas)
   hora_ingreso: '15:00', // Art. 12
   hora_salida: '12:00', // Art. 12
@@ -137,7 +137,6 @@ export function estadoNoche(iso, noDisponibles, hoy = hoyISO(), calidad) {
   return 'disponible'
 }
 
-const vigente = (r, hoy) => !['desistida', 'anulada'].includes(r.estado) && r.salida > hoy
 
 /**
  * Valida un rango de fechas para un solicitante.
@@ -164,16 +163,14 @@ export function validarFechas({ entrada, salida, noDisponibles, reservasUsuario 
   }
   if (ocupada) errores.push('Hay noches ocupadas en ese rango (se deja un día libre entre reservas para aseo).')
 
-  const otra = reservasUsuario.find((r) => vigente(r, hoy) && mesDe(r.entrada) === mesDe(entrada))
-  if (otra) errores.push(`Ya tiene una reserva en ${nombreMes(entrada)}. Se permite una reserva por mes calendario (Art. 7).`)
-
-  // Misma casa (decisión 13-11-2026): cuentan las vigentes y las realizadas del año de la llegada.
+  // Misma casa por mes (decisión 13-11-2026, 15:59; reemplaza el Art. 7): cuentan las
+  // vigentes y las realizadas cuya llegada cae en el mes calendario de la nueva llegada.
   if (casaId != null) {
-    const max = PARAMETROS.reservas_misma_casa_por_anio
-    const anio = entrada.slice(0, 4)
-    const enLaCasa = reservasUsuario.filter((r) => r.casa_id === casaId && !['desistida', 'anulada'].includes(r.estado) && r.entrada.slice(0, 4) === anio)
+    const max = PARAMETROS.reservas_misma_casa_por_mes
+    const mes = mesDe(entrada)
+    const enLaCasa = reservasUsuario.filter((r) => r.casa_id === casaId && !['desistida', 'anulada'].includes(r.estado) && mesDe(r.entrada) === mes)
     if (enLaCasa.length >= max)
-      errores.push(`Ya reservó esta casa ${enLaCasa.length === 1 ? 'una vez' : `${enLaCasa.length} veces`} en ${anio} (${enLaCasa.map((r) => r.codigo).join(', ')}). Se permite${max === 1 ? ' una vez' : `n ${max} veces`} por año calendario en la misma casa.`)
+      errores.push(`Ya reservó esta casa ${enLaCasa.length === 1 ? 'una vez' : `${enLaCasa.length} veces`} en ${nombreMes(entrada)} (${enLaCasa.map((r) => r.codigo).join(', ')}). Se permite${max === 1 ? ' una vez' : `n ${max} veces`} por mes calendario en la misma casa.`)
   }
   return errores
 }

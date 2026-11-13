@@ -87,7 +87,26 @@ transferencia electrónica». Respuestas del mismo día:
   traen la planilla y las transferencias, recibidas y pendientes.
 - La clave de datos pasó a `reserva_veraneo_v21`.
 
-## Misma casa: veces por año (decisión 13-11-2026, 14:33)
+## Misma casa: veces por mes, en lugar del Art. 7 (decisión 13-11-2026, 15:59)
+
+Fuente: Álvaro Zegers (UIA), 13-11-2026, 15:59: «esto debe ser en el "mes"», sobre el
+parámetro «Veces que una persona puede reservar la misma casa en el año». Respuestas del
+mismo día:
+
+- El parámetro pasa a ser **«Veces que una persona puede reservar la misma casa en el mes»**,
+  valor inicial **1** (entre 1 y 10), contado por **mes calendario de la llegada**.
+- **Reemplaza la regla del Art. 7** (una reserva por mes en cualquier casa): una persona puede
+  tener reservas en casas distintas el mismo mes; lo que se limita es repetir la misma casa en
+  el mes. [VERIFICAR: con Bienestar o Fiscalía, porque el reglamento propuesto de octubre
+  2026 dice una reserva por mes calendario (Art. 7) y esta decisión se aparta del texto.]
+- Siguen contando las reservas vigentes y realizadas (no las desistidas ni las anuladas) y,
+  al llegar al límite, no se registra: «Ya reservó esta casa una vez en diciembre 2026
+  (R-…). Se permite una vez por mes calendario en la misma casa.»
+- Los antecedentes de la persona siguen mostrando «Ya tiene una reserva en {mes}», como
+  información, sin citar el Art. 7.
+- La clave de datos pasó a `reserva_veraneo_v22` (el parámetro cambió de nombre).
+
+## Misma casa: veces por año (decisión 13-11-2026, 14:33) — pasó a ser por mes a las 15:59
 
 Fuente: Álvaro Zegers (UIA), 13-11-2026: «ingresa al menú de configuración el parámetro de
 hasta cuántas veces la misma persona puede reservar una casa». Respuestas del mismo día:
@@ -629,7 +648,7 @@ persona.
 |---|---|---|
 | Confirmación | Automática si hay disponibilidad y se cumplen las reglas (difiere del texto del Art. 5) | Decisión 20-10-2026 |
 | Temporada alta (enero-febrero e invierno) | Solo por sorteo, a turnos de sábado a sábado; los turnos vacantes después del sorteo se reservan directo | Art. 6, decisión 20-10-2026 |
-| Reservas por mes | Una por mes calendario | Art. 7 |
+| Reservas por mes | ~~Una por mes calendario~~; desde el 13-11-2026, la misma casa hasta 1 vez por mes (parámetro) | Art. 7; decisión 13-11-2026 |
 | Otros servicios públicos | Reservan con hasta 15 días de anticipación (cupos no tomados por personal de CONAF); tarifa diferenciada y pago anticipado | Art. 9, decisión 20-10-2026 |
 | Desistimiento | Sin costo con 7 o más días corridos; si no, o si no se presenta, una noche; fuerza mayor acreditada sin costo | Art. 10 |
 | Retiro anticipado | Aviso con 2 días; sin aviso se cobra el período completo (en condiciones de uso) | Art. 10 e) |

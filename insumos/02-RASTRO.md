@@ -123,6 +123,8 @@ Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/D
   muestra planilla, transferencias recibidas y pendientes · Álvaro Zegers.
 - 2026-11-13 · La encargada regional queda sin Panel ni Cobros: entra a Reservas y solo el
   encargado nacional registra transferencias · Álvaro Zegers.
+- 2026-11-13 · El límite de la misma casa pasa a ser por mes calendario de la llegada (1) y
+  reemplaza la regla de una reserva por mes del Art. 7 · Álvaro Zegers.
 - 2026-11-02 · Insumos en este repositorio público, con cargos en vez de nombres de
   Bienestar · Álvaro Zegers eligió el repositorio; el criterio de nombres es de esta
   documentación (regla 8 de la metodología).
@@ -403,6 +405,17 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Capturas miradas: Reservas de la encargada al ingresar, en escritorio y teléfono.
 - Pública: GitHub Pages sirve `8b9e5c0` (sha256 igual al local, 1.606.997 bytes); consola sin
   errores.
+
+### Misma casa por mes, en lugar del Art. 7 (13-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 13-11-2026 15:59; respuestas: reemplazar el Art. 7, mes calendario
+  de la llegada, valor 1.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844, 0 fallas: e2e17 32 (agrega: el
+  parámetro dice «1 vez por mes calendario»; la misma casa en diciembre no se registra; la
+  misma casa en noviembre y otra casa en diciembre sí; no aparece el Art. 7; con 2 sí),
+  e2e14 62, e2e15 21, e2e16 23, e2e4 17, e2e9 20. axe-core: 0 infracciones; jueces:
+  0 bloqueantes.
+- Capturas miradas: fila del parámetro y el motivo en el panel de registro.
 
 ## Validación
 

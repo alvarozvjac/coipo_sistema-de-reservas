@@ -36,7 +36,7 @@ export const EDITABLES = [
   { clave: 'anticipacion_maxima_otro_servicio_dias', etiqueta: 'Anticipación máxima, otros servicios públicos', unidad: 'días', min: 1, max: 90, fuente: 'Art. 9' },
   { clave: 'aviso_desistimiento_dias_habiles', etiqueta: 'Aviso para desistir sin costo', unidad: 'días hábiles', min: 1, max: 30, fuente: 'Memo 6188/2026 (Art. 10 a dice 7 días corridos)' },
   { clave: 'aviso_retiro_anticipado_dias', etiqueta: 'Aviso de retiro anticipado', unidad: 'días', min: 0, max: 10, fuente: 'Art. 10 e)' },
-  { clave: 'reservas_misma_casa_por_anio', etiqueta: 'Veces que una persona puede reservar la misma casa en el año', unidad: 'veces por año calendario', min: 1, max: 12, fuente: 'Decisión de Bienestar y UIA (13-11-2026)' },
+  { clave: 'reservas_misma_casa_por_mes', etiqueta: 'Veces que una persona puede reservar la misma casa en el mes', unidad: 'veces por mes calendario', min: 1, max: 10, fuente: 'Decisión de Bienestar y UIA (13-11-2026)' },
   { clave: 'dias_aseo_entre_reservas', etiqueta: 'Días de aseo entre reservas', unidad: 'días', min: 0, max: 3, fuente: 'Decisión de Bienestar' },
   { clave: 'cuotas_maximas_planilla', etiqueta: 'Cuotas máximas por planilla (reserva directa)', unidad: 'cuotas', min: 1, max: 12, fuente: 'Decisión de Bienestar' },
   { clave: 'plazo_observaciones_horas', etiqueta: 'Plazo para informar diferencias de inventario', unidad: 'horas', min: 1, max: 72, fuente: 'Art. 13' },

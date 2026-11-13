@@ -7,7 +7,7 @@ import { fechaCorta, hoyISO, sumarDias } from '../../../lib/fechas.js'
 import { Aviso, Boton, Campo, Tarjeta, claseEntrada } from '../../../componentes/ui.jsx'
 import { Dialogo } from '../../encargada/comun.jsx'
 
-const SINGULAR = { días: 'día', 'días hábiles': 'día hábil', cuotas: 'cuota', horas: 'hora', noches: 'noche', 'veces por año calendario': 'vez por año calendario' }
+const SINGULAR = { días: 'día', 'días hábiles': 'día hábil', cuotas: 'cuota', horas: 'hora', noches: 'noche', 'veces por mes calendario': 'vez por mes calendario' }
 
 /**
  * Parámetros del reglamento (decisión 12-11-2026): el encargado nacional los
