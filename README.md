@@ -29,17 +29,19 @@ asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro)
 
 | Perfil | Qué se puede probar |
 |---|---|
-| Encargada regional | Panel de control de su región (por aprobar, por confirmar, llegadas y salidas, inventario); Reservas con tablero de ocupación de todo el país y listado: registra en un panel lateral, en las casas de su región, lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), solo si hay disponibilidad, viendo antes sus antecedentes, aprueba lo que registró el encargado nacional en su región, registra desistimientos; Inventario |
-| Encargado nacional | Panel nacional; Reservas con tablero de todo el país (registra en cualquier casa, queda por aprobar por la encargada de la región); Cobros (nómina de descuentos y transferencias); Dashboard; Configuración (casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
+| Encargada regional | Panel de control de su región (pagos en efectivo por recibir, por confirmar, llegadas y salidas, inventario); Reservas con tablero de ocupación de todo el país y listado: registra en un panel lateral, en las casas de su región, lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), solo si hay disponibilidad, viendo antes sus antecedentes (queda confirmada al registrarla), registra desistimientos; Cobros de su región (panel de descuentos por mes y efectivo por recibir); Inventario |
+| Encargado nacional | Panel nacional; Reservas con tablero de todo el país (registra en cualquier casa, queda confirmada al registrarla); Cobros (panel de descuentos por mes con planilla y efectivo, nómina para Remuneraciones, transferencias y efectivo por registrar); Dashboard; Configuración (casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
 
 Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María
 Fuentes, afiliada), 16.882.409-2 (Paula Ortiz, plazo fijo) o 6.884.215-8 (Hernán Soto,
 jubilado).
 
-**Aprobación y ficha:** lo que registra el encargado nacional queda «Por aprobar»; la encargada de
-la región lo aprueba en su inicio y la persona recibe la ficha de la reserva (PDF con
-acompañantes, direcciones e inventario). Hay dos de ejemplo: R-2026-0197 (Valparaíso, la
-aprueba `cnunez`) y R-2026-0198 (Atacama, sin encargada en el IAM: la aprueba `pherrera`).
+**Sin aprobación, ficha y efectivo (13-11-2026):** toda reserva registrada queda confirmada y la
+persona recibe la ficha de la reserva (PDF con acompañantes, direcciones e inventario); con
+transferencia, la ficha sale al registrar el pago. Jubilados/as y otros servicios públicos
+pueden pagar en efectivo: la reserva queda confirmada con el pago por recibir y la encargada
+(su región) o el encargado nacional registran el recibo en Cobros. De ejemplo: R-2026-0195
+(Valparaíso, efectivo por recibir).
 
 **Reiniciar datos de prueba**, en el pie de página, vuelve todo al estado inicial.
 

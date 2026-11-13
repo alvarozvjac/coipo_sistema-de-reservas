@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { CheckCircle2, Clock, FileDown, Hourglass, Printer } from 'lucide-react'
+import { CheckCircle2, Clock, FileDown, Printer } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
-import { desistirReserva, obtenerReserva, puedeAprobar, useDatos } from '../../datos/servicio.js'
-import { BotonesAprobacion } from '../../componentes/Aprobacion.jsx'
+import { desistirReserva, obtenerReserva, useDatos } from '../../datos/servicio.js'
 import { INICIO, useSesion } from '../../componentes/Perfil.jsx'
 import { correoEncargada } from '../../datos/usuarios.js'
 import { CATEGORIAS_INVENTARIO } from '../../datos/inventarios.js'
@@ -19,6 +18,7 @@ import { DatosCuenta } from '../../componentes/Transferencia.jsx'
 const PAGO = {
   planilla: (f) => `Descuento por planilla en ${plural(f.cuotas, 'cuota', 'cuotas')}${f.desde_mes ? ` desde ${nombreMes(f.desde_mes + '-01')}` : ''}`,
   transferencia: () => 'Transferencia, antes de llegar',
+  efectivo: () => 'Efectivo, antes de llegar, a la encargada regional o al encargado nacional',
 }
 
 /**
@@ -47,15 +47,6 @@ export function Comprobante() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      {nueva && estado === 'por_aprobar' && (
-        <div className="mb-6 text-center">
-          <Hourglass className="mx-auto size-12 text-alerta-700" aria-hidden />
-          <h1 className="mt-3 text-2xl font-bold">Reserva registrada a nombre de {r.titular.nombre}, por aprobar</h1>
-          <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
-            Las fechas quedan apartadas. {puedeAprobar(usuario, r) ? 'Esta región no tiene encargada con rol en el sistema: apruébela usted más abajo.' : `La aprueba la encargada regional de ${region}.`} Recién al aprobarla se envía a {r.contacto?.correo} la ficha de la reserva.
-          </p>
-        </div>
-      )}
       {nueva && estado === 'por_confirmar' && (
         <div className="mb-6 text-center">
           <Clock className="mx-auto size-12 text-alerta-700" aria-hidden />
@@ -65,12 +56,13 @@ export function Comprobante() {
           </p>
         </div>
       )}
-      {nueva && !['por_confirmar', 'por_aprobar'].includes(estado) && (
+      {nueva && estado !== 'por_confirmar' && (
         <div className="mb-6 text-center">
           <CheckCircle2 className="mx-auto size-12 text-verde-600" aria-hidden />
           <h1 className="mt-3 text-2xl font-bold">Reserva confirmada a nombre de {r.titular.nombre}</h1>
           <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
             Se envió a {r.contacto?.correo} la ficha de la reserva, con quienes viajan, las direcciones de la casa y el inventario.
+            {r.forma_pago.tipo === 'efectivo' && !r.pago ? ' El pago en efectivo queda pendiente hasta que un encargado registre que lo recibió.' : ''}
           </p>
         </div>
       )}
@@ -94,13 +86,12 @@ export function Comprobante() {
           <Dato t="Salida" v={fechaLarga(r.salida)} d={`Hasta las ${PARAMETROS.hora_salida}`} />
           {r.ocupantes.length > 0 && <Dato t="Personas" v={plural(r.ocupantes.length, 'persona', 'personas')} d={r.ocupantes.map((o) => o.nombre).join(', ')} />}
           {r.registrada_por && <Dato t="Registrada por" v={r.registrada_por.nombre} d={`${PERFIL_ETIQUETA[r.registrada_por.perfil] ?? 'Encargado/a'}, a pedido de ${r.titular.nombre}${r.via ? ` (${VIAS[r.via].toLowerCase()})` : ''}, que conoce y acepta el reglamento`} />}
-          {r.aprobada_por && r.registrada_por && <Dato t="Aprobada por" v={r.aprobada_por} d={r.aprobada_en ? fechaCorta(r.aprobada_en.slice(0, 10), true) : undefined} />}
           {r.titular_viaja === false && <Dato t="A cargo en la casa" v={r.a_cargo} d={`${r.titular.nombre} no viaja y sigue siendo el usuario/a responsable`} />}
           {r.perro_asistencia && <Dato t="Perro de asistencia" v="Sí (Ley 20.422)" d={r.perro_asistencia.credencial ? 'Credencial y certificado sanitario adjuntos' : undefined} />}
           <Dato
             t="Pago"
             v={`${pesos(r.total)} · ${plural(n, 'noche', 'noches')}`}
-            d={PAGO[r.forma_pago.tipo](r.forma_pago)}
+            d={PAGO[r.forma_pago.tipo](r.forma_pago) + (r.forma_pago.tipo === 'efectivo' ? (r.pago ? ` · recibido por ${r.pago.por} (${r.pago.comprobante})` : ' · pendiente de recibir') : '')}
           />
         </dl>
 
@@ -111,33 +102,6 @@ export function Comprobante() {
               Transfiera antes de llegar y escriba la glosa tal como aparece. La reserva queda confirmada cuando Bienestar compruebe el pago.
             </p>
             <DatosCuenta monto={r.total} glosa={r.forma_pago.glosa ?? glosaTransferencia(r.casa, r.codigo)} />
-          </div>
-        )}
-
-        {estado === 'por_aprobar' && (
-          <div className="no-imprimir mt-5 border-t border-borde pt-4">
-            <h2 className="font-semibold">Por aprobar</h2>
-            {puedeAprobar(usuario, r) ? (
-              <>
-                <p className="mb-3 mt-1 text-[15px] text-tinta-700">
-                  La registró {r.registrada_por?.nombre}. Las fechas están apartadas hasta que usted la apruebe o no.
-                  {usuario.perfil === 'central' ? ' Esta región no tiene encargada con rol en el sistema, por eso le toca a usted.' : ''}
-                </p>
-                <BotonesAprobacion reserva={r} gestor={usuario} />
-              </>
-            ) : (
-              <p className="mt-1 text-[15px] text-tinta-700">La aprueba la encargada regional de {region}. Las fechas están apartadas mientras tanto; a la persona no se le ha enviado nada todavía.</p>
-            )}
-          </div>
-        )}
-
-        {estado === 'rechazada' && r.rechazo && (
-          <div className="mt-4 rounded-lg bg-error-50 px-4 py-3 text-[15px] text-error-700">
-            <p className="font-semibold">
-              No aprobada por {r.rechazo.por} el {fechaCorta(r.rechazo.en.slice(0, 10), true)}
-            </p>
-            <p className="mt-1">{r.rechazo.motivo}</p>
-            <p className="mt-1">Las fechas se liberaron y se avisó a la persona.</p>
           </div>
         )}
 

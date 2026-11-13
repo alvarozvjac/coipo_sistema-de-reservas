@@ -1,9 +1,8 @@
 import { inventarioDe, listarCasas, reservasRegion, useDatos } from '../../datos/servicio.js'
 import { fechaCorta, hoyISO, sumarDias } from '../../lib/fechas.js'
 import { plural } from '../../lib/formato.js'
-import { estadoReserva } from '../../lib/reglas.js'
+import { efectivoPendiente, estadoReserva } from '../../lib/reglas.js'
 import { useSesion } from '../../componentes/Perfil.jsx'
-import { PanelPorAprobar } from '../../componentes/Aprobacion.jsx'
 import { AccionesRegistro, Indicador, Movimientos, ocupacion } from '../../componentes/Panel.jsx'
 import { nombreRegion } from './comun.jsx'
 
@@ -41,13 +40,12 @@ export function InicioEncargada() {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Indicador cifra={estado('por_aprobar').length} texto="por aprobar" tono="alerta" a={`${base}?estado=por_aprobar`} />
+        <Indicador cifra={reservas.filter(efectivoPendiente).length} texto="pagos en efectivo por recibir" tono="alerta" a="/encargada/cobros?pestana=pagos" />
         <Indicador cifra={estado('por_confirmar').length} texto="por confirmar (esperan el pago)" a={`${base}?estado=por_confirmar`} />
         <Indicador cifra={llegadas.length} texto="llegadas hoy y mañana" />
         <Indicador cifra={`${Math.round(ocupacion(casas, reservas, hoy) * 100)}%`} texto="ocupación de los próximos 30 días" a={base} />
       </div>
 
-      <PanelPorAprobar gestor={usuario} />
       <Movimientos reservas={reservas} hoy={hoy} />
 
       {inventario.length > 0 && (

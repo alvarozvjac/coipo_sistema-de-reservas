@@ -17,7 +17,7 @@ export function AntecedentesPersona({ persona }) {
   const a = antecedentesPersona(persona)
   const avisos = [
     ...a.mesesConReserva.map((m) => `Ya tiene una reserva en ${nombreMes(m + '-01')}: rige una por mes calendario (Art. 7).`),
-    ...a.porPagar.map((r) => `${r.codigo}: transferencia sin registrar (${pesos(r.total)}), llegada el ${fechaCorta(r.entrada)}.`),
+    ...a.porPagar.map((r) => `${r.codigo}: ${r.forma_pago.tipo === 'efectivo' ? 'efectivo por recibir' : 'transferencia sin registrar'} (${pesos(r.total)}), llegada el ${fechaCorta(r.entrada)}.`),
     ...a.cargos.map((r) => `${r.codigo}: desistió fuera de plazo; cargo de ${pesos(r.cargo_desistimiento)}.`),
   ]
   const vacio = !a.reservas.length

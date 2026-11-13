@@ -50,21 +50,55 @@ cuando se contradicen.
 - En el código: `porConfirmar(r)` en `lib/reglas.js` (transferencia sin pago registrado) y
   `registrarPago` en `datos/servicio.js`, que confirma y envía el acta.
 
-## Registro, aprobación y ficha de la reserva (decisión 12-11-2026, tarde)
+## Sin aprobación y pago en efectivo (decisión 13-11-2026)
+
+Fuente: Álvaro Zegers (UIA), 13-11-2026, 12:43: «no debe existir una aprobación en el
+sistema, ya que, si se registra la reserva, ésta queda automáticamente aprobada. Sobre la
+cobranza de las personas que paguen con efectivo, éste se registrará igualmente y es el
+encargado regional y el encargado nacional quien deberá comprobar que se haya realizado el
+pago, el cual se registrará en el reporte de cobranza; en el panel de descuento deberá
+aparecer el monto del mes de acuerdo al descuento desde el sueldo y el descuento por pago en
+efectivo». Respuestas del mismo día a las preguntas de diseño:
+
+- **Sin aprobación.** Toda reserva registrada (por la encargada regional o por el encargado
+  nacional) queda confirmada al registrarla. Ya no existen los estados «Por aprobar» ni
+  «No aprobada», ni la tabla de quién aprueba en cada región, ni la plantilla de correo de
+  no aprobación. Reemplaza la aprobación de la decisión del 12-11-2026.
+- **Quién puede pagar en efectivo.** Solo quienes no tienen planilla: **jubilados/as y
+  funcionarios/as de otros servicios públicos**, que eligen transferencia o efectivo. Los
+  trabajadores activos de CONAF siguen con descuento por planilla.
+- **Efectivo: confirmada con pago pendiente.** Al registrar una reserva en efectivo se envía
+  la ficha de inmediato; el pago queda pendiente en *Cobros* hasta que se registra. (Con
+  transferencia no cambia: queda por confirmar y la ficha sale con el pago.)
+- **Quién registra el efectivo recibido.** La encargada regional, el de las casas de su región
+  (nueva sección *Cobros* en su menú, pestaña «Efectivo por recibir»); el encargado nacional,
+  el de todas las regiones. Queda **quién lo recibió, la fecha y el N° de recibo**.
+- **Panel de descuentos.** *Cobros* abre en una tabla por mes con **descuento por planilla,
+  efectivo recibido, efectivo pendiente y total**; al elegir un mes se ve el detalle por
+  persona (planilla y efectivo) y se descarga el **reporte de cobranza** (CSV con ambas
+  formas de pago, quién recibió y el recibo). La encargada ve su región y no tiene las
+  acciones de nómina (CSV para Remuneraciones, marcar informada), que siguen siendo del
+  encargado nacional. El efectivo recibido cuenta en el mes en que se registró; el
+  pendiente, en el mes de llegada.
+- [PENDIENTE: con Bienestar] formato del recibo de efectivo, dónde se deposita lo recibido y
+  si la encargada rinde a la Oficina Central.
+- La clave de datos pasó a `reserva_veraneo_v19`.
+
+## Registro, aprobación y ficha de la reserva (decisión 12-11-2026, tarde) — aprobación quitada el 13-11-2026
 
 Pedido por Álvaro Zegers el 12-11-2026 («crear un módulo de registro de reservas
 solicitadas…»), con sus respuestas a las preguntas de diseño.
 
 - **Dónde registra cada encargado.** El encargado nacional registra en todas las casas; la
   encargada regional, **solo en las casas de su región** (antes podía en cualquiera).
-- **Aprobación.** Lo que registra el **encargado nacional** queda **«Por aprobar»** y lo
+- ~~**Aprobación.**~~ *Sin vigencia desde el 13-11-2026 (ver arriba).* Lo que registra el **encargado nacional** quedaba **«Por aprobar»** y lo
   aprueba la **encargada regional de la región de la casa**. Lo que registra la propia
   encargada en su región queda aprobado al registrarlo. Si la región no tiene encargada con
   rol en el COIPO IAM, la aprueba el encargado nacional ([PENDIENTE] confirmar con Bienestar;
   en la maqueta solo Valparaíso tiene encargada).
-- **Fechas apartadas.** Mientras está por aprobar, las fechas quedan apartadas. Si no se
+- **Fechas apartadas.** *(Sin vigencia desde el 13-11-2026.)* Mientras está por aprobar, las fechas quedan apartadas. Si no se
   aprueba (con motivo obligatorio), se liberan y se avisa a la persona.
-- **Correo con la ficha.** Al aprobar, se envía a la persona la **ficha de la reserva** en
+- **Correo con la ficha.** Al aprobar (desde el 13-11-2026, al registrar), se envía a la persona la **ficha de la reserva** en
   PDF, que **reemplaza al comprobante y al acta de entrega**: reserva y aprobación,
   solicitante, acompañantes (nombre, relación y edad), **todas las direcciones de la casa**,
   pago, inventario y el acta para el ingreso y la salida (Anexo B). Con **transferencia**, al
@@ -391,12 +425,12 @@ personas piden a la encargada regional o al encargado nacional por cualquier ví
 - **Reservas y Disponibilidad se fusionan** en una sola pantalla, «Reservas»: arriba un
   tablero de ocupación (una fila por casa, una columna por noche, 28 noches en escritorio y
   14 en teléfono) y abajo el listado con filtros. Una reserva se gestiona tocando su barra
-  (detalle con vía, historial, ficha y, si le corresponde, aprobar o no aprobar). Para
+  (detalle con vía, historial y ficha; la opción de aprobar se quitó el 13-11-2026). Para
   registrar se toca la primera noche libre y luego la última. La encargada puede mirar
   cualquier región, pero solo registra en la suya. El filtro «Personas» cierra las casas
   que no alcanzan. Con teclado, el tablero es una sola parada de tabulación; las flechas
   recorren las noches y Enter elige o abre. `/gestion/disponibilidad` lleva a Reservas.
-- **Inicio pasa a ser un Panel de control**: solo lo que pide acción hoy (por aprobar, por
+- **Inicio pasa a ser un Panel de control**: solo lo que pide acción hoy (por aprobar —desde el 13-11-2026, pagos en efectivo por recibir—, por
   confirmar o pagos por registrar, llegadas y salidas, inventario o extintores), cada cifra
   con enlace a donde se resuelve. Se quitó el aviso «¿Alguien le pidió una reserva…?»: el
   botón «Nueva solicitud» (y «Registrar postulación» con la postulación abierta) está en
@@ -485,13 +519,13 @@ lleva a Usuarios y encargadas.
   cambian. INFERIDO: desde la fecha de vigencia, el valor nuevo se aplica a todo registro,
   aunque la estadía sea posterior; si Bienestar quiere que rija según la fecha de la
   estadía, hay que decirlo [PENDIENTE: Bienestar].
-- **Plantillas de correo**: ficha de la reserva, datos para transferir, no aprobada,
+- **Plantillas de correo**: ficha de la reserva, datos para transferir, no aprobada (quitada el 13-11-2026),
   desistimiento y anulación por Bienestar. Asunto y cuerpo con variables entre llaves
   (`{nombre}`, `{codigo}`, `{casa}`, `{fechas}`, `{monto}`, `{glosa}`, `{motivo}`,
   `{registrada_por}`, `{hora_ingreso}`, `{plazo_observaciones}`); una variable mal escrita no se puede guardar; vista
   previa con una reserva de ejemplo; se puede restaurar el texto original. El historial de
   cada reserva muestra el correo tal como habría salido. En la maqueta no se envía nada.
-- **Actividad**: quién hizo qué y cuándo (reservas registradas, aprobadas o no, desistimientos,
+- **Actividad**: quién hizo qué y cuándo (reservas registradas, desistimientos —las aprobaciones se quitaron el 13-11-2026—,
   pagos y devoluciones, bloqueos, tarifas, casas retiradas o reincorporadas, direcciones,
   inventarios, temporadas y sorteos, nómina, parámetros y plantillas), con
   búsqueda, filtros por área y persona, y descarga CSV. No es una bitácora aparte: se arma con

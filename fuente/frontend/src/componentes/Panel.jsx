@@ -46,7 +46,7 @@ export function ocupacion(casas, reservas, hoy, dias = 30) {
   const fin = sumarDias(hoy, dias)
   const ids = new Set(casas.map((c) => c.id))
   const noches = reservas
-    .filter((r) => ids.has(r.casa_id) && ['por_aprobar', 'por_confirmar', 'confirmada', 'en_curso'].includes(estadoReserva(r)))
+    .filter((r) => ids.has(r.casa_id) && ['por_confirmar', 'confirmada', 'en_curso'].includes(estadoReserva(r)))
     .reduce((s, r) => s + Math.max(0, diasEntre(r.entrada > hoy ? r.entrada : hoy, r.salida < fin ? r.salida : fin)), 0)
   return noches / (casas.length * dias)
 }

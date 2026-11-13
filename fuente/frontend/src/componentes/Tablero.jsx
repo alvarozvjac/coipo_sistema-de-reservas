@@ -4,13 +4,12 @@ import { ESTADOS } from '../lib/reglas.js'
 import { bloqueosDe } from '../datos/servicio.js'
 
 /** Estados que ocupan noches en el tablero (las demás reservas no se dibujan). */
-export const EN_TABLERO = ['por_aprobar', 'por_confirmar', 'confirmada', 'en_curso', 'finalizada']
+export const EN_TABLERO = ['por_confirmar', 'confirmada', 'en_curso', 'finalizada']
 
 export const BARRA = {
   confirmada: 'bg-verde-700 text-white',
   en_curso: 'bg-verde-700 text-white',
   por_confirmar: 'bg-verde-100 text-verde-800 ring-1 ring-inset ring-verde-700',
-  por_aprobar: 'border-2 border-dashed border-alerta-700 bg-alerta-50 text-alerta-700',
   finalizada: 'bg-stone-200 text-tinta-700',
 }
 export const RAYADO = 'bg-[repeating-linear-gradient(45deg,var(--color-stone-400)_0_3px,var(--color-stone-100)_3px_7px)]'
@@ -212,7 +211,6 @@ export function LeyendaTablero() {
     <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-tinta-500">
       {item(BARRA.confirmada, 'Confirmada o en curso')}
       {item(BARRA.por_confirmar, 'Por confirmar (pago)')}
-      {item(BARRA.por_aprobar, 'Por aprobar')}
       {item(BARRA.finalizada, 'Finalizada')}
       {item(RAYADO, 'Bloqueada')}
       {item('bg-white ring-1 ring-inset ring-borde', 'Libre')}

@@ -1,6 +1,5 @@
-import { almacen, listarCasas, obtenerCasa, todasLasReservas } from './servicio.js'
-import { CUENTAS, PERFIL_POR_ROL, regionConEncargada } from './iam.js'
-import { REGIONES } from './casas.js'
+import { almacen, obtenerCasa, todasLasReservas } from './servicio.js'
+import { CUENTAS, PERFIL_POR_ROL } from './iam.js'
 import { fechaLarga, hoyISO, rangoFechas } from '../lib/fechas.js'
 import { pesos } from '../lib/formato.js'
 import { PARAMETROS, glosaTransferencia } from '../lib/reglas.js'
@@ -24,15 +23,6 @@ const ahora = () => new Date().toISOString().slice(0, 19)
 
 export function usuariosConAcceso() {
   return CUENTAS.map((c) => ({ ...c, perfil: PERFIL_POR_ROL[c.role] ?? null }))
-}
-
-/** Quién aprueba lo que registra el encargado nacional, región por región. */
-export function aprobadoresPorRegion() {
-  const conCasas = REGIONES.filter((r) => listarCasas().some((c) => c.region === r.codigo))
-  return conCasas.map((r) => {
-    const encargada = CUENTAS.find((c) => c.role === 'encargado_regional' && c.region_id === r.codigo)
-    return { region: r, casas: listarCasas().filter((c) => c.region === r.codigo).length, encargada: encargada ?? null, aprueba: regionConEncargada(r.codigo) ? 'encargada' : 'nacional' }
-  })
 }
 
 /* ---------- Parámetros del reglamento, con vigencia ---------- */
@@ -105,7 +95,7 @@ export const VARIABLES = {
   fechas: 'Llegada y salida',
   monto: 'Total de la estadía',
   glosa: 'Glosa de la transferencia',
-  motivo: 'Motivo (no aprobada o anulada)',
+  motivo: 'Motivo de la anulación',
   registrada_por: 'Quién registró la reserva',
   hora_ingreso: 'Hora de ingreso',
   plazo_observaciones: 'Horas para informar diferencias del inventario',
@@ -114,21 +104,15 @@ export const VARIABLES = {
 export const PLANTILLAS_BASE = {
   ficha: {
     nombre: 'Ficha de la reserva',
-    cuando: 'Al aprobar con planilla o al registrar el pago',
+    cuando: 'Al registrar la reserva (con transferencia, al registrar el pago)',
     asunto: 'Ficha de su reserva {codigo} · {casa}',
     cuerpo: 'Estimado/a {nombre}:\n\nSu reserva en {casa} quedó confirmada para el {fechas}. Adjuntamos la ficha de la reserva, con quienes viajan, las direcciones de la casa y su inventario.\n\nEl ingreso es desde las {hora_ingreso}. Al llegar revise el inventario e informe cualquier diferencia dentro de {plazo_observaciones} horas.\n\nDepartamento de Bienestar · CONAF',
   },
   por_confirmar: {
     nombre: 'Datos para transferir',
-    cuando: 'Al aprobar una reserva que se paga por transferencia',
+    cuando: 'Al registrar una reserva que se paga por transferencia',
     asunto: 'Datos para transferir · reserva {codigo}',
     cuerpo: 'Estimado/a {nombre}:\n\nSu reserva en {casa} ({fechas}) quedó por confirmar. Transfiera {monto} a la cuenta corriente de CONAF con la glosa {glosa}. Cuando registremos el pago le enviaremos la ficha de la reserva.\n\nDepartamento de Bienestar · CONAF',
-  },
-  rechazo: {
-    nombre: 'Reserva no aprobada',
-    cuando: 'Al no aprobar una reserva registrada por el encargado nacional',
-    asunto: 'Su solicitud de reserva no fue aprobada',
-    cuerpo: 'Estimado/a {nombre}:\n\nLa solicitud de reserva en {casa} para el {fechas} no fue aprobada. Motivo: {motivo}\n\nPuede pedir otras fechas a la encargada de Bienestar de su región.\n\nDepartamento de Bienestar · CONAF',
   },
   desistimiento: {
     nombre: 'Desistimiento registrado',
@@ -176,7 +160,7 @@ const valores = (r) => ({
   fechas: `${fechaLarga(r.entrada)} al ${fechaLarga(r.salida)}`,
   monto: pesos(r.total),
   glosa: r.forma_pago?.glosa ?? glosaTransferencia(r.casa ?? obtenerCasa(r.casa_id), r.codigo),
-  motivo: r.rechazo?.motivo ?? r.motivo_anulacion ?? '—',
+  motivo: r.motivo_anulacion ?? '—',
   registrada_por: r.registrada_por?.nombre ?? '—',
   hora_ingreso: PARAMETROS.hora_ingreso,
   plazo_observaciones: PARAMETROS.plazo_observaciones_horas,
@@ -209,8 +193,6 @@ export function actividad() {
   for (const r of e.reservas) {
     const ref = `${r.codigo} · ${casa(r.casa_id)} · ${rangoFechas(r.entrada, r.salida)}`
     if (r.registrada_por) add(r.declaracion_encargado ?? r.creada_en, r.registrada_por.nombre, 'reservas', 'Registró una reserva', `${ref} · a nombre de ${r.titular.nombre}`)
-    if (r.registrada_por?.perfil === 'central' && r.aprobada_por) add(r.aprobada_en, r.aprobada_por, 'reservas', 'Aprobó una reserva', ref)
-    if (r.rechazo) add(r.rechazo.en, r.rechazo.por, 'reservas', 'No aprobó una reserva', `${ref} · ${r.rechazo.motivo}`)
     if (r.desistimiento_registrado_por) add(r.desistida_en, r.desistimiento_registrado_por, 'reservas', 'Registró un desistimiento', ref)
     if (r.pago?.por && r.pago.por !== 'Encargada regional') add(r.pago.registrado_en, r.pago.por, 'cobros', 'Registró un pago', `${ref} · ${r.pago.comprobante}`)
     if (r.devolucion) add(r.devolucion.registrada_en, r.devolucion.por, 'cobros', 'Registró una devolución', ref)

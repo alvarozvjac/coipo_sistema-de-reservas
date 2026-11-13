@@ -48,12 +48,13 @@ export const CALIDADES = {
  * Formas de pago según la calidad (decisión 20-10-2026, ajusta el Art. 21):
  * - Funcionarios de CONAF (afiliados activos y no afiliados): descuento por planilla.
  * - Funcionarios de CONAF a plazo fijo: planilla o transferencia.
- * - Afiliados jubilados y funcionarios de otros servicios públicos: transferencia,
- *   antes de llegar (pago anticipado de toda la estadía).
- * Se eliminó el pago en dependencias de Bienestar.
+ * - Afiliados jubilados y funcionarios de otros servicios públicos: transferencia
+ *   o efectivo, antes de llegar (pago anticipado de toda la estadía). El efectivo
+ *   volvió el 13-11-2026: lo recibe y lo registra la encargada regional o el
+ *   encargado nacional; la reserva queda confirmada con el pago pendiente.
  */
 export function formasDePago(u) {
-  if (u.calidad === 'jubilado' || u.calidad === 'otro_servicio') return ['transferencia']
+  if (u.calidad === 'jubilado' || u.calidad === 'otro_servicio') return ['transferencia', 'efectivo']
   if (u.plazo_fijo) return ['planilla', 'transferencia']
   return ['planilla']
 }
@@ -134,7 +135,7 @@ export function estadoNoche(iso, noDisponibles, hoy = hoyISO(), calidad) {
   return 'disponible'
 }
 
-const vigente = (r, hoy) => !['desistida', 'anulada', 'rechazada'].includes(r.estado) && r.salida > hoy
+const vigente = (r, hoy) => !['desistida', 'anulada'].includes(r.estado) && r.salida > hoy
 
 /**
  * Valida un rango de fechas para un solicitante.
@@ -187,20 +188,20 @@ export function cargoDesistimiento(reserva, hoy = hoyISO()) {
  */
 export const porConfirmar = (r) => r.estado === 'confirmada' && r.forma_pago?.tipo === 'transferencia' && !r.pago
 
+/** Efectivo aún no recibido (decisión 13-11-2026): la reserva está confirmada, pero el pago queda pendiente en Cobros. */
+export const efectivoPendiente = (r) => r.estado === 'confirmada' && r.forma_pago?.tipo === 'efectivo' && !r.pago
+
+export const FORMAS_PAGO = { planilla: 'Descuento por planilla', transferencia: 'Transferencia', efectivo: 'Efectivo' }
+
 /** Estado visible de una reserva según la fecha de hoy. */
 export function estadoReserva(r, hoy = hoyISO()) {
   if (['desistida', 'anulada'].includes(r.estado)) return r.estado
-  // Decisión 12-11-2026: lo que registra el encargado nacional espera la aprobación de la encargada de la región.
-  if (r.estado === 'pendiente_aprobacion') return 'por_aprobar'
-  if (r.estado === 'rechazada') return 'rechazada'
   if (r.salida <= hoy) return 'finalizada'
   if (r.entrada <= hoy) return 'en_curso'
   return porConfirmar(r) ? 'por_confirmar' : 'confirmada'
 }
 
 export const ESTADOS = {
-  por_aprobar: { etiqueta: 'Por aprobar', clase: 'bg-alerta-50 text-alerta-700 ring-1 ring-inset ring-alerta-700/40' },
-  rechazada: { etiqueta: 'No aprobada', clase: 'bg-error-50 text-error-700' },
   por_confirmar: { etiqueta: 'Por confirmar', clase: 'bg-alerta-50 text-alerta-700' },
   confirmada: { etiqueta: 'Confirmada', clase: 'bg-verde-100 text-verde-800' },
   en_curso: { etiqueta: 'En curso', clase: 'bg-sky-100 text-sky-800' },

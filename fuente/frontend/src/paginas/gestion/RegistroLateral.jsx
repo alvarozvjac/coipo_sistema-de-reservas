@@ -87,7 +87,7 @@ export function RegistroLateral({ gestor, inicial, onCerrar, onListo }) {
               </Campo>
             </div>
             <p className="mt-2 text-[13px] text-tinta-500">
-              {regional ? `Solo casas de la Región de ${nombreRegion(gestor.region)}.` : 'Quedará por aprobar por la encargada de la región de la casa.'} La disponibilidad y las reglas de la persona se revisan abajo.
+              {regional ? `Solo casas de la Región de ${nombreRegion(gestor.region)}.` : 'Cualquier casa del país.'} La disponibilidad y las reglas de la persona se revisan abajo.
             </p>
             {entrada && salida && !fechasValidas && <p className="mt-2 text-sm text-error-700">La llegada debe ser desde mañana y la salida, posterior a la llegada.</p>}
           </Tarjeta>

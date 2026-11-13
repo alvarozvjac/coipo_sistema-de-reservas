@@ -6,8 +6,6 @@ import { diasEntre, fechaCorta, hoyISO, sumarDias } from '../../lib/fechas.js'
 import { plural } from '../../lib/formato.js'
 import { estadoReserva } from '../../lib/reglas.js'
 import { Tarjeta } from '../../componentes/ui.jsx'
-import { PanelPorAprobar } from '../../componentes/Aprobacion.jsx'
-import { useSesion } from '../../componentes/Perfil.jsx'
 import { AccionesRegistro, Indicador, Movimientos, ocupacion } from '../../componentes/Panel.jsx'
 
 const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? ''
@@ -18,7 +16,6 @@ const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? ''
  */
 export function InicioCentral() {
   useDatos()
-  const { usuario } = useSesion()
   const hoy = hoyISO()
   const casas = listarCasas({ incluirInactivas: true })
   const reservas = todasLasReservas()
@@ -50,7 +47,6 @@ export function InicioCentral() {
     }
   }).filter(Boolean)
 
-  const porAprobar = reservas.filter((r) => estadoReserva(r) === 'por_aprobar')
   const llegadas = reservas.filter((r) => ['por_confirmar', 'confirmada'].includes(estadoReserva(r)) && (r.entrada === hoy || r.entrada === sumarDias(hoy, 1)))
 
   return (
@@ -66,12 +62,11 @@ export function InicioCentral() {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Indicador cifra={porAprobar.length} texto="por aprobar en el país" tono="alerta" a="/central/reservas?estado=por_aprobar" />
-        <Indicador cifra={pagosPorRegistrar().length} texto="pagos por registrar" a="/central/cobros" />
+        <Indicador cifra={pagosPorRegistrar().filter((r) => r.forma_pago.tipo === 'transferencia').length} texto="transferencias por registrar" a="/central/cobros?pestana=pagos" />
+        <Indicador cifra={pagosPorRegistrar().filter((r) => r.forma_pago.tipo === 'efectivo').length} texto="pagos en efectivo por recibir" tono="alerta" a="/central/cobros?pestana=pagos" />
         <Indicador cifra={llegadas.length} texto="llegadas hoy y mañana" />
         <Indicador cifra={`${Math.round(ocupacion(casas.filter((c) => c.activa), reservas, hoy) * 100)}%`} texto="ocupación nacional, próximos 30 días" a="/central/reservas" />
       </div>
-      <PanelPorAprobar gestor={usuario} />
 
       <section className="mt-8" aria-labelledby="t-alertas">
         <h2 id="t-alertas" className="text-lg font-semibold">

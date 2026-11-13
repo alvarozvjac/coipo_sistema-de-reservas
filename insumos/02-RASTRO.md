@@ -109,6 +109,11 @@ Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/D
   llamado · Álvaro Zegers · detalle en `fuente/docs/DECISIONES.md`.
 - 2026-11-06 · El formulario de postulación de la maqueta deja de pedir correo, región,
   RUT y nombre (salen del ingreso y la nómina) · Álvaro Zegers.
+- 2026-11-13 · Sin aprobación: lo registrado queda confirmado. Jubilados/as y otros
+  servicios pueden pagar en efectivo (confirmada, con el pago pendiente); el efectivo lo
+  registra la encargada (su región) o el encargado nacional, con recibo; Cobros muestra por
+  mes planilla, efectivo recibido y pendiente · Álvaro Zegers · detalle en
+  `fuente/docs/DECISIONES.md`.
 - 2026-11-02 · Insumos en este repositorio público, con cargos en vez de nombres de
   Bienestar · Álvaro Zegers eligió el repositorio; el criterio de nombres es de esta
   documentación (regla 8 de la metodología).
@@ -326,6 +331,23 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   contiene «Realizar sorteo» ni «Registrar postulación»); consola sin errores. La página bajó
   de 8 MB a 1,6 MB porque las fotos de las casas solo se mostraban en el formulario de tres
   pasos, que ya no existe.
+
+### Sin aprobación y pago en efectivo (13-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 13-11-2026 12:43; respuestas: efectivo solo para quienes no tienen
+  planilla; confirmada con pago pendiente; registra la encargada (su región) o el nacional,
+  con quién, fecha y N° de recibo; panel por mes con planilla, efectivo y total.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844, 0 fallas: e2e14 65 (agrega: el
+  nacional registra sin aprobación; jubilado en efectivo queda confirmado con ficha y pago
+  pendiente; recibo REC-0042; panel de descuentos y reporte de cobranza con el efectivo; la
+  encargada tiene Cobros, ve solo el efectivo de su región y registra R-2026-0195), e2e15 21,
+  e2e16 23, e2e17 24, e2e4 17, e2e9 20. axe-core: 0 infracciones en 19 pantallas (agrega
+  Cobros de la encargada y Pagos por registrar), claro y oscuro. Jueces: 0 bloqueantes,
+  0 avisos.
+- Capturas miradas: Cobros de la encargada en escritorio y teléfono, «Efectivo por recibir»
+  y el panel nacional con enero 2027. Corregido al mirarlas: la tabla por mes obligaba a
+  desplazarse de lado en el teléfono (ahora una tarjeta por mes) y a la encargada se le
+  decía «Revise y envíe la nómina a Remuneraciones», que no le corresponde.
 
 ## Validación
 

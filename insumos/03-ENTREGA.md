@@ -14,9 +14,10 @@ orden de llegada y solo si hay disponibilidad, las reservas que les piden para l
 de veraneo a nombre de funcionarios/as de CONAF, jubilados/as y funcionarios/as de otros
 servicios públicos, según el reglamento, y que gestionen ocupación, inventario, cobros,
 tarifas y casas (primera etapa, decisión del 12-11-2026: los afiliados/as no ingresan y no
-hay temporadas altas ni sorteo). La encargada regional registra en su región y aprueba lo
-que el encargado nacional registra en ella; al aprobarse, la persona recibe una ficha con
-acompañantes, direcciones e inventario; ambos consultan la disponibilidad de todo el país.
+hay temporadas altas ni sorteo). La encargada regional registra en su región y el encargado
+nacional en todas; lo registrado queda confirmado sin aprobación y la persona recibe una
+ficha con acompañantes, direcciones e inventario; jubilados/as y otros servicios pueden pagar
+en efectivo, y ambos encargados controlan por mes el descuento por planilla y el efectivo; ambos consultan la disponibilidad de todo el país.
 
 ## En una frase, qué NO hace
 

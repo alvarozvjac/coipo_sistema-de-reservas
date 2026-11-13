@@ -12,6 +12,7 @@ const NAV = {
   encargada: [
     { a: '/encargada', texto: 'Panel', fin: true },
     { a: '/encargada/reservas', texto: 'Reservas' },
+    { a: '/encargada/cobros', texto: 'Cobros' },
     { a: '/encargada/inventario', texto: 'Inventario' },
   ],
   central: [

@@ -36,14 +36,12 @@ import { RegistroLateral } from "./RegistroLateral.jsx";
 
 const FILTROS = [
   "todas",
-  "por_aprobar",
   "por_confirmar",
   "confirmada",
   "en_curso",
   "finalizada",
   "desistida",
   "anulada",
-  "rechazada",
 ];
 const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? "";
 const angosta = () =>
@@ -171,7 +169,7 @@ export function Reservas() {
           <p className="mt-1 text-[15px] text-tinta-500">
             {regional
               ? `Registra en las casas de la Región de ${nombreRegion(usuario.region)}; las demás regiones son solo consulta.`
-              : "Registra en cualquier casa del país; queda por aprobar por la encargada de la región de la casa."}
+              : "Registra en cualquier casa del país."}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -490,10 +488,10 @@ export function Reservas() {
             setMensaje(
               <>
                 {codigo} registrada a nombre de {r.titular.nombre}:{" "}
-                {r.estado === "pendiente_aprobacion"
-                  ? "queda por aprobar por la encargada de la región."
-                  : estadoReserva(r) === "por_confirmar"
-                    ? "por confirmar; se enviaron los datos para transferir."
+                {estadoReserva(r) === "por_confirmar"
+                  ? "por confirmar; se enviaron los datos para transferir."
+                  : r.forma_pago.tipo === "efectivo"
+                    ? "confirmada; se envió la ficha y el pago en efectivo queda por recibir."
                     : "confirmada; se envió la ficha de la reserva."}{" "}
                 <button
                   type="button"
@@ -509,19 +507,7 @@ export function Reservas() {
       )}
 
       {detalle && (
-        <DetalleReserva
-          reserva={detalle}
-          gestor={usuario}
-          onCerrar={() => abrir(null)}
-          onListo={(que) => {
-            setMensaje(
-              que === "aprobada"
-                ? `${detalle.codigo} aprobada.`
-                : `${detalle.codigo} no aprobada: se liberaron las fechas y se avisó a la persona.`,
-            );
-            abrir(null);
-          }}
-        />
+        <DetalleReserva reserva={detalle} onCerrar={() => abrir(null)} />
       )}
     </>
   );

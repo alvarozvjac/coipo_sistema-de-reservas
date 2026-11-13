@@ -66,15 +66,15 @@ actual por correo y planillas. El sorteo de temporada alta quedó fuera (decisi�
 | Pantalla | Perfil | Decisión que permite | Criterios |
 |---|---|---|---|
 | Ingreso con el COIPO IAM (simulado) | Encargados | Entrar; a cualquier otra persona se le indica que pida su reserva a la encargada | C1 |
-| Comprobante de la reserva | Encargados | Ver estado, direcciones, datos de transferencia y ficha; aprobar o no aprobar; registrar el desistimiento | C2, C6, C7, C8, C19, C21 |
-| Panel (antes Inicio) | Encargada (su región), encargado nacional (país) | Ver de un vistazo lo que pide acción hoy: por aprobar, por confirmar o pagos por registrar, llegadas y salidas, inventario; aprobar desde ahí | C19, C22 |
+| Comprobante de la reserva | Encargados | Ver estado, direcciones, datos de transferencia, pago en efectivo y ficha; registrar el desistimiento | C2, C6, C7, C8, C19, C21, C30 |
+| Panel (antes Inicio) | Encargada (su región), encargado nacional (país) | Ver de un vistazo lo que pide acción hoy: pagos en efectivo por recibir, por confirmar o transferencias por registrar, llegadas y salidas, inventario | C22, C30 |
 | Reservas: tablero de ocupación + listado (fusiona Reservas y Disponibilidad) | Encargada, encargado nacional | Ver la ocupación por casa y noche en una o todas las regiones, elegir un tramo libre y registrarlo, o abrir una reserva para gestionarla | C10, C19, C20, C23 |
 | Registrar reserva (panel lateral en Reservas) | Encargada, encargado nacional | Registrar lo que la persona pidió, solo si hay disponibilidad, sin perder de vista la ocupación y viendo antes sus antecedentes | C2 a C7, C23, C25 |
 | Configuración › Casas › otras direcciones | Encargado nacional | Mantener las direcciones que salen en la ficha | C21 |
 | Inventario | Encargada regional | Actualizar el inventario que va en la ficha | C10 |
-| Cobros | Encargado nacional | Registrar pagos, informar la nómina | C6, C11 |
+| Cobros | Encargada regional (su región), encargado nacional (país) | Ver el panel de descuentos por mes (planilla, efectivo recibido y pendiente), registrar el efectivo recibido; el nacional además registra transferencias e informa la nómina | C6, C11, C30, C31 |
 | Configuración › Casas, Tarifas, Bloqueos de fechas | Encargado nacional | Retirar casas, actualizar tarifas, bloquear fechas | C12, C13, C14 |
-| Configuración › Usuarios y encargadas | Encargado nacional | Saber quién entra y quién aprueba en cada región (se cambia en el IAM) | C26 |
+| Configuración › Usuarios y encargadas | Encargado nacional | Saber quién entra y con qué rol (se cambia en el IAM) | C26 |
 | Configuración › Parámetros | Encargado nacional | Cambiar un parámetro del reglamento desde una fecha y con respaldo | C27 |
 | Configuración › Plantillas de correo | Encargado nacional | Ajustar lo que recibe la persona | C28 |
 | Configuración › Actividad | Encargado nacional | Saber quién hizo qué y cuándo | C29 |
@@ -138,24 +138,24 @@ correspondencia está en `02-RASTRO.md`.
 - **C17 · Dashboard.** Dado el período «año a la fecha», cuando el encargado nacional abre el
   dashboard, entonces ve usuarios, reservas, noches, ocupación, ingresos y anticipación,
   sin indicadores de confirmación manual.
-- **C19 · Aprobación (decisión 12-11-2026).** Dada una reserva que el encargado nacional
-  registra en el Departamento Viña del Mar, cuando la guarda, entonces queda «Por aprobar»
-  con las fechas apartadas y sin envío a la persona; cuando la encargada de Valparaíso la
-  aprueba, queda «Confirmada» con «Aprobada por» y se envía la ficha; y si no la aprueba
-  (con motivo), queda «No aprobada», se liberan las fechas y se avisa a la persona.
+- **C19 · Sin aprobación (decisión 13-11-2026; reemplaza la aprobación del 12-11-2026).**
+  Dada una reserva con planilla que el encargado nacional registra en el Departamento Viña
+  del Mar, cuando la guarda, entonces queda «Confirmada», se envía la ficha y ni el
+  detalle, ni el comprobante, ni la ficha muestran «Aprobada por» ni un botón «Aprobar».
 - **C20 · Consulta y región (decisión 12-11-2026, ajustado por el rediseño).** Dada la
   encargada de Valparaíso, cuando en Reservas elige «Todo el país» y toca una noche libre
   de Toconao, entonces la selección dice «Solo consulta» y no ofrece registrar; y cuando
   vuelve a Valparaíso y toca el 14 y luego el 16-12-2026 de una casa libre, ve «3 noches»
   y «Registrar reserva» la lleva al registro con esa casa y esas fechas.
 - **C21 · Ficha y direcciones (decisión 12-11-2026).** Dado el Departamento Viña del Mar con
-  su estacionamiento en «6 Norte 1045, Viña del Mar», cuando se aprueba una reserva con
+  su estacionamiento en «6 Norte 1045, Viña del Mar», cuando se registra una reserva con
   planilla, entonces la ficha PDF trae el solicitante, quienes viajan, la dirección
   principal, el estacionamiento, el inventario y el acta de ingreso y salida.
-- **C22 · Panel de control (decisión 12-11-2026, tarde).** Dada la encargada de Valparaíso
-  con 1 reserva por aprobar, cuando entra, entonces el panel muestra «1 por aprobar»,
-  por confirmar, llegadas de hoy y mañana y ocupación de 30 días, sin textos explicativos;
-  y tocar «1 por aprobar» abre Reservas con el listado filtrado en «Por aprobar».
+- **C22 · Panel de control (decisión 12-11-2026, tarde; ajustado el 13-11-2026).** Dada la
+  encargada de Valparaíso, cuando entra, entonces el panel muestra pagos en efectivo por
+  recibir, por confirmar, llegadas de hoy y mañana y ocupación de 30 días, sin textos
+  explicativos; tocar «por confirmar» abre Reservas con el listado filtrado en «Por
+  confirmar», y tocar «pagos en efectivo por recibir» abre Cobros en esa pestaña.
 - **C23 · Vía de la solicitud (decisión 12-11-2026, tarde).** Dado un registro de reserva
   sin vía elegida, cuando el encargado pulsa «Confirmar reserva», entonces ve «Indique por
   qué vía le pidió la reserva» y no se registra; con «Teléfono» elegido, la vía queda en la
@@ -163,13 +163,12 @@ correspondencia está en `02-RASTRO.md`.
 - **C25 · Antecedentes de la persona (decisión 12-11-2026, tarde).** Dada una persona con una
   reserva por confirmar en diciembre, cuando la encargada escribe su RUT en el registro,
   entonces antes del formulario ve «Ya tiene una reserva en diciembre 2026» y «transferencia
-  sin registrar», y la lista de sus reservas de los últimos 12 meses.
+  sin registrar» (o «efectivo por recibir», si paga en efectivo), y la lista de sus reservas de los últimos 12 meses.
 
 - **C26 · Usuarios y encargadas (decisión 12-11-2026).** Dado el IAM con `cnunez`
   (encargada de Valparaíso), `pherrera` (nacional) y `mfuentes` (sin rol), cuando el
-  nacional abre la pestaña, entonces ve a los tres con su rol y que `mfuentes` no entra, que
-  Valparaíso aprueba su encargada y Atacama el encargado nacional, y no hay botones para
-  editar roles.
+  nacional abre la pestaña, entonces ve a los tres con su rol y que `mfuentes` no entra, y no
+  hay botones para editar roles (desde el 13-11-2026 no hay tabla de quién aprueba).
 - **C27 · Parámetros con vigencia (decisión 12-11-2026).** Dado «Aviso para desistir sin
   costo» en 10 días hábiles, cuando el nacional lo cambia a 7 desde el 01-12-2026 sin
   respaldo, entonces no se guarda; con respaldo, queda programado y hasta esa fecha rige 10;
@@ -182,6 +181,18 @@ correspondencia está en `02-RASTRO.md`.
 - **C29 · Actividad (decisión 12-11-2026).** Dado que el nacional cambió un parámetro y una
   plantilla, cuando abre Actividad, entonces ve ambas acciones a su nombre; al filtrar por
   «Reservas» desaparecen, y «Descargar CSV» entrega el archivo.
+
+- **C30 · Pago en efectivo (decisión 13-11-2026).** Dado un afiliado jubilado, cuando el
+  encargado nacional lo registra con «Efectivo», entonces la reserva queda «Confirmada», se
+  envía la ficha y el pago queda «por recibir»; en Cobros › Pagos por registrar, con el
+  N° de recibo «REC-0042», queda recibido a nombre de quien lo registró. Un trabajador
+  activo no ve la opción «Efectivo».
+- **C31 · Panel de descuentos (decisión 13-11-2026).** Dada la encargada de Valparaíso,
+  cuando abre Cobros, entonces ve por mes el descuento por planilla, el efectivo recibido,
+  el efectivo pendiente y el total de las casas de su región, sin el CSV para Remuneraciones
+  ni «Marcar como informada»; en «Efectivo por recibir» ve solo el efectivo de su región y,
+  al registrar el recibo de R-2026-0195, el pago queda a su nombre y entra al reporte de
+  cobranza (CSV) con quién lo recibió y el recibo.
 
 ## Instrumentos de datos candidatos para la fábrica
 

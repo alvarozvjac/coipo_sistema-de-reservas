@@ -1,17 +1,13 @@
 import { FileDown } from 'lucide-react'
-import { puedeAprobar } from '../../datos/servicio.js'
 import { PLANTILLAS_BASE, correoDe } from '../../datos/configuracion.js'
 import { fechaCorta, rangoFechas } from '../../lib/fechas.js'
 import { pesos } from '../../lib/formato.js'
 import { CALIDADES, PARENTESCOS, VIAS } from '../../lib/reglas.js'
 import { Boton, Estado } from '../../componentes/ui.jsx'
-import { BotonesAprobacion } from '../../componentes/Aprobacion.jsx'
 import { Dialogo, antiguedad } from '../encargada/comun.jsx'
 
-const PAGO = { planilla: 'Planilla', transferencia: 'Transferencia' }
+const PAGO = { planilla: 'Planilla', transferencia: 'Transferencia', efectivo: 'Efectivo' }
 const NOTIF = {
-  solicitud: null,
-  rechazo: 'el aviso de reserva no aprobada',
   confirmacion: 'el comprobante de reserva',
   por_confirmar: 'los datos para transferir',
   pago: 'el registro del pago',
@@ -27,9 +23,8 @@ async function descargar(reserva, numero) {
 
 /**
  * Detalle de una reserva, abierto desde el tablero o el listado de Reservas.
- * Si está por aprobar y le toca a este encargado, se aprueba desde aquí.
  */
-export function DetalleReserva({ reserva: r, gestor, onCerrar, onListo }) {
+export function DetalleReserva({ reserva: r, onCerrar }) {
   return (
     <Dialogo titulo={`${r.codigo} · ${r.casa.nombre}`} onCerrar={onCerrar}>
       <div className="mt-2">
@@ -37,7 +32,7 @@ export function DetalleReserva({ reserva: r, gestor, onCerrar, onListo }) {
       </div>
       <dl className="mt-4 grid grid-cols-2 gap-3 text-[15px]">
         <D t="Fechas" v={rangoFechas(r.entrada, r.salida)} />
-        <D t="Total" v={`${pesos(r.total)} · ${PAGO[r.forma_pago.tipo]}${r.forma_pago.cuotas > 1 ? ` (${r.forma_pago.cuotas} cuotas)` : ''}`} />
+        <D t="Total" v={`${pesos(r.total)} · ${PAGO[r.forma_pago.tipo]}${r.forma_pago.cuotas > 1 ? ` (${r.forma_pago.cuotas} cuotas)` : ''}${r.forma_pago.tipo === 'efectivo' ? (r.pago ? ' · recibido' : ' · por recibir') : ''}`} />
         <D
           t="Usuario/a responsable"
           v={
@@ -78,33 +73,17 @@ export function DetalleReserva({ reserva: r, gestor, onCerrar, onListo }) {
       )}
       {r.motivo_anulacion && <p className="mt-3 rounded-lg bg-error-50 px-3 py-2 text-[15px] text-error-700">{r.motivo_anulacion}</p>}
 
-      {r.visible === 'por_aprobar' && puedeAprobar(gestor, r) && (
-        <div className="mt-4 rounded-lg bg-alerta-50 p-3">
-          <p className="mb-2 text-[15px] font-medium text-alerta-700">Por aprobar: le corresponde a usted.</p>
-          <BotonesAprobacion reserva={r} gestor={gestor} onListo={onListo} />
-        </div>
-      )}
 
       <p className="mt-4 text-[13px] font-medium text-tinta-500">Historial</p>
       <ul className="mt-1 space-y-0.5 text-sm text-tinta-700">
         <li>
           Reservada {antiguedad(r.creada_en)} ·{' '}
-          {r.estado === 'pendiente_aprobacion'
-            ? 'por aprobar'
-            : r.estado === 'rechazada'
-              ? `no aprobada por ${r.rechazo?.por}: ${r.rechazo?.motivo}`
-              : r.aprobada_por && r.registrada_por?.perfil === 'central'
-                ? `aprobada por ${r.aprobada_por}`
-                : (r.confirmada_por ?? 'confirmada')}
+          {r.registrada_por ? `registrada por ${r.registrada_por.nombre}` : (r.confirmada_por ?? 'confirmada')}
         </li>
         {(r.notificaciones ?? []).map((n, i) =>
           PLANTILLAS_BASE[n.tipo] ? (
             <li key={i}>
               <Correo reserva={r} n={n} />
-            </li>
-          ) : n.tipo === 'solicitud' ? (
-            <li key={i}>
-              {fechaCorta(n.en.slice(0, 10), true)}: registrada por {r.registrada_por?.nombre ?? 'el encargado nacional'}, por aprobar
             </li>
           ) : (
             <li key={i}>

@@ -1,11 +1,11 @@
 /**
  * Ficha de la reserva (decisión 12-11-2026): un solo PDF que reemplaza al
  * comprobante y al acta de entrega-recepción (Art. 2 f, Art. 13 y Anexo B).
- * Lleva la reserva y su aprobación, la persona, quienes viajan, todas las
+ * Lleva la reserva, la persona, quienes viajan, todas las
  * direcciones de la casa (la principal y las otras: estacionamiento, retiro
  * de llaves…), el pago, el inventario y el acta para el ingreso y la salida.
  *
- * Se genera al aprobar la reserva (con transferencia, al registrar el pago) y
+ * Se genera al registrar la reserva (con transferencia, al registrar el pago) y
  * cada vez que la encargada actualiza el inventario antes de la llegada. Se
  * envía al correo de la persona y queda en el historial de la reserva.
  *
@@ -134,7 +134,9 @@ export async function descargarFicha(reserva, acta) {
   const pago =
     fp.tipo === "planilla"
       ? `Descuento por planilla en ${fp.cuotas ?? 1} cuota(s)${fp.desde_mes ? " desde " + fp.desde_mes : ""}, autorizado por la persona`
-      : `Transferencia${reserva.pago ? ` registrada el ${fechaCorta(reserva.pago.registrado_en.slice(0, 10), true)} (N° ${reserva.pago.comprobante})` : ""} · ${glosaTransferencia(reserva.casa, reserva.codigo)}`;
+      : fp.tipo === "efectivo"
+        ? `Efectivo, antes de llegar, a la encargada regional o al encargado nacional${reserva.pago ? ` · recibido el ${fechaCorta(reserva.pago.registrado_en.slice(0, 10), true)} (recibo ${reserva.pago.comprobante})` : " · pendiente"}`
+        : `Transferencia${reserva.pago ? ` registrada el ${fechaCorta(reserva.pago.registrado_en.slice(0, 10), true)} (N° ${reserva.pago.comprobante})` : ""} · ${glosaTransferencia(reserva.casa, reserva.codigo)}`;
 
   // 1. Reserva
   titulo("1. Reserva");
@@ -159,12 +161,6 @@ export async function descargarFicha(reserva, acta) {
         "Registrada por",
         reserva.registrada_por
           ? `${reserva.registrada_por.nombre}, a pedido de la persona${reserva.via ? ` (${VIAS[reserva.via].toLowerCase()})` : ""}`
-          : "—",
-      ],
-      [
-        "Aprobada por",
-        reserva.aprobada_por
-          ? `${reserva.aprobada_por}${reserva.aprobada_en ? ", el " + fechaCorta(reserva.aprobada_en.slice(0, 10), true) : ""}`
           : "—",
       ],
       ["Pago", pago],

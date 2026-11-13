@@ -13,11 +13,10 @@
  *   misReservas(usuarioId)                    GET   /api/reservas?titular=me
  *   reservasRegion(region)                    GET   /api/reservas?region={region}
  *   obtenerReserva(codigo)                    GET   /api/reservas/{codigo}
- *   crearReserva(datos)                       POST  /api/reservas   (aprobada, o por aprobar si la registra el nacional)
- *   aprobarReserva / rechazarReserva          POST  /api/reservas/{codigo}/aprobacion | /rechazo
- *   reservasPorAprobar(region)                GET   /api/reservas?estado=por_aprobar&region={region}
+ *   crearReserva(datos)                       POST  /api/reservas   (queda confirmada al registrar)
+ *   efectivoDelPeriodo(periodo, region)       GET   /api/cobranza/efectivo?periodo&region
+ *   resumenCobranza(region)                   GET   /api/cobranza/resumen?region
  *   actualizarDirecciones(id, lista)          PUT   /api/casas/{id}/direcciones
- *   disponibilidad(consulta)                  GET   /api/disponibilidad?entrada&salida&personas&region
  *   desistirReserva(codigo)                   POST  /api/reservas/{codigo}/desistimiento
  *   registrarPago(codigo, datos, actor)       POST  /api/reservas/{codigo}/pago
  *   nominaPlanilla(periodo)                   GET   /api/nomina-descuentos/{AAAA-MM}
@@ -28,13 +27,12 @@
 import { useSyncExternalStore } from 'react'
 import { CASAS } from './casas.js'
 import { NOMINA } from './usuarios.js'
-import { regionConEncargada } from './iam.js'
 import { ADICIONAL_BASE, aleatorio, crearPersonas, semillas as semillasBase } from './semillas.js'
 
 import { hoyISO, mesDe, primerDiaMes, sumarDias, sumarMeses } from '../lib/fechas.js'
 import { ADICIONAL_TARIFA, cargoDesistimiento, noches, porConfirmar, tarifaTramo } from '../lib/reglas.js'
 
-const CLAVE = 'reserva_veraneo_v18'
+const CLAVE = 'reserva_veraneo_v19'
 
 const ahora = () => new Date().toISOString().slice(0, 19)
 
@@ -155,8 +153,8 @@ export const listarBloqueos = () => [...estado.bloqueos].sort((a, b) => (a.entra
 
 export const bloqueosDe = (casaId) => estado.bloqueos.filter((b) => b.casa_id === casaId)
 
-/** Ocupan fechas: las vigentes y las por aprobar (apartadas hasta que se aprueban o rechazan). */
-const ocupa = (r) => !['desistida', 'anulada', 'rechazada'].includes(r.estado)
+/** Ocupan fechas todas las reservas, salvo las desistidas y las anuladas. */
+const ocupa = (r) => !['desistida', 'anulada'].includes(r.estado)
 
 export const ocupacionesDe = (casaId) => [
   ...estado.reservas.filter((r) => r.casa_id === casaId && ocupa(r)).map(({ entrada, salida }) => ({ entrada, salida })),
@@ -245,90 +243,25 @@ export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocu
     creada_en: ahora(),
     notificaciones: [],
   }
-  if (requiereAprobacion(registrada_por)) {
-    // Decisión 12-11-2026: lo que registra el encargado nacional queda por aprobar, con las
-    // fechas apartadas; a la persona no se le envía nada hasta que se aprueba.
-    r.estado = 'pendiente_aprobacion'
-    r.notificaciones.push({ tipo: 'solicitud', en: ahora(), detalle: 'Reserva registrada por el encargado nacional: por aprobar' })
-  } else {
-    // La registra la encargada de la región de la casa: queda aprobada al registrarla.
-    aprobar(r, registrada_por?.nombre ?? 'Encargada regional')
-  }
+  // Decisión 13-11-2026: no hay aprobación; lo que registra un encargado queda confirmado.
+  confirmar(r, registrada_por?.nombre ?? 'Encargada regional')
   estado.reservas.push(r)
   guardar()
   return codigo
 }
 
-/** Solo la registrada por el encargado nacional espera aprobación (decisión 12-11-2026). */
-const requiereAprobacion = (registrada_por) => registrada_por?.perfil === 'central'
-
 /**
- * Aprueba: con planilla queda confirmada y se envía la ficha de la reserva; con
- * transferencia, se envían los datos para transferir y la ficha recién cuando
- * se registra el pago (decisión 12-11-2026).
+ * Confirma al registrar (decisión 13-11-2026: sin aprobación). Con planilla o
+ * efectivo se envía la ficha de la reserva; con transferencia, los datos para
+ * transferir, y la ficha cuando se registra el pago. El efectivo queda con el
+ * pago pendiente hasta que un encargado registra que lo recibió.
  */
-function aprobar(r, por) {
+function confirmar(r, por) {
   r.estado = 'confirmada'
-  r.aprobada_por = por
-  r.aprobada_en = ahora()
   r.confirmada_por = por
   r.confirmada_en = ahora()
-  if (porConfirmar(r)) r.notificaciones.push({ tipo: 'por_confirmar', en: ahora(), detalle: 'Reserva aprobada: datos para la transferencia' })
+  if (porConfirmar(r)) r.notificaciones.push({ tipo: 'por_confirmar', en: ahora(), detalle: 'Datos para la transferencia' })
   else enviarFicha(r)
-}
-
-/** Reservas por aprobar; sin región, las de todo el país. */
-export const reservasPorAprobar = (region) =>
-  estado.reservas
-    .filter((r) => r.estado === 'pendiente_aprobacion' && (!region || casaBase(r.casa_id)?.region === region))
-    .map(conCasa)
-    .sort((a, b) => (a.entrada < b.entrada ? -1 : 1))
-
-/**
- * Quién aprueba: la encargada regional de la región de la casa. Si esa región
- * aún no tiene encargada con rol en el COIPO IAM, la aprueba el encargado
- * nacional ([PENDIENTE] confirmar con Bienestar).
- */
-export function puedeAprobar(gestor, r) {
-  const region = casaBase(r.casa_id)?.region
-  if (gestor?.perfil === 'encargada') return gestor.region === region
-  return gestor?.perfil === 'central' && !regionConEncargada(region)
-}
-
-export function aprobarReserva(codigo, actor) {
-  const r = estado.reservas.find((x) => x.codigo === codigo)
-  if (!r || r.estado !== 'pendiente_aprobacion') return false
-  aprobar(r, actor.nombre)
-  guardar()
-  return true
-}
-
-/** No aprobada: se liberan las fechas y se avisa a la persona con el motivo. */
-export function rechazarReserva(codigo, motivo, actor) {
-  const r = estado.reservas.find((x) => x.codigo === codigo)
-  if (!r || r.estado !== 'pendiente_aprobacion') return false
-  r.estado = 'rechazada'
-  r.rechazo = { motivo, por: actor.nombre, en: ahora() }
-  r.notificaciones.push({ tipo: 'rechazo', en: ahora(), detalle: `Reserva no aprobada: ${motivo}` })
-  guardar()
-  return true
-}
-
-/**
- * Consulta de disponibilidad nacional (encargada regional y nacional): para
- * cada casa activa, si está libre entre `entrada` y `salida` para `personas`.
- * No mira la anticipación ni la regla de una reserva por mes: esas dependen de
- * la persona y se revisan al registrar.
- */
-export function disponibilidad({ entrada, salida, personas = 1, region = '' }) {
-  return listarCasas()
-    .filter((c) => !region || c.region === region)
-    .map((c) => {
-      let motivo = null
-      if (c.capacidad < personas) motivo = 'capacidad'
-      else if (ocupacionesDe(c.id).some((o) => entrada < o.salida && o.entrada < salida)) motivo = 'ocupada'
-      return { casa: c, disponible: !motivo, motivo }
-    })
 }
 
 function nuevoCodigo() {
@@ -354,9 +287,10 @@ export function desistirReserva(codigo, gestor) {
 /* ---------- Cobros (Art. 21, Anexo A) ---------- */
 
 /** Pagos por transferencia o en Bienestar aún no registrados, de reservas confirmadas. */
-export const pagosPorRegistrar = () =>
+/** Pagos por registrar: transferencias por comprobar y efectivo por recibir; con región, solo las casas de esa región. */
+export const pagosPorRegistrar = (region = '') =>
   estado.reservas
-    .filter((r) => r.estado === 'confirmada' && r.forma_pago.tipo !== 'planilla' && !r.pago)
+    .filter((r) => r.estado === 'confirmada' && r.forma_pago.tipo !== 'planilla' && !r.pago && (!region || casaBase(r.casa_id)?.region === region))
     .map(conCasa)
     .sort((a, b) => (a.entrada < b.entrada ? -1 : 1))
 
@@ -366,7 +300,7 @@ export function registrarPago(codigo, { comprobante }, actor) {
   const confirma = porConfirmar(r) && r.entrada > hoyISO()
   r.pago = { registrado_en: ahora(), comprobante, por: actor.nombre }
   r.notificaciones ??= []
-  r.notificaciones.push({ tipo: 'pago', en: ahora(), detalle: `Pago registrado (${comprobante})` })
+  r.notificaciones.push({ tipo: 'pago', en: ahora(), detalle: r.forma_pago.tipo === 'efectivo' ? `Pago en efectivo recibido por ${actor.nombre} (recibo ${comprobante})` : `Pago registrado (${comprobante})` })
   if (confirma) {
     // Decisión 02-11-2026: comprobado el pago, la reserva queda confirmada y recién ahí se envía la ficha (12-11-2026).
     r.confirmada_por = actor.nombre
@@ -382,10 +316,11 @@ export function registrarPago(codigo, { comprobante }, actor) {
  * finalizada con planilla se descuenta en cuotas a partir del mes siguiente
  * a la salida; los cargos por desistimiento, en el mes siguiente al aviso.
  */
-export function nominaPlanilla(periodo) {
+export function nominaPlanilla(periodo, region = '') {
   const lineas = []
   for (const r of estado.reservas) {
     if (r.forma_pago.tipo !== 'planilla') continue
+    if (region && casaBase(r.casa_id)?.region !== region) continue
     if (r.estado === 'confirmada' && r.salida <= hoyISO()) {
       const cuotas = r.forma_pago.cuotas ?? 1
       for (let k = 1; k <= cuotas; k++) {
@@ -414,6 +349,40 @@ export function cambiarEstadoNomina(periodo, nuevo, actor) {
   estado.nominas[periodo] = { estado: nuevo, en: ahora(), por: actor.nombre }
   guardar()
 }
+
+/**
+ * Cobranza en efectivo de un período (decisión 13-11-2026). Lo recibido cuenta en
+ * el mes en que un encargado registró que lo recibió; lo pendiente, en el mes
+ * de la llegada (debe pagarse antes de llegar) o, si desistió fuera de plazo,
+ * en el mes del aviso. Con región, solo las casas de esa región.
+ */
+export function efectivoDelPeriodo(periodo, region = '') {
+  const lineas = []
+  for (const r of estado.reservas) {
+    if (r.forma_pago.tipo !== 'efectivo') continue
+    if (region && casaBase(r.casa_id)?.region !== region) continue
+    const base = { reserva: r.codigo, titular: r.titular, casa: casaBase(r.casa_id).nombre, region: casaBase(r.casa_id).region }
+    if (r.estado === 'confirmada') {
+      if (r.pago) {
+        if (mesDe(r.pago.registrado_en) === periodo) lineas.push({ ...base, concepto: `Estadía ${r.entrada} a ${r.salida}`, monto: r.total, recibido: true, comprobante: r.pago.comprobante, por: r.pago.por, fecha: r.pago.registrado_en.slice(0, 10) })
+      } else if (mesDe(r.entrada) === periodo) lineas.push({ ...base, concepto: `Estadía ${r.entrada} a ${r.salida}`, monto: r.total, recibido: false, vence: r.entrada })
+    }
+    if (r.estado === 'desistida' && r.cargo_desistimiento > 0 && !r.pago && mesDe(r.desistida_en) === periodo) {
+      lineas.push({ ...base, concepto: 'Desistimiento fuera de plazo: estadía completa', monto: r.cargo_desistimiento, recibido: false, vence: r.desistida_en })
+    }
+  }
+  return lineas.sort((a, b) => a.titular.nombre.localeCompare(b.titular.nombre))
+}
+
+/** Resumen mensual de la cobranza: descuento por planilla y efectivo (recibido y pendiente). */
+export const resumenCobranza = (region = '') =>
+  periodosNomina().map((periodo) => {
+    const planilla = nominaPlanilla(periodo, region).reduce((s, l) => s + l.monto, 0)
+    const ef = efectivoDelPeriodo(periodo, region)
+    const recibido = ef.filter((l) => l.recibido).reduce((s, l) => s + l.monto, 0)
+    const pendiente = ef.filter((l) => !l.recibido).reduce((s, l) => s + l.monto, 0)
+    return { periodo, planilla, recibido, pendiente, total: planilla + recibido + pendiente }
+  })
 
 export const periodosNomina = () => {
   const actual = primerDiaMes(hoyISO())
