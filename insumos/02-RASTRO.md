@@ -332,7 +332,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   de 8 MB a 1,6 MB porque las fotos de las casas solo se mostraban en el formulario de tres
   pasos, que ya no existe.
 
-### Sin aprobación y pago en efectivo (13-11-2026, local, sin publicar)
+### Sin aprobación y pago en efectivo (13-11-2026, publicado en `d373177`)
 
 - Pedido: Álvaro Zegers, 13-11-2026 12:43; respuestas: efectivo solo para quienes no tienen
   planilla; confirmada con pago pendiente; registra la encargada (su región) o el nacional,
@@ -348,6 +348,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   y el panel nacional con enero 2027. Corregido al mirarlas: la tabla por mes obligaba a
   desplazarse de lado en el teléfono (ahora una tarjeta por mes) y a la encargada se le
   decía «Revise y envíe la nómina a Remuneraciones», que no le corresponde.
+- Pública: GitHub Pages sirve `d373177` (sha256 igual al local, 1.611.270 bytes; el HTML
+  contiene «Efectivo por recibir»); consola sin errores.
 
 ## Validación
 
