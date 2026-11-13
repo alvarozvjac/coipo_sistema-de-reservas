@@ -392,7 +392,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `aabafe3` (sha256 igual al local, 1.609.622 bytes; el HTML trae
   «Transferencias pendientes» y ya no «Registrar efectivo»); consola sin errores.
 
-### Encargada sin Panel ni Cobros (13-11-2026, local, sin publicar)
+### Encargada sin Panel ni Cobros (13-11-2026, publicado en `8b9e5c0`)
 
 - Pedido: Álvaro Zegers, 13-11-2026 15:27; respuestas: solo el nacional registra las
   transferencias; la encargada entra a Reservas.
@@ -401,6 +401,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   `/central/cobros` la llevan a Reservas), e2e15 21, e2e16 23, e2e17 31, e2e4 17, e2e9 20.
   axe-core: 0 infracciones (sin las pantallas quitadas); jueces: 0 bloqueantes.
 - Capturas miradas: Reservas de la encargada al ingresar, en escritorio y teléfono.
+- Pública: GitHub Pages sirve `8b9e5c0` (sha256 igual al local, 1.606.997 bytes); consola sin
+  errores.
 
 ## Validación
 
