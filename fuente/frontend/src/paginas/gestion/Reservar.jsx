@@ -564,7 +564,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
                   <strong>ficha de la reserva</strong>: quienes viajan, las
                   direcciones de la casa y el inventario.
                   {pago === "transferencia" &&
-                    " También se envían los datos para transferir; la transferencia queda pendiente hasta que usted u otro encargado registre en Cobros que llegó, antes de la llegada."}
+                    " También se envían los datos para transferir; la transferencia queda pendiente hasta que el encargado nacional registre en Cobros que llegó, antes de la llegada."}
                 </li>
                 <li>
                   Si desiste{" "}

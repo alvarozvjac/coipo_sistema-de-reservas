@@ -253,7 +253,7 @@ export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocu
 /**
  * Confirma al registrar (decisión 13-11-2026: sin aprobación) y envía la ficha
  * de la reserva. Con transferencia se envían además los datos para transferir,
- * y el pago queda pendiente hasta que un encargado registra que llegó.
+ * y el pago queda pendiente hasta que el encargado nacional registra que llegó.
  */
 function confirmar(r, por) {
   r.estado = 'confirmada'

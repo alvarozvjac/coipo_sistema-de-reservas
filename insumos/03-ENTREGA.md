@@ -17,8 +17,9 @@ tarifas y casas (primera etapa, decisión del 12-11-2026: los afiliados/as no in
 hay temporadas altas ni sorteo). La encargada regional registra en su región y el encargado
 nacional en todas; lo registrado queda confirmado sin aprobación y la persona recibe una
 ficha con acompañantes, direcciones e inventario; jubilados/as y otros servicios pagan por
-transferencia electrónica, que registran ambos encargados, y ambos controlan por mes el
-descuento por planilla y las transferencias recibidas; ambos consultan la disponibilidad de todo el país.
+transferencia electrónica, que registra el encargado nacional, quien además controla por mes
+el descuento por planilla y las transferencias (la encargada regional trabaja solo en
+Reservas e Inventario); ambos consultan la disponibilidad de todo el país.
 
 ## En una frase, qué NO hace
 

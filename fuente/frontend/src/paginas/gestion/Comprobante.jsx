@@ -52,7 +52,7 @@ export function Comprobante() {
           <h1 className="mt-3 text-2xl font-bold">Reserva confirmada a nombre de {r.titular.nombre}</h1>
           <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
             Se envió a {r.contacto?.correo} la ficha de la reserva, con quienes viajan, las direcciones de la casa y el inventario.
-            {r.forma_pago.tipo === 'transferencia' && !r.pago ? ' También se enviaron los datos para transferir; la transferencia queda pendiente hasta que un encargado registre que llegó.' : ''}
+            {r.forma_pago.tipo === 'transferencia' && !r.pago ? ' También se enviaron los datos para transferir; la transferencia queda pendiente hasta que el encargado nacional registre que llegó.' : ''}
           </p>
         </div>
       )}
@@ -89,7 +89,7 @@ export function Comprobante() {
           <div className="mt-5 border-t border-borde pt-4">
             <h2 className="font-semibold">Datos para la transferencia</h2>
             <p className="mb-3 mt-1 text-[13px] text-tinta-500">
-              Transfiera antes de llegar y escriba la glosa tal como aparece. La reserva ya está confirmada; la transferencia queda pendiente hasta que un encargado registre que llegó.
+              Transfiera antes de llegar y escriba la glosa tal como aparece. La reserva ya está confirmada; la transferencia queda pendiente hasta que el encargado nacional registre que llegó.
             </p>
             <DatosCuenta monto={r.total} glosa={r.forma_pago.glosa ?? glosaTransferencia(r.casa, r.codigo)} />
           </div>

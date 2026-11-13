@@ -9,7 +9,6 @@ import { Ingreso } from './paginas/Ingreso.jsx'
 import { IamSimulado } from './paginas/iam/IamSimulado.jsx'
 import { Callback } from './paginas/iam/Callback.jsx'
 import { Comprobante } from './paginas/gestion/Comprobante.jsx'
-import { InicioEncargada } from './paginas/encargada/Inicio.jsx'
 import { Reservas } from './paginas/gestion/Reservas.jsx'
 import { InventarioEncargada } from './paginas/encargada/Inventario.jsx'
 import { InicioCentral } from './paginas/central/Inicio.jsx'
@@ -70,12 +69,13 @@ createRoot(document.getElementById('root')).render(
             }
           >
             <Route index element={<AlInicio />} />
-            <Route path="encargada" element={<Requiere perfil="encargada"><InicioEncargada /></Requiere>} />
+            {/* La encargada no tiene Panel ni Cobros (decisión 13-11-2026, 15:27): entra a Reservas. */}
+            <Route path="encargada" element={<Navigate to="/encargada/reservas" replace />} />
             <Route path="encargada/reservas" element={<Requiere perfil="encargada"><Reservas /></Requiere>} />
             <Route path="encargada/inventario" element={<Requiere perfil="encargada"><InventarioEncargada /></Requiere>} />
             <Route path="central" element={<Requiere perfil="central"><InicioCentral /></Requiere>} />
             <Route path="central/cobros" element={<Requiere perfil="central"><Cobros /></Requiere>} />
-            <Route path="encargada/cobros" element={<Requiere perfil="encargada"><Cobros /></Requiere>} />
+            <Route path="encargada/cobros" element={<Navigate to="/encargada/reservas" replace />} />
             <Route path="central/configuracion" element={<Requiere perfil="central"><Configuracion /></Requiere>} />
             <Route path="central/casas" element={<Navigate to="/central/configuracion" replace />} />
             <Route path="central/reservas" element={<Requiere perfil="central"><Reservas /></Requiere>} />

@@ -67,12 +67,12 @@ actual por correo y planillas. El sorteo de temporada alta quedó fuera (decisi�
 |---|---|---|---|
 | Ingreso con el COIPO IAM (simulado) | Encargados | Entrar; a cualquier otra persona se le indica que pida su reserva a la encargada | C1 |
 | Comprobante de la reserva | Encargados | Ver estado, direcciones, datos de transferencia y si se registró, y la ficha; registrar el desistimiento | C2, C6, C7, C8, C19, C21, C30 |
-| Panel (antes Inicio) | Encargada (su región), encargado nacional (país) | Ver de un vistazo lo que pide acción hoy: transferencias por registrar, reservas confirmadas, llegadas y salidas, inventario | C22, C30 |
+| Panel (antes Inicio) | Encargado nacional (país); la encargada regional ya no tiene Panel desde el 13-11-2026 y entra a Reservas | Ver de un vistazo lo que pide acción hoy: transferencias por registrar, reservas recientes, llegadas y salidas, inventario | C22, C30 |
 | Reservas: tablero de ocupación + listado (fusiona Reservas y Disponibilidad) | Encargada, encargado nacional | Ver la ocupación por casa y noche en una o todas las regiones, elegir un tramo libre y registrarlo, o abrir una reserva para gestionarla | C10, C19, C20, C23 |
 | Registrar reserva (panel lateral en Reservas) | Encargada, encargado nacional | Registrar lo que la persona pidió, solo si hay disponibilidad, sin perder de vista la ocupación y viendo antes sus antecedentes | C2 a C7, C23, C25 |
 | Configuración › Casas › otras direcciones | Encargado nacional | Mantener las direcciones que salen en la ficha | C21 |
 | Inventario | Encargada regional | Actualizar el inventario que va en la ficha | C10 |
-| Cobros | Encargada regional (su región), encargado nacional (país) | Ver el panel de descuentos por mes (planilla y transferencias recibidas) y registrar las transferencias que llegan; el nacional además informa la nómina y registra devoluciones | C6, C11, C30, C31 |
+| Cobros | Encargado nacional (la encargada regional ya no tiene Cobros desde el 13-11-2026) | Ver el panel de descuentos por mes (planilla, transferencias recibidas y pendientes), registrar las transferencias que llegan, informar la nómina y registrar devoluciones | C6, C11, C30, C31 |
 | Configuración › Casas, Tarifas, Bloqueos de fechas | Encargado nacional | Retirar casas, actualizar tarifas, bloquear fechas | C12, C13, C14 |
 | Configuración › Usuarios y encargadas | Encargado nacional | Saber quién entra y con qué rol (se cambia en el IAM) | C26 |
 | Configuración › Parámetros | Encargado nacional | Cambiar un parámetro del reglamento desde una fecha y con respaldo (incluye las veces por año en la misma casa) | C27, C32 |
@@ -151,11 +151,11 @@ correspondencia está en `02-RASTRO.md`.
   su estacionamiento en «6 Norte 1045, Viña del Mar», cuando se registra una reserva con
   planilla, entonces la ficha PDF trae el solicitante, quienes viajan, la dirección
   principal, el estacionamiento, el inventario y el acta de ingreso y salida.
-- **C22 · Panel de control (decisión 12-11-2026, tarde; ajustado el 13-11-2026).** Dada la
-  encargada de Valparaíso, cuando entra, entonces el panel muestra transferencias por
-  registrar, reservas confirmadas por venir, llegadas de hoy y mañana y ocupación de 30
-  días, sin textos explicativos; tocar «confirmadas por venir» abre Reservas filtrado en
-  «Confirmada», y tocar «transferencias por registrar» abre Cobros en esa pestaña.
+- **C22 · Menú de la encargada (decisión 13-11-2026, 15:27; reemplaza su Panel de control
+  del 12-11-2026).** Dada la encargada de Valparaíso, cuando entra, entonces llega a Reservas
+  y su menú tiene solo «Reservas» e «Inventario»; las direcciones antiguas de su Panel y de
+  Cobros la llevan a Reservas. El Panel nacional sigue mostrando transferencias por
+  registrar, llegadas de hoy y mañana y ocupación de 30 días.
 - **C23 · Vía de la solicitud (decisión 12-11-2026, tarde).** Dado un registro de reserva
   sin vía elegida, cuando el encargado pulsa «Confirmar reserva», entonces ve «Indique por
   qué vía le pidió la reserva» y no se registra; con «Teléfono» elegido, la vía queda en la
@@ -186,12 +186,11 @@ correspondencia está en `02-RASTRO.md`.
   encargado nacional abre el registro, entonces la única forma de pago es «Transferencia
   electrónica» (no aparece «Efectivo»); en Cobros › Transferencias por registrar, con el
   N° de operación «TRF-123456», la transferencia queda a nombre de quien la registró.
-- **C31 · Panel de descuentos (decisión 13-11-2026).** Dada la encargada de Valparaíso,
-  cuando abre Cobros, entonces ve por mes el descuento por planilla, las transferencias
-  recibidas, las pendientes y el total de las casas de su región, sin el CSV para Remuneraciones ni «Marcar
-  como informada»; en «Transferencias por registrar» ve solo las de su región y, al
-  registrar la de R-2026-0195, queda a su nombre y entra al reporte de cobranza (CSV) con
-  quién la registró y el N° de operación.
+- **C31 · Panel de descuentos (decisión 13-11-2026).** Dado el encargado nacional, cuando
+  abre Cobros, entonces ve por mes el descuento por planilla, las transferencias recibidas,
+  las pendientes y el total de todo el país; al registrar una transferencia con N° de
+  operación, queda a su nombre y entra al reporte de cobranza (CSV) con quién la registró y
+  el N°. La encargada regional no tiene Cobros (13-11-2026, 15:27).
 
 - **C32 · Misma casa por año (decisión 13-11-2026).** Dado el parámetro «Veces que una
   persona puede reservar la misma casa en el año» en 1 y una persona con R-2026-0195 en Rocas

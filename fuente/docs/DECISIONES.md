@@ -50,6 +50,21 @@ cuando se contradicen.
 - En el código: `porConfirmar(r)` en `lib/reglas.js` (transferencia sin pago registrado) y
   `registrarPago` en `datos/servicio.js`, que confirma y envía el acta.
 
+## Encargada regional sin Panel ni Cobros (decisión 13-11-2026, 15:27)
+
+Fuente: Álvaro Zegers (UIA), 13-11-2026, 15:27: «del perfil de encargada regional, quita la
+pestaña "Panel", también la pestaña "Cobros"». Respuestas del mismo día:
+
+- El menú de la encargada regional queda en **Reservas** e **Inventario**, y al ingresar
+  llega a **Reservas**. Las direcciones antiguas (`/encargada` y `/encargada/cobros`) la
+  llevan a Reservas.
+- **Solo el encargado nacional registra las transferencias** (reemplaza, para la encargada,
+  lo decidido a las 12:43 y a las 15:00). El panel de descuentos y el reporte de cobranza
+  quedan solo en el perfil nacional.
+- Lo que el Panel regional mostraba (transferencias por registrar, llegadas de hoy y mañana,
+  ocupación, avisos de inventario) ya no tiene pantalla propia para ella: la ocupación y las
+  reservas siguen en Reservas, y el inventario en Inventario.
+
 ## Sin efectivo: el pago es por transferencia electrónica (decisión 13-11-2026, 15:00)
 
 Fuente: Álvaro Zegers (UIA), 13-11-2026, 15:00: «el pago no es en efectivo, es una
@@ -62,8 +77,9 @@ transferencia electrónica». Respuestas del mismo día:
   **confirmada**, se envía la ficha y también los datos para transferir; la transferencia
   queda pendiente en *Cobros* hasta que se registra. Desaparece el estado «Por confirmar»
   (decisión del 02-11-2026) y, con él, su barra en el tablero y su filtro en Reservas.
-- **Quién registra.** La encargada regional, las transferencias de las casas de su región; el
-  encargado nacional, las de todo el país (pestaña «Transferencias por registrar»). Queda
+- **Quién registra.** *(Ajustado a las 15:27: solo el encargado nacional.)* La encargada
+  regional, las transferencias de las casas de su región; el encargado nacional, las de todo
+  el país (pestaña «Transferencias por registrar»). Queda
   quién la registró, la fecha y el N° de operación.
 - **Panel de descuentos.** Por mes: **descuento por planilla, transferencias recibidas,
   transferencias pendientes y total** (Álvaro Zegers pidió agregar las pendientes al revisar

@@ -121,6 +121,8 @@ Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/D
   electrónica; la reserva queda confirmada con la transferencia pendiente (se quita «Por
   confirmar»); la registran la encargada (su región) o el nacional; el panel de descuentos
   muestra planilla, transferencias recibidas y pendientes · Álvaro Zegers.
+- 2026-11-13 · La encargada regional queda sin Panel ni Cobros: entra a Reservas y solo el
+  encargado nacional registra transferencias · Álvaro Zegers.
 - 2026-11-02 · Insumos en este repositorio público, con cargos en vez de nombres de
   Bienestar · Álvaro Zegers eligió el repositorio; el criterio de nombres es de esta
   documentación (regla 8 de la metodología).
@@ -389,6 +391,16 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   después de agregar la columna de pendientes.
 - Pública: GitHub Pages sirve `aabafe3` (sha256 igual al local, 1.609.622 bytes; el HTML trae
   «Transferencias pendientes» y ya no «Registrar efectivo»); consola sin errores.
+
+### Encargada sin Panel ni Cobros (13-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 13-11-2026 15:27; respuestas: solo el nacional registra las
+  transferencias; la encargada entra a Reservas.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844, 0 fallas: e2e14 62 (agrega: menú
+  «Reservas, Inventario»; entra a Reservas; `/encargada`, `/encargada/cobros` y
+  `/central/cobros` la llevan a Reservas), e2e15 21, e2e16 23, e2e17 31, e2e4 17, e2e9 20.
+  axe-core: 0 infracciones (sin las pantallas quitadas); jueces: 0 bloqueantes.
+- Capturas miradas: Reservas de la encargada al ingresar, en escritorio y teléfono.
 
 ## Validación
 

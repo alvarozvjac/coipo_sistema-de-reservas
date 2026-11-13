@@ -29,7 +29,7 @@ asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro)
 
 | Perfil | Qué se puede probar |
 |---|---|
-| Encargada regional | Panel de control de su región (transferencias por registrar, reservas confirmadas, llegadas y salidas, inventario); Reservas con tablero de ocupación de todo el país y listado: registra en un panel lateral, en las casas de su región, lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), solo si hay disponibilidad, viendo antes sus antecedentes (queda confirmada al registrarla), registra desistimientos; Cobros de su región (panel de descuentos por mes y transferencias por registrar); Inventario |
+| Encargada regional | Entra a Reservas (sin Panel ni Cobros desde el 13-11-2026): tablero de ocupación de todo el país y listado; registra en un panel lateral, en las casas de su región, lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), solo si hay disponibilidad, viendo antes sus antecedentes (queda confirmada al registrarla), registra desistimientos; Inventario |
 | Encargado nacional | Panel nacional; Reservas con tablero de todo el país (registra en cualquier casa, queda confirmada al registrarla); Cobros (panel de descuentos por mes con planilla y transferencias, nómina para Remuneraciones, transferencias por registrar); Dashboard; Configuración (casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
 
 Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María
@@ -40,7 +40,7 @@ jubilado) o 7.215.346-4 (Nora Castillo, jubilada, paga por transferencia).
 confirmada y la persona recibe la ficha de la reserva (PDF con acompañantes, direcciones e
 inventario). No hay pago en efectivo: jubilados/as y otros servicios públicos pagan por
 transferencia electrónica; reciben además los datos para transferir y la transferencia queda
-pendiente hasta que la encargada (su región) o el encargado nacional la registran en Cobros.
+pendiente hasta que el encargado nacional la registra en Cobros.
 De ejemplo: R-2026-0195 (Valparaíso, transferencia por registrar).
 
 **Reiniciar datos de prueba**, en el pie de página, vuelve todo al estado inicial.

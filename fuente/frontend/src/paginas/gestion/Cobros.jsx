@@ -61,35 +61,26 @@ const ESTADO_NOMINA = {
 const TIPO = { transferencia: "Transferencia" };
 
 /**
- * Cobros (decisión 13-11-2026): la encargada regional ve los de su región y
- * registra las transferencias que llegan; el encargado nacional ve todo el país,
- * registra transferencias, informa la nómina y registra devoluciones.
+ * Cobros del encargado nacional (decisión 13-11-2026, 15:27: la encargada
+ * regional ya no tiene Cobros): panel de descuentos de todo el país, registro
+ * de transferencias, nómina para Remuneraciones y devoluciones.
  */
 export function Cobros() {
   useDatos();
-  const { usuario } = useSesion();
-  const regional = usuario.perfil === "encargada";
-  const region = regional ? usuario.region : "";
   const [params, setParams] = useSearchParams();
-  const pagos = pagosPorRegistrar(region);
-  const devoluciones = regional
-    ? []
-    : todasLasReservas().filter((r) => r.devolucion_pendiente);
+  const pagos = pagosPorRegistrar();
+  const devoluciones = todasLasReservas().filter((r) => r.devolucion_pendiente);
   const pestanas = [
     ["descuentos", "Panel de descuentos"],
     ["pagos", `Transferencias por registrar (${pagos.length})`],
-    ...(regional
-      ? []
-      : [["devoluciones", `Devoluciones (${devoluciones.length})`]]),
+    ["devoluciones", `Devoluciones (${devoluciones.length})`],
   ];
   const pestana = pestanas.some(([k]) => k === params.get("pestana"))
     ? params.get("pestana")
     : "descuentos";
   return (
     <>
-      <h1 className="text-2xl font-bold">
-        Cobros{regional ? ` · Región de ${nombreRegion(region)}` : ""}
-      </h1>
+      <h1 className="text-2xl font-bold">Cobros</h1>
       <div
         className="mt-4 flex gap-1 overflow-x-auto overflow-y-hidden border-b border-borde"
         role="tablist"
@@ -108,17 +99,16 @@ export function Cobros() {
         ))}
       </div>
       <div className="mt-5">
-        {pestana === "descuentos" && (
-          <Nomina region={region} regional={regional} />
-        )}
-        {pestana === "pagos" && <Pagos pagos={pagos} regional={regional} />}
+        {pestana === "descuentos" && <Nomina />}
+        {pestana === "pagos" && <Pagos pagos={pagos} />}
         {pestana === "devoluciones" && <Devoluciones lista={devoluciones} />}
       </div>
     </>
   );
 }
 
-function Nomina({ region, regional }) {
+function Nomina() {
+  const region = "";
   const { usuario } = useSesion();
   const actual = hoyISO().slice(0, 7);
   const [periodo, setPeriodo] = useState(actual);
@@ -184,10 +174,7 @@ function Nomina({ region, regional }) {
       <Tarjeta className="mt-4 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-[13px] text-tinta-500">
-              Descuento por planilla
-              {regional ? " de las casas de su región" : ""}
-            </p>
+            <p className="text-[13px] text-tinta-500">Descuento por planilla</p>
             <p className="mt-0.5 text-2xl font-bold tabular-nums">
               {pesos(total)}
             </p>
@@ -205,23 +192,19 @@ function Nomina({ region, regional }) {
             <p className="mt-1 max-w-64 text-[13px] text-tinta-500">
               {est.por
                 ? `${e.ayuda} ${est.por}, ${fechaCorta(est.en.slice(0, 10), true)}.`
-                : regional && est.estado === "pendiente"
-                  ? "La informa el encargado nacional a Remuneraciones."
-                  : e.ayuda}
+                : e.ayuda}
             </p>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          {!regional && (
-            <Boton
-              variante="secundario"
-              onClick={exportar}
-              disabled={!lineas.length}
-            >
-              <Download className="size-4" aria-hidden /> Descargar CSV para
-              Remuneraciones
-            </Boton>
-          )}
+          <Boton
+            variante="secundario"
+            onClick={exportar}
+            disabled={!lineas.length}
+          >
+            <Download className="size-4" aria-hidden /> Descargar CSV para
+            Remuneraciones
+          </Boton>
           <Boton
             variante="secundario"
             onClick={() => descargarCobranza(periodo, region)}
@@ -229,7 +212,7 @@ function Nomina({ region, regional }) {
             <Download className="size-4" aria-hidden /> Descargar reporte de
             cobranza
           </Boton>
-          {!regional && est.estado === "pendiente" && (
+          {est.estado === "pendiente" && (
             <Boton
               onClick={() => cambiarEstadoNomina(periodo, "informada", usuario)}
               disabled={!lineas.length}
@@ -237,7 +220,7 @@ function Nomina({ region, regional }) {
               <Send className="size-4" aria-hidden /> Marcar como informada
             </Boton>
           )}
-          {!regional && est.estado === "informada" && (
+          {est.estado === "informada" && (
             <Boton
               onClick={() =>
                 cambiarEstadoNomina(periodo, "descontada", usuario)
@@ -300,7 +283,7 @@ function Nomina({ region, regional }) {
   );
 }
 
-function Pagos({ pagos, regional }) {
+function Pagos({ pagos }) {
   const { usuario } = useSesion();
   const [registrando, setRegistrando] = useState(null);
   const [comprobante, setComprobante] = useState("");
@@ -310,9 +293,9 @@ function Pagos({ pagos, regional }) {
   return (
     <>
       <p className="max-w-3xl text-[15px] text-tinta-500">
-        {regional
-          ? "Reservas de su región que se pagan por transferencia electrónica (jubilados/as, otros servicios públicos y plazo fijo que la eligió). La reserva ya está confirmada; deben pagar antes de llegar. Cuando compruebe que llegó la transferencia, registre el N° de operación: queda en el reporte de cobranza a su nombre."
-          : "Transferencias electrónicas por comprobar, de todo el país. La reserva ya está confirmada; deben pagar antes de llegar. Al registrar el N° de operación queda en el reporte de cobranza a su nombre."}
+        Transferencias electrónicas por comprobar, de todo el país. La reserva
+        ya está confirmada; deben pagar antes de llegar. Al registrar el N° de
+        operación queda en el reporte de cobranza a su nombre.
       </p>
       {hecho && (
         <div className="mt-3">
