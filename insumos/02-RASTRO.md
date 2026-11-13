@@ -421,7 +421,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `d6701eb` (sha256 igual al local, 1.606.685 bytes); consola sin
   errores.
 
-### Tarifas en carril horizontal (13-11-2026, local, sin publicar)
+### Tarifas en carril horizontal (13-11-2026, publicado en `2d80015`)
 
 - Pedido: Álvaro Zegers, 13-11-2026 16:19; respuestas: carril horizontal, edición dentro de la
   tarjeta.
@@ -435,6 +435,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   editada salía negro (color inexistente), el borde superior de las tarjetas se cortaba, y en
   el teléfono los 22 puntos desbordaban la página (ahora los puntos se muestran desde
   tableta).
+- Pública: GitHub Pages sirve `2d80015` (sha256 igual al local, 1.612.068 bytes); consola sin
+  errores.
 
 ## Validación
 
