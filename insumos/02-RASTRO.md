@@ -406,7 +406,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `8b9e5c0` (sha256 igual al local, 1.606.997 bytes); consola sin
   errores.
 
-### Misma casa por mes, en lugar del Art. 7 (13-11-2026, local, sin publicar)
+### Misma casa por mes, en lugar del Art. 7 (13-11-2026, publicado en `d6701eb`)
 
 - Pedido: Álvaro Zegers, 13-11-2026 15:59; respuestas: reemplazar el Art. 7, mes calendario
   de la llegada, valor 1.
@@ -416,6 +416,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   e2e14 62, e2e15 21, e2e16 23, e2e4 17, e2e9 20. axe-core: 0 infracciones; jueces:
   0 bloqueantes.
 - Capturas miradas: fila del parámetro y el motivo en el panel de registro.
+- Pública: GitHub Pages sirve `d6701eb` (sha256 igual al local, 1.606.685 bytes); consola sin
+  errores.
 
 ## Validación
 
