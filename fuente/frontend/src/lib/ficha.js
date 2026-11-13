@@ -134,9 +134,7 @@ export async function descargarFicha(reserva, acta) {
   const pago =
     fp.tipo === "planilla"
       ? `Descuento por planilla en ${fp.cuotas ?? 1} cuota(s)${fp.desde_mes ? " desde " + fp.desde_mes : ""}, autorizado por la persona`
-      : fp.tipo === "efectivo"
-        ? `Efectivo, antes de llegar, a la encargada regional o al encargado nacional${reserva.pago ? ` · recibido el ${fechaCorta(reserva.pago.registrado_en.slice(0, 10), true)} (recibo ${reserva.pago.comprobante})` : " · pendiente"}`
-        : `Transferencia${reserva.pago ? ` registrada el ${fechaCorta(reserva.pago.registrado_en.slice(0, 10), true)} (N° ${reserva.pago.comprobante})` : ""} · ${glosaTransferencia(reserva.casa, reserva.codigo)}`;
+      : `Transferencia electrónica, antes de llegar${reserva.pago ? ` · registrada el ${fechaCorta(reserva.pago.registrado_en.slice(0, 10), true)} (N° ${reserva.pago.comprobante})` : " · pendiente"} · glosa ${glosaTransferencia(reserva.casa, reserva.codigo)}`;
 
   // 1. Reserva
   titulo("1. Reserva");

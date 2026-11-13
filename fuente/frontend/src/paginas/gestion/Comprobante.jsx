@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { CheckCircle2, Clock, FileDown, Printer } from 'lucide-react'
+import { CheckCircle2, FileDown, Printer } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
 import { desistirReserva, obtenerReserva, useDatos } from '../../datos/servicio.js'
 import { INICIO, useSesion } from '../../componentes/Perfil.jsx'
@@ -17,8 +17,7 @@ import { DatosCuenta } from '../../componentes/Transferencia.jsx'
 
 const PAGO = {
   planilla: (f) => `Descuento por planilla en ${plural(f.cuotas, 'cuota', 'cuotas')}${f.desde_mes ? ` desde ${nombreMes(f.desde_mes + '-01')}` : ''}`,
-  transferencia: () => 'Transferencia, antes de llegar',
-  efectivo: () => 'Efectivo, antes de llegar, a la encargada regional o al encargado nacional',
+  transferencia: () => 'Transferencia electrónica, antes de llegar',
 }
 
 /**
@@ -42,27 +41,18 @@ export function Comprobante() {
   const region = REGIONES.find((x) => x.codigo === r.casa.region)?.nombre
   const { usuario } = useSesion()
   const reservas = usuario.perfil === 'central' ? '/central/reservas' : '/encargada/reservas'
-  const puedeDesistir = ['confirmada', 'por_confirmar'].includes(estado)
+  const puedeDesistir = estado === 'confirmada'
   const ficha = r.fichas?.at(-1)
 
   return (
     <div className="mx-auto max-w-2xl">
-      {nueva && estado === 'por_confirmar' && (
-        <div className="mb-6 text-center">
-          <Clock className="mx-auto size-12 text-alerta-700" aria-hidden />
-          <h1 className="mt-3 text-2xl font-bold">Reserva por confirmar a nombre de {r.titular.nombre}</h1>
-          <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
-            Se enviaron a {r.contacto?.correo} los datos para transferir. Las fechas quedan apartadas: cuando Bienestar compruebe el pago, la reserva queda confirmada y se envía la ficha de la reserva.
-          </p>
-        </div>
-      )}
-      {nueva && estado !== 'por_confirmar' && (
+      {nueva && (
         <div className="mb-6 text-center">
           <CheckCircle2 className="mx-auto size-12 text-verde-600" aria-hidden />
           <h1 className="mt-3 text-2xl font-bold">Reserva confirmada a nombre de {r.titular.nombre}</h1>
           <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
             Se envió a {r.contacto?.correo} la ficha de la reserva, con quienes viajan, las direcciones de la casa y el inventario.
-            {r.forma_pago.tipo === 'efectivo' && !r.pago ? ' El pago en efectivo queda pendiente hasta que un encargado registre que lo recibió.' : ''}
+            {r.forma_pago.tipo === 'transferencia' && !r.pago ? ' También se enviaron los datos para transferir; la transferencia queda pendiente hasta que un encargado registre que llegó.' : ''}
           </p>
         </div>
       )}
@@ -91,15 +81,15 @@ export function Comprobante() {
           <Dato
             t="Pago"
             v={`${pesos(r.total)} · ${plural(n, 'noche', 'noches')}`}
-            d={PAGO[r.forma_pago.tipo](r.forma_pago) + (r.forma_pago.tipo === 'efectivo' ? (r.pago ? ` · recibido por ${r.pago.por} (${r.pago.comprobante})` : ' · pendiente de recibir') : '')}
+            d={PAGO[r.forma_pago.tipo](r.forma_pago) + (r.forma_pago.tipo === 'transferencia' ? (r.pago ? ` · registrada por ${r.pago.por ?? 'Bienestar'} (${r.pago.comprobante})` : ' · pendiente de registrar') : '')}
           />
         </dl>
 
-        {r.forma_pago.tipo === 'transferencia' && ['por_confirmar', 'en_curso'].includes(estado) && !r.pago && (
+        {r.forma_pago.tipo === 'transferencia' && ['confirmada', 'en_curso'].includes(estado) && !r.pago && (
           <div className="mt-5 border-t border-borde pt-4">
             <h2 className="font-semibold">Datos para la transferencia</h2>
             <p className="mb-3 mt-1 text-[13px] text-tinta-500">
-              Transfiera antes de llegar y escriba la glosa tal como aparece. La reserva queda confirmada cuando Bienestar compruebe el pago.
+              Transfiera antes de llegar y escriba la glosa tal como aparece. La reserva ya está confirmada; la transferencia queda pendiente hasta que un encargado registre que llegó.
             </p>
             <DatosCuenta monto={r.total} glosa={r.forma_pago.glosa ?? glosaTransferencia(r.casa, r.codigo)} />
           </div>

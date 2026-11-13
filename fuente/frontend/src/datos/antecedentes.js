@@ -1,6 +1,6 @@
 import { todasLasReservas } from './servicio.js'
 import { hoyISO, mesDe, sumarDias } from '../lib/fechas.js'
-import { efectivoPendiente, estadoReserva } from '../lib/reglas.js'
+import { estadoReserva, pagoPendiente } from '../lib/reglas.js'
 
 /*
  * Antecedentes de una persona (decisión 12-11-2026).
@@ -25,11 +25,11 @@ export function antecedentesPersona(persona) {
     .filter((r) => r.salida >= desde)
     .map((r) => ({ ...r, visible: estadoReserva(r) }))
     .sort((a, b) => (a.entrada < b.entrada ? 1 : -1))
-  const vigentes = reservas.filter((r) => ['por_confirmar', 'confirmada', 'en_curso'].includes(r.visible))
+  const vigentes = reservas.filter((r) => ['confirmada', 'en_curso'].includes(r.visible))
   return {
     reservas,
     mesesConReserva: [...new Set(vigentes.filter((r) => r.salida > hoy).map((r) => mesDe(r.entrada)))],
-    porPagar: reservas.filter((r) => r.visible === 'por_confirmar' || (r.visible === 'confirmada' && efectivoPendiente(r))),
+    porPagar: reservas.filter((r) => r.visible === 'confirmada' && pagoPendiente(r)),
     cargos: reservas.filter((r) => r.estado === 'desistida' && r.cargo_desistimiento > 0),
   }
 }

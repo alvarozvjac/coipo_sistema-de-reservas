@@ -117,6 +117,10 @@ Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/D
 - 2026-11-13 · Parámetro «veces que una persona puede reservar la misma casa en el año»:
   1 por año calendario, cuentan vigentes y realizadas, al llegar al límite no se registra ·
   Álvaro Zegers.
+- 2026-11-13 · Sin efectivo: el pago de quienes no tienen planilla es por transferencia
+  electrónica; la reserva queda confirmada con la transferencia pendiente (se quita «Por
+  confirmar»); la registran la encargada (su región) o el nacional; el panel de descuentos
+  muestra planilla, transferencias recibidas y pendientes · Álvaro Zegers.
 - 2026-11-02 · Insumos en este repositorio público, con cargos en vez de nombres de
   Bienestar · Álvaro Zegers eligió el repositorio; el criterio de nombres es de esta
   documentación (regla 8 de la metodología).
@@ -369,6 +373,20 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   propio (7.215.346-4). La clave de datos pasó a `reserva_veraneo_v20`.
 - Pública: GitHub Pages sirve `9f30f03` (sha256 igual al local, 1.612.357 bytes); consola sin
   errores.
+
+### Sin efectivo: transferencia electrónica (13-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 13-11-2026 15:00 («el pago no es en efectivo, es una transferencia
+  electrónica»); respuestas: quitar el efectivo; confirmada con pago pendiente; registran la
+  encargada y el nacional; panel con «Planilla y transferencias». Primera versión sin la
+  columna de pendientes; al ver las capturas pidió agregarla.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844, 0 fallas: e2e14 63 (agrega: el
+  jubilado no ve «Efectivo»; la transferencia queda confirmada con ficha y datos para
+  transferir; el nacional y la encargada la registran con N° de operación; panel y CSV con
+  planilla y transferencias recibidas y pendientes), e2e15 21, e2e16 24 (el panel ya no muestra «por confirmar»),
+  e2e17 31, e2e4 17, e2e9 20. axe-core: 0 infracciones; jueces: 0 bloqueantes.
+- Capturas miradas: Cobros nacional en escritorio y de la encargada en teléfono, antes y
+  después de agregar la columna de pendientes.
 
 ## Validación
 

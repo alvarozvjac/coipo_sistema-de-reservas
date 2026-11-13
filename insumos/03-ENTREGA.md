@@ -16,8 +16,9 @@ servicios públicos, según el reglamento, y que gestionen ocupación, inventari
 tarifas y casas (primera etapa, decisión del 12-11-2026: los afiliados/as no ingresan y no
 hay temporadas altas ni sorteo). La encargada regional registra en su región y el encargado
 nacional en todas; lo registrado queda confirmado sin aprobación y la persona recibe una
-ficha con acompañantes, direcciones e inventario; jubilados/as y otros servicios pueden pagar
-en efectivo, y ambos encargados controlan por mes el descuento por planilla y el efectivo; ambos consultan la disponibilidad de todo el país.
+ficha con acompañantes, direcciones e inventario; jubilados/as y otros servicios pagan por
+transferencia electrónica, que registran ambos encargados, y ambos controlan por mes el
+descuento por planilla y las transferencias recibidas; ambos consultan la disponibilidad de todo el país.
 
 ## En una frase, qué NO hace
 

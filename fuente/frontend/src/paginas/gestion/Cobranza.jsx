@@ -1,8 +1,8 @@
 import { CheckCircle2, Clock } from "lucide-react";
 import {
-  efectivoDelPeriodo,
   nominaPlanilla,
   resumenCobranza,
+  transferenciasDelPeriodo,
 } from "../../datos/servicio.js";
 import { fechaCorta, hoyISO, nombreMes } from "../../lib/fechas.js";
 import { pesos, plural } from "../../lib/formato.js";
@@ -13,7 +13,7 @@ import { nombreRegion } from "../encargada/comun.jsx";
 
 /**
  * Panel de descuentos (decisión 13-11-2026): mes a mes, lo que se descuenta del
- * sueldo y lo que se paga en efectivo (recibido y pendiente), para que la
+ * sueldo y las transferencias electrónicas recibidas y pendientes, para que la
  * encargada regional (su región) y el encargado nacional (todo el país) lo
  * controlen. Una fila elige el mes que se detalla abajo.
  */
@@ -36,11 +36,14 @@ export function ResumenCobranza({ region, periodo, onPeriodo }) {
       )}
     </>
   );
+  const monto = (v) => (v ? pesos(v) : "—");
   return (
     <>
       {/* Teléfono: una tarjeta por mes, sin desplazamiento lateral */}
       <Tarjeta className="sm:hidden">
-        <p className="px-4 pt-3 text-[13px] text-tinta-500">{leyenda} Recibido y pendiente son pagos en efectivo.</p>
+        <p className="px-4 pt-3 text-[13px] text-tinta-500">
+          {leyenda} Recibidas y pendientes son transferencias.
+        </p>
         <ul className="mt-1 divide-y divide-borde">
           {filas.map((f) => {
             const sel = f.periodo === periodo;
@@ -52,28 +55,28 @@ export function ResumenCobranza({ region, periodo, onPeriodo }) {
                 <div className="flex items-baseline justify-between gap-3 text-[15px]">
                   <span>{nombre(f, sel)}</span>
                   <span className="font-semibold tabular-nums">
-                    {f.total ? pesos(f.total) : "—"}
+                    {monto(f.total)}
                   </span>
                 </div>
                 <dl className="mt-1 grid grid-cols-3 gap-2 text-[12px] text-tinta-500">
                   <div>
                     <dt>Planilla</dt>
                     <dd className="tabular-nums text-tinta-900">
-                      {f.planilla ? pesos(f.planilla) : "—"}
+                      {monto(f.planilla)}
                     </dd>
                   </div>
                   <div>
-                    <dt>Recibido</dt>
+                    <dt>Recibidas</dt>
                     <dd className="tabular-nums text-tinta-900">
-                      {f.recibido ? pesos(f.recibido) : "—"}
+                      {monto(f.recibidas)}
                     </dd>
                   </div>
                   <div>
-                    <dt>Pendiente</dt>
+                    <dt>Pendientes</dt>
                     <dd
-                      className={`tabular-nums ${f.pendiente ? "font-medium text-alerta-700" : "text-tinta-900"}`}
+                      className={`tabular-nums ${f.pendientes ? "font-medium text-alerta-700" : "text-tinta-900"}`}
                     >
-                      {f.pendiente ? pesos(f.pendiente) : "—"}
+                      {monto(f.pendientes)}
                     </dd>
                   </div>
                 </dl>
@@ -83,7 +86,7 @@ export function ResumenCobranza({ region, periodo, onPeriodo }) {
         </ul>
       </Tarjeta>
       <Tarjeta className="hidden overflow-x-auto sm:block">
-        <table className="w-full min-w-[640px] text-left text-[15px]">
+        <table className="w-full min-w-[680px] text-left text-[15px]">
           <caption className="px-4 pt-3 text-left text-[13px] text-tinta-500">
             {leyenda}
           </caption>
@@ -94,10 +97,10 @@ export function ResumenCobranza({ region, periodo, onPeriodo }) {
                 Descuento por planilla
               </th>
               <th className="px-4 py-3 text-right font-medium">
-                Efectivo recibido
+                Transferencias recibidas
               </th>
               <th className="px-4 py-3 text-right font-medium">
-                Efectivo pendiente
+                Transferencias pendientes
               </th>
               <th className="px-4 py-3 text-right font-medium">
                 Total del mes
@@ -116,18 +119,18 @@ export function ResumenCobranza({ region, periodo, onPeriodo }) {
                     {nombre(f, sel)}
                   </th>
                   <td className="px-4 py-2.5 text-right tabular-nums">
-                    {f.planilla ? pesos(f.planilla) : "—"}
+                    {monto(f.planilla)}
                   </td>
                   <td className="px-4 py-2.5 text-right tabular-nums">
-                    {f.recibido ? pesos(f.recibido) : "—"}
+                    {monto(f.recibidas)}
                   </td>
                   <td
-                    className={`px-4 py-2.5 text-right tabular-nums ${f.pendiente ? "font-medium text-alerta-700" : ""}`}
+                    className={`px-4 py-2.5 text-right tabular-nums ${f.pendientes ? "font-medium text-alerta-700" : ""}`}
                   >
-                    {f.pendiente ? pesos(f.pendiente) : "—"}
+                    {monto(f.pendientes)}
                   </td>
                   <td className="px-4 py-2.5 text-right font-semibold tabular-nums">
-                    {f.total ? pesos(f.total) : "—"}
+                    {monto(f.total)}
                   </td>
                 </tr>
               );
@@ -139,29 +142,25 @@ export function ResumenCobranza({ region, periodo, onPeriodo }) {
   );
 }
 
-/** Detalle del efectivo de un mes: recibido (por quién y con qué recibo) y pendiente. */
-export function EfectivoDelMes({ periodo, region }) {
-  const lineas = efectivoDelPeriodo(periodo, region);
-  const recibido = lineas.filter((l) => l.recibido);
-  const pendiente = lineas.filter((l) => !l.recibido);
+/** Transferencias de un mes: recibidas (quién las registró y con qué N°) y pendientes. */
+export function TransferenciasDelMes({ periodo, region }) {
+  const lineas = transferenciasDelPeriodo(periodo, region);
   const suma = (xs) => xs.reduce((s, l) => s + l.monto, 0);
+  const recibidas = lineas.filter((l) => l.recibido);
+  const pendientes = lineas.filter((l) => !l.recibido);
   return (
     <Tarjeta className="mt-4 p-5">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="text-[13px] text-tinta-500">Pago en efectivo</p>
-          <p className="mt-0.5 text-2xl font-bold tabular-nums">
-            {pesos(suma(lineas))}
-          </p>
-          <p className="text-sm text-tinta-500">
-            {pesos(suma(recibido))} recibido · {pesos(suma(pendiente))}{" "}
-            pendiente
-          </p>
-        </div>
-      </div>
+      <p className="text-[13px] text-tinta-500">Transferencias del mes</p>
+      <p className="mt-0.5 text-2xl font-bold tabular-nums">
+        {pesos(suma(lineas))}
+      </p>
+      <p className="text-sm text-tinta-500">
+        {pesos(suma(recibidas))} recibidas · {pesos(suma(pendientes))}{" "}
+        pendientes
+      </p>
       {lineas.length === 0 ? (
         <p className="mt-3 text-[15px] text-tinta-500">
-          No hay pagos en efectivo en este mes.
+          No hay transferencias en este mes.
         </p>
       ) : (
         <ul className="mt-3 divide-y divide-borde">
@@ -182,8 +181,8 @@ export function EfectivoDelMes({ periodo, region }) {
                 </span>
                 {l.recibido ? (
                   <span className="inline-flex items-center gap-1 text-[13px] text-verde-700">
-                    <CheckCircle2 className="size-3.5" aria-hidden /> Recibido
-                    por {l.por}, {fechaCorta(l.fecha, true)} · recibo{" "}
+                    <CheckCircle2 className="size-3.5" aria-hidden /> Registrada
+                    por {l.por ?? "Bienestar"}, {fechaCorta(l.fecha, true)} · N°{" "}
                     {l.comprobante}
                   </span>
                 ) : (
@@ -198,14 +197,15 @@ export function EfectivoDelMes({ periodo, region }) {
         </ul>
       )}
       <p className="mt-3 text-[13px] text-tinta-500">
-        {plural(lineas.length, "pago", "pagos")}. Lo recibido cuenta en el mes
-        en que se registró; lo pendiente, en el mes de la llegada.
+        {plural(lineas.length, "transferencia", "transferencias")}. Las
+        recibidas cuentan en el mes en que se registraron; las pendientes, en el
+        mes de la llegada.
       </p>
     </Tarjeta>
   );
 }
 
-/** Reporte de cobranza del mes (planilla y efectivo), en CSV. */
+/** Reporte de cobranza del mes (planilla y transferencias recibidas y pendientes), en CSV. */
 export function descargarCobranza(periodo, region) {
   const filas = [
     ...nominaPlanilla(periodo, region).map((l) => [
@@ -223,10 +223,10 @@ export function descargarCobranza(periodo, region) {
       "",
       "",
     ]),
-    ...efectivoDelPeriodo(periodo, region).map((l) => [
+    ...transferenciasDelPeriodo(periodo, region).map((l) => [
       periodo,
-      "Efectivo",
-      l.recibido ? "Recibido" : "Pendiente",
+      "Transferencia",
+      l.recibido ? "Recibida" : "Pendiente",
       l.titular.rut,
       l.titular.nombre,
       CALIDADES[l.titular.calidad],
@@ -235,7 +235,7 @@ export function descargarCobranza(periodo, region) {
       l.concepto,
       "1 de 1",
       l.monto,
-      l.recibido ? l.por : "",
+      l.recibido ? (l.por ?? "") : "",
       l.recibido ? l.comprobante : "",
     ]),
   ];
@@ -253,8 +253,8 @@ export function descargarCobranza(periodo, region) {
       "Concepto",
       "Cuota",
       "Monto",
-      "Recibido por",
-      "Recibo",
+      "Registrada por",
+      "N° de operación",
     ],
     filas,
   );

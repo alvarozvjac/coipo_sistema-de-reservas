@@ -121,11 +121,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
       : null;
 
   const pagoValido =
-    pago === "planilla"
-      ? autoriza
-      : pago === "transferencia"
-        ? vioCuenta
-        : pago === "efectivo";
+    pago === "planilla" ? autoriza : pago === "transferencia" && vioCuenta;
   const pasoValido = [
     erroresFechas.length === 0,
     !excede && !otrosConError && !contactoError && !errorGrupo && !errorPerro,
@@ -165,9 +161,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
       forma_pago:
         pago === "planilla"
           ? { tipo: "planilla", cuotas, autorizacion: true }
-          : pago === "efectivo"
-            ? { tipo: "efectivo", anticipado: true }
-            : { tipo: "transferencia", anticipado: true, glosa },
+          : { tipo: "transferencia", anticipado: true, glosa },
       ...(asistida && {
         registrada_por: {
           nombre: gestor.nombre,
@@ -448,13 +442,13 @@ export function Reservar({ titular, gestor, casaId, panel }) {
                 <strong className="text-tinta-900">{pesos(total)}</strong>
               </p>
               <p className="mt-3 text-[15px] text-tinta-700">
-                {formas.includes("efectivo")
-                  ? usuario.calidad === "jubilado"
-                    ? "Como persona pensionada, paga antes de llegar por transferencia o en efectivo (Art. 21)."
-                    : "Como funcionario/a de otro servicio público, paga antes de llegar por transferencia o en efectivo (Art. 21)."
-                  : formas.length > 1
-                    ? "Con contrato a plazo fijo puede elegir descuento por planilla o transferencia."
-                    : "Como funcionario/a de CONAF, paga con descuento por planilla."}
+                {usuario.calidad === "jubilado"
+                  ? "Como persona pensionada, paga antes de llegar por transferencia electrónica (Art. 21)."
+                  : usuario.calidad === "otro_servicio"
+                    ? "Como funcionario/a de otro servicio público, paga antes de llegar por transferencia electrónica (Art. 21)."
+                    : formas.length > 1
+                      ? "Con contrato a plazo fijo puede elegir descuento por planilla o transferencia."
+                      : "Como funcionario/a de CONAF, paga con descuento por planilla."}
               </p>
               <div
                 className="mt-4 grid gap-3"
@@ -553,14 +547,6 @@ export function Reservar({ titular, gestor, casaId, panel }) {
                     )}
                   </OpcionPago>
                 )}
-                {formas.includes("efectivo") && (
-                  <OpcionPago
-                    activa={pago === "efectivo"}
-                    onClick={() => setPago("efectivo")}
-                    titulo="Efectivo"
-                    detalle="Antes de llegar, a la encargada regional o al encargado nacional, que registra que lo recibió."
-                  />
-                )}
               </div>
               {intento && !pago && (
                 <div className="mt-3">
@@ -572,24 +558,14 @@ export function Reservar({ titular, gestor, casaId, panel }) {
             <Tarjeta className="p-5">
               <h2 className="text-lg font-semibold">Antes de enviar</h2>
               <ul className="mt-2 list-disc space-y-1.5 pl-5 text-[15px] text-tinta-700">
-                {pago === "transferencia" ? (
-                  <li>
-                    Si las fechas siguen disponibles, quedan apartadas y la
-                    reserva queda <strong>por confirmar</strong> y se envían
-                    los datos para transferir. Cuando Bienestar compruebe la
-                    transferencia, se confirma y se envía por correo la{" "}
-                    <strong>ficha de la reserva</strong>.
-                  </li>
-                ) : (
-                  <li>
-                    Si las fechas siguen disponibles, la reserva queda{" "}
-                    <strong>confirmada</strong> y se envía por correo la{" "}
-                    <strong>ficha de la reserva</strong>: quienes viajan, las
-                    direcciones de la casa y el inventario.
-                    {pago === "efectivo" &&
-                      " El pago en efectivo queda pendiente hasta que usted u otro encargado registre en Cobros que lo recibió, antes de la llegada."}
-                  </li>
-                )}
+                <li>
+                  Si las fechas siguen disponibles, la reserva queda{" "}
+                  <strong>confirmada</strong> y se envía por correo la{" "}
+                  <strong>ficha de la reserva</strong>: quienes viajan, las
+                  direcciones de la casa y el inventario.
+                  {pago === "transferencia" &&
+                    " También se envían los datos para transferir; la transferencia queda pendiente hasta que usted u otro encargado registre en Cobros que llegó, antes de la llegada."}
+                </li>
                 <li>
                   Si desiste{" "}
                   <strong>hasta el {fechaCorta(limiteDesistir, true)}</strong> (
@@ -650,7 +626,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
                 />
                 <span className="text-[15px]">
                   {asistida
-                    ? `Declaro que ${usuario.nombre} me pidió esta reserva y que conoce y acepta el Reglamento General de Uso de Casas de Veraneo o Descanso. Recibirá en ${correo} ${pago === "transferencia" ? "los datos para transferir y, cuando se compruebe el pago, " : ""}la ficha de la reserva.${pago === "efectivo" ? " Pagará en efectivo antes de llegar." : ""}`
+                    ? `Declaro que ${usuario.nombre} me pidió esta reserva y que conoce y acepta el Reglamento General de Uso de Casas de Veraneo o Descanso. Recibirá en ${correo} la ficha de la reserva${pago === "transferencia" ? " y los datos para transferir antes de llegar" : ""}.`
                     : "Conozco y acepto el Reglamento General de Uso de Casas de Veraneo o Descanso."}
                 </span>
               </label>

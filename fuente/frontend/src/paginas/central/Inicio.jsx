@@ -47,7 +47,7 @@ export function InicioCentral() {
     }
   }).filter(Boolean)
 
-  const llegadas = reservas.filter((r) => ['por_confirmar', 'confirmada'].includes(estadoReserva(r)) && (r.entrada === hoy || r.entrada === sumarDias(hoy, 1)))
+  const llegadas = reservas.filter((r) => estadoReserva(r) === 'confirmada' && (r.entrada === hoy || r.entrada === sumarDias(hoy, 1)))
 
   return (
     <>
@@ -62,8 +62,8 @@ export function InicioCentral() {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Indicador cifra={pagosPorRegistrar().filter((r) => r.forma_pago.tipo === 'transferencia').length} texto="transferencias por registrar" a="/central/cobros?pestana=pagos" />
-        <Indicador cifra={pagosPorRegistrar().filter((r) => r.forma_pago.tipo === 'efectivo').length} texto="pagos en efectivo por recibir" tono="alerta" a="/central/cobros?pestana=pagos" />
+        <Indicador cifra={pagosPorRegistrar().length} texto="transferencias por registrar" tono="alerta" a="/central/cobros?pestana=pagos" />
+        <Indicador cifra={reservas.filter((r) => r.estado === 'confirmada' && r.creada_en.slice(0, 10) >= sumarDias(hoy, -7)).length} texto="reservas registradas en los últimos 7 días" a="/central/reservas" />
         <Indicador cifra={llegadas.length} texto="llegadas hoy y mañana" />
         <Indicador cifra={`${Math.round(ocupacion(casas.filter((c) => c.activa), reservas, hoy) * 100)}%`} texto="ocupación nacional, próximos 30 días" a="/central/reservas" />
       </div>

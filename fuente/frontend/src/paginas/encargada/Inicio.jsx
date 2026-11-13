@@ -1,7 +1,7 @@
 import { inventarioDe, listarCasas, reservasRegion, useDatos } from '../../datos/servicio.js'
 import { fechaCorta, hoyISO, sumarDias } from '../../lib/fechas.js'
 import { plural } from '../../lib/formato.js'
-import { efectivoPendiente, estadoReserva } from '../../lib/reglas.js'
+import { estadoReserva, pagoPendiente } from '../../lib/reglas.js'
 import { useSesion } from '../../componentes/Perfil.jsx'
 import { AccionesRegistro, Indicador, Movimientos, ocupacion } from '../../componentes/Panel.jsx'
 import { nombreRegion } from './comun.jsx'
@@ -18,7 +18,7 @@ export function InicioEncargada() {
   const casas = listarCasas().filter((c) => c.region === usuario.region)
   const reservas = reservasRegion(usuario.region)
   const estado = (e) => reservas.filter((r) => estadoReserva(r) === e)
-  const llegadas = reservas.filter((r) => ['por_confirmar', 'confirmada'].includes(estadoReserva(r)) && (r.entrada === hoy || r.entrada === sumarDias(hoy, 1)))
+  const llegadas = reservas.filter((r) => estadoReserva(r) === 'confirmada' && (r.entrada === hoy || r.entrada === sumarDias(hoy, 1)))
   const sinInventario = casas.filter((c) => !inventarioDe(c.id))
   const extintores = casas.filter((c) => {
     const v = inventarioDe(c.id)?.seguridad?.extintor_vence
@@ -40,8 +40,8 @@ export function InicioEncargada() {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Indicador cifra={reservas.filter(efectivoPendiente).length} texto="pagos en efectivo por recibir" tono="alerta" a="/encargada/cobros?pestana=pagos" />
-        <Indicador cifra={estado('por_confirmar').length} texto="por confirmar (esperan el pago)" a={`${base}?estado=por_confirmar`} />
+        <Indicador cifra={reservas.filter(pagoPendiente).length} texto="transferencias por registrar" tono="alerta" a="/encargada/cobros?pestana=pagos" />
+        <Indicador cifra={estado('confirmada').length} texto="reservas confirmadas por venir" a={`${base}?estado=confirmada`} />
         <Indicador cifra={llegadas.length} texto="llegadas hoy y mañana" />
         <Indicador cifra={`${Math.round(ocupacion(casas, reservas, hoy) * 100)}%`} texto="ocupación de los próximos 30 días" a={base} />
       </div>

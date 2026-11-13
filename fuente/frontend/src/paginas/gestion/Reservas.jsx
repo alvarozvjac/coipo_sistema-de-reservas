@@ -1,18 +1,8 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  Search,
-  X,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Search, X } from "lucide-react";
 import { REGIONES } from "../../datos/casas.js";
-import {
-  listarCasas,
-  reservasRegion,
-  useDatos,
-} from "../../datos/servicio.js";
+import { listarCasas, reservasRegion, useDatos } from "../../datos/servicio.js";
 import {
   diasEntre,
   fechaCorta,
@@ -36,7 +26,6 @@ import { RegistroLateral } from "./RegistroLateral.jsx";
 
 const FILTROS = [
   "todas",
-  "por_confirmar",
   "confirmada",
   "en_curso",
   "finalizada",
@@ -376,103 +365,103 @@ export function Reservas() {
           </h2>
         </div>
         <>
-            <div
-              className="mt-3 flex flex-wrap gap-2"
-              role="tablist"
-              aria-label="Filtrar por estado"
-            >
-              {FILTROS.map((f) => (
-                <button
-                  key={f}
-                  type="button"
-                  role="tab"
-                  aria-selected={filtro === f}
-                  onClick={() => setFiltro(f)}
-                  className={`rounded-full px-3 py-1.5 text-sm ring-1 ring-inset pointer-coarse:min-h-11 ${filtro === f ? "bg-verde-700 font-semibold text-white ring-verde-700" : "bg-white text-tinta-700 ring-borde hover:bg-stone-50"}`}
-                >
-                  {f === "todas" ? "Todas" : ESTADOS[f].etiqueta}{" "}
-                  <span className="tabular-nums">{cuenta(f)}</span>
-                </button>
-              ))}
-            </div>
-            <div className="mt-3 max-w-xs">
-              <select
-                className={claseEntrada}
-                value={casaLista}
-                onChange={(e) => setCasaLista(e.target.value)}
-                aria-label="Casa"
+          <div
+            className="mt-3 flex flex-wrap gap-2"
+            role="tablist"
+            aria-label="Filtrar por estado"
+          >
+            {FILTROS.map((f) => (
+              <button
+                key={f}
+                type="button"
+                role="tab"
+                aria-selected={filtro === f}
+                onClick={() => setFiltro(f)}
+                className={`rounded-full px-3 py-1.5 text-sm ring-1 ring-inset pointer-coarse:min-h-11 ${filtro === f ? "bg-verde-700 font-semibold text-white ring-verde-700" : "bg-white text-tinta-700 ring-borde hover:bg-stone-50"}`}
               >
-                <option value="">Todas las casas</option>
-                {casas.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
+                {f === "todas" ? "Todas" : ESTADOS[f].etiqueta}{" "}
+                <span className="tabular-nums">{cuenta(f)}</span>
+              </button>
+            ))}
+          </div>
+          <div className="mt-3 max-w-xs">
+            <select
+              className={claseEntrada}
+              value={casaLista}
+              onChange={(e) => setCasaLista(e.target.value)}
+              aria-label="Casa"
+            >
+              <option value="">Todas las casas</option>
+              {casas.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            <Tarjeta className="mt-3 overflow-x-auto">
-              <table className="w-full min-w-[760px] text-left text-[15px]">
-                <thead className="border-b border-borde text-[13px] text-tinta-500">
-                  <tr>
-                    <th className="px-4 py-3 font-medium">Fechas</th>
-                    <th className="px-4 py-3 font-medium">Casa</th>
-                    <th className="px-4 py-3 font-medium">
-                      Usuario/a responsable
-                    </th>
-                    <th className="px-4 py-3 font-medium">Vía</th>
-                    <th className="px-4 py-3 font-medium">Estado</th>
-                    <th className="px-4 py-3 text-right font-medium">Total</th>
+          <Tarjeta className="mt-3 overflow-x-auto">
+            <table className="w-full min-w-[760px] text-left text-[15px]">
+              <thead className="border-b border-borde text-[13px] text-tinta-500">
+                <tr>
+                  <th className="px-4 py-3 font-medium">Fechas</th>
+                  <th className="px-4 py-3 font-medium">Casa</th>
+                  <th className="px-4 py-3 font-medium">
+                    Usuario/a responsable
+                  </th>
+                  <th className="px-4 py-3 font-medium">Vía</th>
+                  <th className="px-4 py-3 font-medium">Estado</th>
+                  <th className="px-4 py-3 text-right font-medium">Total</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-borde">
+                {lista.map((r) => (
+                  <tr
+                    key={r.codigo}
+                    className="cursor-pointer hover:bg-stone-50"
+                    onClick={() => abrir(r.codigo)}
+                  >
+                    <td className="whitespace-nowrap px-4 py-3">
+                      <button
+                        type="button"
+                        className="text-left font-medium text-verde-800 hover:underline"
+                        onClick={() => abrir(r.codigo)}
+                      >
+                        {rangoFechas(r.entrada, r.salida)}
+                      </button>
+                      <span className="block text-[13px] text-tinta-500">
+                        {r.codigo}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">{r.casa.nombre}</td>
+                    <td className="px-4 py-3">
+                      {r.titular.nombre}
+                      <span className="block text-[13px] text-tinta-500">
+                        {CALIDADES[r.titular.calidad]}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-tinta-700">
+                      {r.via ? VIAS[r.via] : "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <Estado estado={r.visible} />
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums">
+                      {pesos(r.total)}
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-borde">
-                  {lista.map((r) => (
-                    <tr
-                      key={r.codigo}
-                      className="cursor-pointer hover:bg-stone-50"
-                      onClick={() => abrir(r.codigo)}
-                    >
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <button
-                          type="button"
-                          className="text-left font-medium text-verde-800 hover:underline"
-                          onClick={() => abrir(r.codigo)}
-                        >
-                          {rangoFechas(r.entrada, r.salida)}
-                        </button>
-                        <span className="block text-[13px] text-tinta-500">
-                          {r.codigo}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">{r.casa.nombre}</td>
-                      <td className="px-4 py-3">
-                        {r.titular.nombre}
-                        <span className="block text-[13px] text-tinta-500">
-                          {CALIDADES[r.titular.calidad]}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-tinta-700">
-                        {r.via ? VIAS[r.via] : "—"}
-                      </td>
-                      <td className="px-4 py-3">
-                        <Estado estado={r.visible} />
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums">
-                        {pesos(r.total)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {lista.length === 0 && (
-                <p className="p-6 text-center text-tinta-500">
-                  No hay reservas con esos filtros.
-                </p>
-              )}
-            </Tarjeta>
-            <p className="mt-2 text-[13px] text-tinta-500">
-              {plural(lista.length, "reserva", "reservas")}
-            </p>
+                ))}
+              </tbody>
+            </table>
+            {lista.length === 0 && (
+              <p className="p-6 text-center text-tinta-500">
+                No hay reservas con esos filtros.
+              </p>
+            )}
+          </Tarjeta>
+          <p className="mt-2 text-[13px] text-tinta-500">
+            {plural(lista.length, "reserva", "reservas")}
+          </p>
         </>
       </section>
 
@@ -488,11 +477,9 @@ export function Reservas() {
             setMensaje(
               <>
                 {codigo} registrada a nombre de {r.titular.nombre}:{" "}
-                {estadoReserva(r) === "por_confirmar"
-                  ? "por confirmar; se enviaron los datos para transferir."
-                  : r.forma_pago.tipo === "efectivo"
-                    ? "confirmada; se envió la ficha y el pago en efectivo queda por recibir."
-                    : "confirmada; se envió la ficha de la reserva."}{" "}
+                {r.forma_pago.tipo === "transferencia"
+                  ? "confirmada; se envió la ficha y los datos para transferir, y la transferencia queda por registrar."
+                  : "confirmada; se envió la ficha de la reserva."}{" "}
                 <button
                   type="button"
                   onClick={() => abrir(codigo)}

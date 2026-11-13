@@ -36,7 +36,7 @@ cuando se contradicen.
 - **Diferencia con el reglamento:** el Art. 5 dice que la reserva "queda pendiente hasta
   la confirmación final". Bienestar debe ajustar ese texto o aceptar la diferencia.
 
-## Reserva por confirmar cuando se paga por transferencia (decisión 02-11-2026)
+## Reserva por confirmar cuando se paga por transferencia (decisión 02-11-2026) — sin vigencia desde el 13-11-2026
 
 - Quien paga por **transferencia** (jubilados/as, otros servicios públicos y plazo fijo que
   la elija) queda con la reserva **«Por confirmar»**: las fechas quedan apartadas y recibe
@@ -49,6 +49,27 @@ cuando se contradicen.
   quedará confirmada y le enviaremos el comprobante y el acta de entrega al mismo correo.»
 - En el código: `porConfirmar(r)` en `lib/reglas.js` (transferencia sin pago registrado) y
   `registrarPago` en `datos/servicio.js`, que confirma y envía el acta.
+
+## Sin efectivo: el pago es por transferencia electrónica (decisión 13-11-2026, 15:00)
+
+Fuente: Álvaro Zegers (UIA), 13-11-2026, 15:00: «el pago no es en efectivo, es una
+transferencia electrónica». Respuestas del mismo día:
+
+- **Se quita el efectivo.** Jubilados/as y funcionarios/as de otros servicios públicos pagan
+  solo por **transferencia electrónica**, antes de llegar; plazo fijo sigue eligiendo entre
+  planilla y transferencia.
+- **Confirmada, con pago pendiente.** Al registrar una reserva por transferencia queda
+  **confirmada**, se envía la ficha y también los datos para transferir; la transferencia
+  queda pendiente en *Cobros* hasta que se registra. Desaparece el estado «Por confirmar»
+  (decisión del 02-11-2026) y, con él, su barra en el tablero y su filtro en Reservas.
+- **Quién registra.** La encargada regional, las transferencias de las casas de su región; el
+  encargado nacional, las de todo el país (pestaña «Transferencias por registrar»). Queda
+  quién la registró, la fecha y el N° de operación.
+- **Panel de descuentos.** Por mes: **descuento por planilla, transferencias recibidas,
+  transferencias pendientes y total** (Álvaro Zegers pidió agregar las pendientes al revisar
+  la primera versión, que no las tenía). El detalle del mes y el reporte de cobranza (CSV)
+  traen la planilla y las transferencias, recibidas y pendientes.
+- La clave de datos pasó a `reserva_veraneo_v21`.
 
 ## Misma casa: veces por año (decisión 13-11-2026, 14:33)
 
@@ -69,7 +90,7 @@ hasta cuántas veces la misma persona puede reservar una casa». Respuestas del 
 - La clave de datos pasó a `reserva_veraneo_v20` (además, la jubilada de ejemplo Nora
   Castillo quedó en la nómina de demostración con RUT ficticio propio).
 
-## Sin aprobación y pago en efectivo (decisión 13-11-2026)
+## Sin aprobación y pago en efectivo (decisión 13-11-2026) — el efectivo se quitó a las 15:00 (ver arriba)
 
 Fuente: Álvaro Zegers (UIA), 13-11-2026, 12:43: «no debe existir una aprobación en el
 sistema, ya que, si se registra la reserva, ésta queda automáticamente aprobada. Sobre la

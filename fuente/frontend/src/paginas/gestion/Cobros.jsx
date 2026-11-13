@@ -13,7 +13,7 @@ import {
 } from "../../datos/servicio.js";
 import {
   ResumenCobranza,
-  EfectivoDelMes,
+  TransferenciasDelMes,
   descargarCobranza,
 } from "./Cobranza.jsx";
 import {
@@ -58,12 +58,12 @@ const ESTADO_NOMINA = {
     ayuda: "Remuneraciones aplicó el descuento.",
   },
 };
-const TIPO = { transferencia: "Transferencia", efectivo: "Efectivo" };
+const TIPO = { transferencia: "Transferencia" };
 
 /**
  * Cobros (decisión 13-11-2026): la encargada regional ve los de su región y
- * registra el efectivo que recibe; el encargado nacional ve todo el país y
- * además registra transferencias, informa la nómina y registra devoluciones.
+ * registra las transferencias que llegan; el encargado nacional ve todo el país,
+ * registra transferencias, informa la nómina y registra devoluciones.
  */
 export function Cobros() {
   useDatos();
@@ -71,20 +71,13 @@ export function Cobros() {
   const regional = usuario.perfil === "encargada";
   const region = regional ? usuario.region : "";
   const [params, setParams] = useSearchParams();
-  const pagos = pagosPorRegistrar(region).filter(
-    (r) => !regional || r.forma_pago.tipo === "efectivo",
-  );
+  const pagos = pagosPorRegistrar(region);
   const devoluciones = regional
     ? []
     : todasLasReservas().filter((r) => r.devolucion_pendiente);
   const pestanas = [
     ["descuentos", "Panel de descuentos"],
-    [
-      "pagos",
-      regional
-        ? `Efectivo por recibir (${pagos.length})`
-        : `Pagos por registrar (${pagos.length})`,
-    ],
+    ["pagos", `Transferencias por registrar (${pagos.length})`],
     ...(regional
       ? []
       : [["devoluciones", `Devoluciones (${devoluciones.length})`]]),
@@ -302,7 +295,7 @@ function Nomina({ region, regional }) {
           </p>
         )}
       </Tarjeta>
-      <EfectivoDelMes periodo={periodo} region={region} />
+      <TransferenciasDelMes periodo={periodo} region={region} />
     </>
   );
 }
@@ -318,8 +311,8 @@ function Pagos({ pagos, regional }) {
     <>
       <p className="max-w-3xl text-[15px] text-tinta-500">
         {regional
-          ? "Reservas de su región que se pagan en efectivo (jubilados/as y otros servicios públicos). Deben pagar antes de llegar. Cuando reciba el dinero, registre el N° de recibo: queda en el reporte de cobranza a su nombre."
-          : "Transferencias por comprobar (la reserva queda confirmada y se envía la ficha al registrarlas) y pagos en efectivo por recibir (la reserva ya está confirmada; queda registrado quién recibió el dinero). Deben pagarse antes de llegar."}
+          ? "Reservas de su región que se pagan por transferencia electrónica (jubilados/as, otros servicios públicos y plazo fijo que la eligió). La reserva ya está confirmada; deben pagar antes de llegar. Cuando compruebe que llegó la transferencia, registre el N° de operación: queda en el reporte de cobranza a su nombre."
+          : "Transferencias electrónicas por comprobar, de todo el país. La reserva ya está confirmada; deben pagar antes de llegar. Al registrar el N° de operación queda en el reporte de cobranza a su nombre."}
       </p>
       {hecho && (
         <div className="mt-3">
@@ -384,10 +377,8 @@ function Pagos({ pagos, regional }) {
                         setComprobante("");
                       }}
                     >
-                      <Wallet className="size-4" aria-hidden />{" "}
-                      {r.forma_pago.tipo === "efectivo"
-                        ? "Registrar efectivo recibido"
-                        : "Registrar pago"}
+                      <Wallet className="size-4" aria-hidden /> Registrar
+                      transferencia
                     </Boton>
                   </td>
                 </tr>
@@ -397,23 +388,22 @@ function Pagos({ pagos, regional }) {
         </table>
         {!pagos.length && (
           <p className="p-6 text-center text-tinta-500">
-            No hay pagos por registrar.
+            No hay transferencias por registrar.
           </p>
         )}
       </Tarjeta>
 
       {registrando && (
-        <Dialogo titulo="Registrar pago" onCerrar={() => setRegistrando(null)}>
+        <Dialogo
+          titulo="Registrar transferencia"
+          onCerrar={() => setRegistrando(null)}
+        >
           <p className="mt-2 text-[15px] text-tinta-700">
             {registrando.titular.nombre} · {registrando.codigo} ·{" "}
             <strong>{pesos(registrando.total)}</strong>
           </p>
           <Campo
-            etiqueta={
-              registrando.forma_pago.tipo === "efectivo"
-                ? "N° de recibo o comprobante del efectivo"
-                : "N° de operación de la transferencia"
-            }
+            etiqueta="N° de operación de la transferencia"
             className="mt-4"
           >
             <input
@@ -430,18 +420,13 @@ function Pagos({ pagos, regional }) {
             <Boton
               disabled={comprobante.trim().length < 3}
               onClick={() => {
-                const confirmo = registrarPago(
+                registrarPago(
                   registrando.codigo,
                   { comprobante: comprobante.trim() },
                   usuario,
                 );
                 setHecho(
-                  registrando.forma_pago.tipo === "efectivo"
-                    ? `Efectivo de ${registrando.titular.nombre} recibido (recibo ${comprobante.trim()}): queda en el reporte de cobranza.`
-                    : `Pago de ${registrando.titular.nombre} registrado (${comprobante.trim()}).` +
-                        (confirmo
-                          ? " La reserva quedó confirmada y se envió la ficha de la reserva."
-                          : " Se avisó al usuario."),
+                  `Transferencia de ${registrando.titular.nombre} registrada (N° ${comprobante.trim()}): queda en el reporte de cobranza a su nombre.`,
                 );
                 setRegistrando(null);
               }}

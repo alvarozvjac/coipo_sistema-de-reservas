@@ -87,8 +87,8 @@ function nuevaReserva(codigo, casaId, entrada, nochesN, titular, extra = {}) {
       ...Array.from({ length: personas - 1 }, (_, i) => ({ nombre: `Acompañante ${i + 1}`, edad: i === 0 ? 41 : 6 + i * 4, parentesco: i === 0 ? 'conyuge' : 'hijo' })),
     ],
     contacto: { correo: titular.correo, telefono: titular.telefono },
-    // Jubilados/as y otros servicios: transferencia o efectivo (efectivo desde el 13-11-2026), repartido.
-    forma_pago: anticipado ? { tipo: codigo.charCodeAt(codigo.length - 1) % 2 ? 'transferencia' : 'efectivo', anticipado: true } : { tipo: 'planilla', cuotas: 1, autorizacion: true },
+    // Jubilados/as y otros servicios: transferencia electrónica (sin efectivo desde el 13-11-2026, 15:00).
+    forma_pago: anticipado ? { tipo: 'transferencia', anticipado: true } : { tipo: 'planilla', cuotas: 1, autorizacion: true },
     estado: 'confirmada',
     creada_en: sumarDias(entrada, -21) + 'T10:15:00',
     notificaciones: [],
@@ -118,7 +118,7 @@ export function semillas(hoy) {
     confirmada_por: 'Patricia Herrera Muñoz',
     confirmada_en: creada,
   })
-  const pagado = (r, dias) => ({ ...r, pago: { registrado_en: sumarDias(hoy, -dias) + 'T12:00:00', comprobante: (r.forma_pago.tipo === 'efectivo' ? 'REC-' : 'TRF-') + (480000 + dias * 37), por: 'Patricia Herrera Muñoz' } })
+  const pagado = (r, dias) => ({ ...r, pago: { registrado_en: sumarDias(hoy, -dias) + 'T12:00:00', comprobante: 'TRF-' + (480000 + dias * 37), por: 'Patricia Herrera Muñoz' } })
 
   const bloqueos = [
     { id: 'B-1', casa_id: 7, entrada: sumarDias(hoy, 12), salida: sumarDias(hoy, 20), motivo: 'Mantención de techumbre', creado_por: 'Patricia Herrera Muñoz', creado_en: sumarDias(hoy, -6) + 'T10:00:00' },
@@ -139,8 +139,8 @@ export function semillas(hoy) {
     nuevaReserva('R-2026-0179', 7, sumarDias(hoy, 25), 4, { ...personas[4], calidad: 'afiliado', plazo_fijo: false }, conf(4)),
     nuevaReserva('R-2026-0190', 6, sumarDias(hoy, 12), 3, { ...personas[5], calidad: 'afiliado', plazo_fijo: false }, { ...auto(sumarDias(hoy, -2) + 'T16:42:00') }),
     nuevaReserva('R-2026-0193', 9, sumarDias(hoy, 12), 2, externo, { ...auto(sumarDias(hoy, -1) + 'T11:05:00') }),
-    // Jubilada de Valparaíso que paga en efectivo: confirmada, con el pago pendiente (13-11-2026).
-    nuevaReserva('R-2026-0195', 8, sumarDias(hoy, 30), 4, jubilada, { ...auto(hoy + 'T08:12:00'), forma_pago: { tipo: 'efectivo', anticipado: true } }),
+    // Jubilada de Valparaíso que paga por transferencia: confirmada, con el pago pendiente (13-11-2026).
+    nuevaReserva('R-2026-0195', 8, sumarDias(hoy, 30), 4, jubilada, { ...auto(hoy + 'T08:12:00'), forma_pago: { tipo: 'transferencia', anticipado: true } }),
     // Confirmadas con pago anticipado pendiente de registrar.
     nuevaReserva('R-2026-0181', 2, sumarDias(hoy, 4), 3, { ...personas[6], calidad: 'jubilado', rol: 'Afiliado jubilado' }, conf(9)),
     nuevaReserva('R-2026-0183', 25, sumarDias(hoy, 8), 4, { ...personas[7], calidad: 'otro_servicio', rol: 'Funcionario/a de INDAP' }, conf(5)),
@@ -188,7 +188,7 @@ export function semillas(hoy) {
           r.desistida_en = sumarDias(d, -Math.floor(rnd() * 14))
           r.cargo_desistimiento = cargoDesistimiento({ ...r, estado: 'confirmada' }, r.desistida_en)
         } else if (r.forma_pago.tipo !== 'planilla' && (salida <= hoy || r.forma_pago.anticipado)) {
-          if (salida <= hoy || rnd() < 0.85) r.pago = { registrado_en: (salida <= hoy ? sumarDias(salida, -1) : sumarDias(hoy, -2)) + 'T12:00:00', comprobante: (r.forma_pago.tipo === 'efectivo' ? 'REC-' : 'TRF-') + (500000 + n), por: 'Encargada regional' }
+          if (salida <= hoy || rnd() < 0.85) r.pago = { registrado_en: (salida <= hoy ? sumarDias(salida, -1) : sumarDias(hoy, -2)) + 'T12:00:00', comprobante: 'TRF-' + (500000 + n), por: 'Encargada regional' }
         }
         lista.push(r)
       }

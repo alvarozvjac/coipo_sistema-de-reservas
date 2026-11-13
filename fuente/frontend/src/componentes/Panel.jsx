@@ -46,7 +46,7 @@ export function ocupacion(casas, reservas, hoy, dias = 30) {
   const fin = sumarDias(hoy, dias)
   const ids = new Set(casas.map((c) => c.id))
   const noches = reservas
-    .filter((r) => ids.has(r.casa_id) && ['por_confirmar', 'confirmada', 'en_curso'].includes(estadoReserva(r)))
+    .filter((r) => ids.has(r.casa_id) && ['confirmada', 'en_curso'].includes(estadoReserva(r)))
     .reduce((s, r) => s + Math.max(0, diasEntre(r.entrada > hoy ? r.entrada : hoy, r.salida < fin ? r.salida : fin)), 0)
   return noches / (casas.length * dias)
 }
@@ -54,7 +54,7 @@ export function ocupacion(casas, reservas, hoy, dias = 30) {
 /** Llegadas y salidas de hoy y mañana, con el teléfono a mano. */
 export function Movimientos({ reservas, hoy, conRegion }) {
   const manana = sumarDias(hoy, 1)
-  const activas = reservas.filter((r) => ['por_confirmar', 'confirmada', 'en_curso'].includes(estadoReserva(r)) || (r.estado === 'confirmada' && r.salida === hoy))
+  const activas = reservas.filter((r) => ['confirmada', 'en_curso'].includes(estadoReserva(r)) || (r.estado === 'confirmada' && r.salida === hoy))
   const dias = [hoy, manana].map((dia) => ({ dia, items: [...activas.filter((r) => r.entrada === dia).map((r) => ['llega', r]), ...activas.filter((r) => r.salida === dia).map((r) => ['sale', r])] }))
   return (
     <section className="mt-8" aria-labelledby="t-mov">

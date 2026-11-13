@@ -105,15 +105,15 @@ export const VARIABLES = {
 export const PLANTILLAS_BASE = {
   ficha: {
     nombre: 'Ficha de la reserva',
-    cuando: 'Al registrar la reserva (con transferencia, al registrar el pago)',
+    cuando: 'Al registrar la reserva',
     asunto: 'Ficha de su reserva {codigo} · {casa}',
     cuerpo: 'Estimado/a {nombre}:\n\nSu reserva en {casa} quedó confirmada para el {fechas}. Adjuntamos la ficha de la reserva, con quienes viajan, las direcciones de la casa y su inventario.\n\nEl ingreso es desde las {hora_ingreso}. Al llegar revise el inventario e informe cualquier diferencia dentro de {plazo_observaciones} horas.\n\nDepartamento de Bienestar · CONAF',
   },
   por_confirmar: {
     nombre: 'Datos para transferir',
-    cuando: 'Al registrar una reserva que se paga por transferencia',
+    cuando: 'Al registrar una reserva que se paga por transferencia electrónica',
     asunto: 'Datos para transferir · reserva {codigo}',
-    cuerpo: 'Estimado/a {nombre}:\n\nSu reserva en {casa} ({fechas}) quedó por confirmar. Transfiera {monto} a la cuenta corriente de CONAF con la glosa {glosa}. Cuando registremos el pago le enviaremos la ficha de la reserva.\n\nDepartamento de Bienestar · CONAF',
+    cuerpo: 'Estimado/a {nombre}:\n\nSu reserva en {casa} ({fechas}) quedó confirmada y le enviamos la ficha por separado. Transfiera {monto} a la cuenta corriente de CONAF con la glosa {glosa}, antes de la llegada. Cuando registremos la transferencia le avisaremos.\n\nDepartamento de Bienestar · CONAF',
   },
   desistimiento: {
     nombre: 'Desistimiento registrado',

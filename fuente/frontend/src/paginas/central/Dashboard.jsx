@@ -12,7 +12,7 @@ import { Boton, claseFiltro } from '../../componentes/ui.jsx'
 import { nombreRegion } from '../encargada/comun.jsx'
 
 const MESES_CORTOS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
-const PAGO = { planilla: 'Descuento por planilla', transferencia: 'Transferencia', efectivo: 'Efectivo' }
+const PAGO = { planilla: 'Descuento por planilla', transferencia: 'Transferencia' }
 const pct = (x) => `${Math.round(x * 100)}%`
 const miles = (n) => Math.round(n).toLocaleString('es-CL')
 const millones = (n) => (n >= 1e6 ? `$${(n / 1e6).toLocaleString('es-CL', { maximumFractionDigits: 1 })} M` : pesos(n))

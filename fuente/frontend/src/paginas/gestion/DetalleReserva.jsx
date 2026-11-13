@@ -6,7 +6,7 @@ import { CALIDADES, PARENTESCOS, VIAS } from '../../lib/reglas.js'
 import { Boton, Estado } from '../../componentes/ui.jsx'
 import { Dialogo, antiguedad } from '../encargada/comun.jsx'
 
-const PAGO = { planilla: 'Planilla', transferencia: 'Transferencia', efectivo: 'Efectivo' }
+const PAGO = { planilla: 'Planilla', transferencia: 'Transferencia' }
 const NOTIF = {
   confirmacion: 'el comprobante de reserva',
   por_confirmar: 'los datos para transferir',
@@ -32,7 +32,7 @@ export function DetalleReserva({ reserva: r, onCerrar }) {
       </div>
       <dl className="mt-4 grid grid-cols-2 gap-3 text-[15px]">
         <D t="Fechas" v={rangoFechas(r.entrada, r.salida)} />
-        <D t="Total" v={`${pesos(r.total)} · ${PAGO[r.forma_pago.tipo]}${r.forma_pago.cuotas > 1 ? ` (${r.forma_pago.cuotas} cuotas)` : ''}${r.forma_pago.tipo === 'efectivo' ? (r.pago ? ' · recibido' : ' · por recibir') : ''}`} />
+        <D t="Total" v={`${pesos(r.total)} · ${PAGO[r.forma_pago.tipo]}${r.forma_pago.cuotas > 1 ? ` (${r.forma_pago.cuotas} cuotas)` : ''}${r.forma_pago.tipo === 'transferencia' ? (r.pago ? ' · registrada' : ' · por registrar') : ''}`} />
         <D
           t="Usuario/a responsable"
           v={
@@ -97,7 +97,7 @@ export function DetalleReserva({ reserva: r, onCerrar }) {
         <Boton variante="secundario" onClick={onCerrar}>
           Cerrar
         </Boton>
-        <Boton a={`/gestion/reserva/${r.codigo}`}>{['confirmada', 'por_confirmar'].includes(r.visible) ? 'Ver comprobante o registrar desistimiento' : 'Ver comprobante'}</Boton>
+        <Boton a={`/gestion/reserva/${r.codigo}`}>{r.visible === 'confirmada' ? 'Ver comprobante o registrar desistimiento' : 'Ver comprobante'}</Boton>
       </div>
     </Dialogo>
   )
