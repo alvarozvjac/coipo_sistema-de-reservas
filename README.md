@@ -33,8 +33,8 @@ asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro)
 | Encargado nacional | Panel nacional; Reservas con tablero de todo el país (registra en cualquier casa, queda confirmada al registrarla); Cobros (panel de descuentos por mes con planilla y efectivo, nómina para Remuneraciones, transferencias y efectivo por registrar); Dashboard; Configuración (casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
 
 Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María
-Fuentes, afiliada), 16.882.409-2 (Paula Ortiz, plazo fijo) o 6.884.215-8 (Hernán Soto,
-jubilado).
+Fuentes, afiliada), 16.882.409-2 (Paula Ortiz, plazo fijo), 6.884.215-8 (Hernán Soto,
+jubilado) o 7.215.346-4 (Nora Castillo, jubilada, paga en efectivo).
 
 **Sin aprobación, ficha y efectivo (13-11-2026):** toda reserva registrada queda confirmada y la
 persona recibe la ficha de la reserva (PDF con acompañantes, direcciones e inventario); con

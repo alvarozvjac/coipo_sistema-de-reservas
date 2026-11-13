@@ -7,7 +7,7 @@ import { fechaCorta, hoyISO, sumarDias } from '../../../lib/fechas.js'
 import { Aviso, Boton, Campo, Tarjeta, claseEntrada } from '../../../componentes/ui.jsx'
 import { Dialogo } from '../../encargada/comun.jsx'
 
-const SINGULAR = { días: 'día', 'días hábiles': 'día hábil', cuotas: 'cuota', horas: 'hora', noches: 'noche' }
+const SINGULAR = { días: 'día', 'días hábiles': 'día hábil', cuotas: 'cuota', horas: 'hora', noches: 'noche', 'veces por año calendario': 'vez por año calendario' }
 
 /**
  * Parámetros del reglamento (decisión 12-11-2026): el encargado nacional los
@@ -150,7 +150,7 @@ function DialogoParametro({ def, actor, onCerrar, onListo }) {
   return (
     <Dialogo titulo={def.etiqueta} onCerrar={onCerrar}>
       <p className="mt-1 text-[15px] text-tinta-700">
-        Hoy rige: <strong>{def.tipo === 'hora' ? valorVigente(def.clave) : `${valorVigente(def.clave)} ${def.unidad}`}</strong>. Fuente: {def.fuente}.
+        Hoy rige: <strong>{def.tipo === 'hora' ? valorVigente(def.clave) : `${valorVigente(def.clave)} ${Number(valorVigente(def.clave)) === 1 ? (SINGULAR[def.unidad] ?? def.unidad) : def.unidad}`}</strong>. Fuente: {def.fuente}.
       </p>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <Campo etiqueta={def.tipo === 'hora' ? 'Nuevo valor (HH:MM)' : `Nuevo valor (${def.unidad})`} error={intento && err.valor}>

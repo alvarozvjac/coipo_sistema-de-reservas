@@ -106,7 +106,8 @@ export function semillas(hoy) {
   const maria = { id: 1, nombre: 'María Fuentes Rojas', rut: '13.457.902-1', rol: 'Técnica administrativa', region: '05', calidad: 'afiliado', grado: 16, correo: 'maria.fuentes@conaf.cl', telefono: '+56 9 6123 4587' }
   const hernan = { id: 3, nombre: 'Hernán Soto Valenzuela', rut: '6.884.215-8', rol: 'Afiliado jubilado', region: '08', calidad: 'jubilado', correo: 'hsoto.valenzuela@gmail.com', telefono: '+56 9 8455 1290' }
   const externo = { nombre: 'Rodrigo Pérez Leiva', rut: rutFicticio(14552310), rol: 'Funcionario de Servicio Agrícola y Ganadero', region: '05', calidad: 'otro_servicio', correo: 'rodrigo.perez@sag.gob.cl', telefono: '+56 9 7712 4410' }
-  const jubilada = { ...personas[3], nombre: 'Nora Castillo Vergara', calidad: 'jubilado', rol: 'Afiliada jubilada', correo: 'nora.castillo@gmail.com', region: '05' }
+  // Nora está en la nómina de demostración (datos/usuarios.js) con su propio RUT ficticio.
+  const jubilada = { id: 7, nombre: 'Nora Castillo Vergara', rut: '7.215.346-4', rol: 'Afiliada jubilada', region: '05', calidad: 'jubilado', correo: 'nora.castillo@gmail.com', telefono: '+56 9 6630 2194' }
   const conf = (dias) => ({ confirmada_por: AUTOMATICA, creada_en: sumarDias(hoy, -dias) + 'T09:30:00', confirmada_en: sumarDias(hoy, -dias) + 'T09:30:00' })
   const auto = (creada) => ({ confirmada_por: AUTOMATICA, creada_en: creada, confirmada_en: creada })
   const porNacional = (creada) => ({

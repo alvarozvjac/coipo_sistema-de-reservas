@@ -108,6 +108,20 @@ export const NOMINA = [
     perfil: 'central',
     grupo_familiar: [],
   },
+  {
+    id: 7,
+    nombre: 'Nora Castillo Vergara',
+    rut: '7.215.346-4',
+    correo: 'nora.castillo@gmail.com',
+    telefono: '+56 9 6630 2194',
+    region: '05',
+    rol: 'Afiliada jubilada',
+    unidad: '—',
+    calidad: 'jubilado',
+    plazo_fijo: false,
+    perfil: 'solicitante',
+    grupo_familiar: [{ nombre: 'Ernesto Valdés Rojas', edad: 71, parentesco: 'conyuge' }],
+  },
 ]
 
 /** Persona de otro servicio público para los botones de demostración (no está en nómina). */

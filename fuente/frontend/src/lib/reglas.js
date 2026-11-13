@@ -21,6 +21,7 @@ export const PARAMETROS = {
   aviso_retiro_anticipado_dias: 2, // Art. 10 e)
   dias_aseo_entre_reservas: 1, // decisión de Bienestar
   reservas_por_mes: 1, // Art. 7
+  reservas_misma_casa_por_anio: 1, // decisión 13-11-2026: veces que una persona puede reservar la misma casa en un año calendario
   cuotas_maximas_planilla: 3, // reserva directa: decisión de Bienestar (Anexo A pide el número de cuotas)
   hora_ingreso: '15:00', // Art. 12
   hora_salida: '12:00', // Art. 12
@@ -141,7 +142,7 @@ const vigente = (r, hoy) => !['desistida', 'anulada'].includes(r.estado) && r.sa
  * Valida un rango de fechas para un solicitante.
  * Devuelve una lista de mensajes; vacía = se puede solicitar.
  */
-export function validarFechas({ entrada, salida, noDisponibles, reservasUsuario = [], hoy = hoyISO(), calidad }) {
+export function validarFechas({ entrada, salida, noDisponibles, reservasUsuario = [], hoy = hoyISO(), calidad, casaId }) {
   const errores = []
   if (!entrada || !salida) return ['Elija la fecha de llegada y la de salida.']
   if (salida <= entrada) return ['La salida debe ser posterior a la llegada.']
@@ -164,6 +165,15 @@ export function validarFechas({ entrada, salida, noDisponibles, reservasUsuario 
 
   const otra = reservasUsuario.find((r) => vigente(r, hoy) && mesDe(r.entrada) === mesDe(entrada))
   if (otra) errores.push(`Ya tiene una reserva en ${nombreMes(entrada)}. Se permite una reserva por mes calendario (Art. 7).`)
+
+  // Misma casa (decisión 13-11-2026): cuentan las vigentes y las realizadas del año de la llegada.
+  if (casaId != null) {
+    const max = PARAMETROS.reservas_misma_casa_por_anio
+    const anio = entrada.slice(0, 4)
+    const enLaCasa = reservasUsuario.filter((r) => r.casa_id === casaId && !['desistida', 'anulada'].includes(r.estado) && r.entrada.slice(0, 4) === anio)
+    if (enLaCasa.length >= max)
+      errores.push(`Ya reservó esta casa ${enLaCasa.length === 1 ? 'una vez' : `${enLaCasa.length} veces`} en ${anio} (${enLaCasa.map((r) => r.codigo).join(', ')}). Se permite${max === 1 ? ' una vez' : `n ${max} veces`} por año calendario en la misma casa.`)
+  }
   return errores
 }
 

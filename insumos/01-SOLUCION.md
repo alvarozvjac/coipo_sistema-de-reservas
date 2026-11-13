@@ -75,7 +75,7 @@ actual por correo y planillas. El sorteo de temporada alta quedó fuera (decisi�
 | Cobros | Encargada regional (su región), encargado nacional (país) | Ver el panel de descuentos por mes (planilla, efectivo recibido y pendiente), registrar el efectivo recibido; el nacional además registra transferencias e informa la nómina | C6, C11, C30, C31 |
 | Configuración › Casas, Tarifas, Bloqueos de fechas | Encargado nacional | Retirar casas, actualizar tarifas, bloquear fechas | C12, C13, C14 |
 | Configuración › Usuarios y encargadas | Encargado nacional | Saber quién entra y con qué rol (se cambia en el IAM) | C26 |
-| Configuración › Parámetros | Encargado nacional | Cambiar un parámetro del reglamento desde una fecha y con respaldo | C27 |
+| Configuración › Parámetros | Encargado nacional | Cambiar un parámetro del reglamento desde una fecha y con respaldo (incluye las veces por año en la misma casa) | C27, C32 |
 | Configuración › Plantillas de correo | Encargado nacional | Ajustar lo que recibe la persona | C28 |
 | Configuración › Actividad | Encargado nacional | Saber quién hizo qué y cuándo | C29 |
 | Dashboard | Encargado nacional | Decidir sobre tarifas, mantenciones y oferta | C17 |
@@ -193,6 +193,13 @@ correspondencia está en `02-RASTRO.md`.
   ni «Marcar como informada»; en «Efectivo por recibir» ve solo el efectivo de su región y,
   al registrar el recibo de R-2026-0195, el pago queda a su nombre y entra al reporte de
   cobranza (CSV) con quién lo recibió y el recibo.
+
+- **C32 · Misma casa por año (decisión 13-11-2026).** Dado el parámetro «Veces que una
+  persona puede reservar la misma casa en el año» en 1 y una persona con R-2026-0195 en Rocas
+  de Santo Domingo en diciembre de 2026, cuando el encargado nacional intenta registrarla en
+  esa casa del 20 al 22-11-2026, entonces ve «Ya reservó esta casa una vez en 2026
+  (R-2026-0195)» y no se registra; en otra casa sí se puede; y con el parámetro cambiado a 2
+  desde hoy, la misma casa sí se puede.
 
 ## Instrumentos de datos candidatos para la fábrica
 

@@ -114,6 +114,9 @@ Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/D
   registra la encargada (su región) o el encargado nacional, con recibo; Cobros muestra por
   mes planilla, efectivo recibido y pendiente · Álvaro Zegers · detalle en
   `fuente/docs/DECISIONES.md`.
+- 2026-11-13 · Parámetro «veces que una persona puede reservar la misma casa en el año»:
+  1 por año calendario, cuentan vigentes y realizadas, al llegar al límite no se registra ·
+  Álvaro Zegers.
 - 2026-11-02 · Insumos en este repositorio público, con cargos en vez de nombres de
   Bienestar · Álvaro Zegers eligió el repositorio; el criterio de nombres es de esta
   documentación (regla 8 de la metodología).
@@ -350,6 +353,20 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   decía «Revise y envíe la nómina a Remuneraciones», que no le corresponde.
 - Pública: GitHub Pages sirve `d373177` (sha256 igual al local, 1.611.270 bytes; el HTML
   contiene «Efectivo por recibir»); consola sin errores.
+
+### Parámetro de veces por la misma casa (13-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 13-11-2026 14:33; respuestas: año calendario, valor 1, no permite
+  registrar, cuentan vigentes y realizadas.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844, 0 fallas: e2e17 31 (agrega: el
+  parámetro aparece en «1 vez por año calendario»; la misma casa en 2026 no se registra; en
+  2027 sí; otra casa sí; con 2 desde hoy sí; el RUT de Nora la trae a ella), e2e14 65,
+  e2e15 21, e2e16 23, e2e4 17, e2e9 20. axe-core: 0 infracciones; jueces: 0 bloqueantes.
+- Capturas miradas: fila del parámetro en Parámetros y el motivo en el panel de registro.
+- Defecto de datos visto en la captura y corregido con acuerdo de Álvaro Zegers: R-2026-0195
+  estaba a nombre de «Nora Castillo Vergara» con un RUT que en la nómina era de otra persona
+  (afiliada activa). Nora quedó en la nómina de demostración como jubilada, con RUT ficticio
+  propio (7.215.346-4). La clave de datos pasó a `reserva_veraneo_v20`.
 
 ## Validación
 

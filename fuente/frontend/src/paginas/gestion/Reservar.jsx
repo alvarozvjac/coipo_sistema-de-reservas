@@ -83,6 +83,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
     noDisponibles,
     reservasUsuario: misReservas(usuario.id),
     calidad: usuario.calidad,
+    casaId: casa.id,
   });
   const n = noches(entrada, salida);
   const total = tarifa * n;

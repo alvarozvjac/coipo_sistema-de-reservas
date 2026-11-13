@@ -32,7 +32,7 @@ import { ADICIONAL_BASE, aleatorio, crearPersonas, semillas as semillasBase } fr
 import { hoyISO, mesDe, primerDiaMes, sumarDias, sumarMeses } from '../lib/fechas.js'
 import { ADICIONAL_TARIFA, cargoDesistimiento, noches, porConfirmar, tarifaTramo } from '../lib/reglas.js'
 
-const CLAVE = 'reserva_veraneo_v19'
+const CLAVE = 'reserva_veraneo_v20'
 
 const ahora = () => new Date().toISOString().slice(0, 19)
 

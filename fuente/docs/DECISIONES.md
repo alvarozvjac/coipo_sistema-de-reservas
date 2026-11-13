@@ -50,6 +50,25 @@ cuando se contradicen.
 - En el código: `porConfirmar(r)` en `lib/reglas.js` (transferencia sin pago registrado) y
   `registrarPago` en `datos/servicio.js`, que confirma y envía el acta.
 
+## Misma casa: veces por año (decisión 13-11-2026, 14:33)
+
+Fuente: Álvaro Zegers (UIA), 13-11-2026: «ingresa al menú de configuración el parámetro de
+hasta cuántas veces la misma persona puede reservar una casa». Respuestas del mismo día:
+
+- Nuevo parámetro en *Configuración › Parámetros*: **«Veces que una persona puede reservar la
+  misma casa en el año»**, con valor inicial **1** (entre 1 y 12). Se cambia como los demás:
+  desde una fecha y con respaldo.
+- Se cuenta por **año calendario** de la fecha de llegada.
+- Cuentan las reservas **vigentes y realizadas** (por confirmar, confirmadas, en curso y
+  finalizadas); no cuentan las desistidas ni las anuladas.
+- Al llegar al límite, **no se registra**: el panel de registro muestra «Ya reservó esta casa
+  una vez en 2026 (R-…)» y el motivo, como la regla de una reserva por mes (Art. 7). Otra casa
+  del mismo año, o la misma casa en otro año, sí se puede.
+- [PENDIENTE: con Bienestar] si el límite cuenta por casa o por complejo (por ejemplo, las
+  cabañas de un mismo parque) y si alcanza también a quienes solo viajan como acompañantes.
+- La clave de datos pasó a `reserva_veraneo_v20` (además, la jubilada de ejemplo Nora
+  Castillo quedó en la nómina de demostración con RUT ficticio propio).
+
 ## Sin aprobación y pago en efectivo (decisión 13-11-2026)
 
 Fuente: Álvaro Zegers (UIA), 13-11-2026, 12:43: «no debe existir una aprobación en el
