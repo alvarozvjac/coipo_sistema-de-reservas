@@ -15,7 +15,6 @@ import { InicioCentral } from './paginas/central/Inicio.jsx'
 import { Cobros } from './paginas/gestion/Cobros.jsx'
 import { Configuracion } from './paginas/central/Configuracion.jsx'
 import { aplicarParametros } from './datos/configuracion.js'
-import { Dashboard } from './paginas/central/Dashboard.jsx'
 import { Buscar } from './paginas/trabajador/Buscar.jsx'
 import { Casa } from './paginas/trabajador/Casa.jsx'
 import { ReservarCasa } from './paginas/trabajador/ReservarCasa.jsx'
@@ -87,7 +86,6 @@ createRoot(document.getElementById('root')).render(
             <Route path="central/configuracion" element={<Requiere perfil="central"><Configuracion /></Requiere>} />
             <Route path="central/casas" element={<Navigate to="/central/configuracion" replace />} />
             <Route path="central/reservas" element={<Requiere perfil="central"><Reservas /></Requiere>} />
-            <Route path="central/dashboard" element={<Requiere perfil="central"><Dashboard /></Requiere>} />
             <Route path="central/administracion" element={<Navigate to="/central/configuracion?pestana=usuarios" replace />} />
             <Route path="gestion/reservar" element={<IrAReservas nueva />} />
             <Route path="gestion/disponibilidad" element={<IrAReservas />} />

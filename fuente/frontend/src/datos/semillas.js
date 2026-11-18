@@ -93,7 +93,7 @@ function nuevaReserva(codigo, casaId, entrada, nochesN, titular, extra = {}) {
     estado: 'confirmada',
     creada_en: sumarDias(entrada, -21) + 'T10:15:00',
     notificaciones: [],
-    // Vía ficticia y repartida, para que el dashboard tenga qué contar.
+    // Vía ficticia y repartida, para que los datos de prueba sean variados.
     via: VIAS_SEMILLA[codigo.charCodeAt(codigo.length - 1) % VIAS_SEMILLA.length],
     ...extra,
   }

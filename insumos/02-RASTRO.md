@@ -482,6 +482,21 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `76181dc` (sha256 igual al local, 8.059.414 bytes); consola sin
   errores.
 
+### Panel nacional sin tabla de regiones y sin Dashboard (18-11-2026)
+
+- Pedido de Álvaro Zegers (VERIFICADO, 18-11-2026, 11:12 y 11:21): «quita del perfil del
+  encargado nacional: Regiones · próximos 30 días» y «quita la pestaña del dashboard»; ante la
+  pregunta, eligió quitar la página completa, no solo la pestaña.
+- Cambios: `paginas/central/Inicio.jsx` sin la tabla por región; se borraron
+  `paginas/central/Dashboard.jsx` y `lib/indicadores.js`; se quitaron la ruta y la pestaña.
+- Verificación local (390×844 y 1366×900, fecha fija 2026-11-02): e2e14 62, e2e15 21, e2e16
+  22, e2e17 32, e2e18 31, e2e19 30, e2e4 y e2e9 28 sin fallas; axe 0 violaciones; oxlint
+  sin hallazgos. Las pruebas que miraban el Dashboard ahora comprueban que no está.
+- VERIFICADO (pdftotext): el manual de usuario en PDF (`public/manual-usuario.pdf`, del
+  12-11-2026) todavía describe el Dashboard (sección 7.6) y la tabla por región. Ya estaba
+  desfasado antes de este cambio (cita pestañas «Casas y tarifas» y «Administración»); no se
+  regeneró. [PENDIENTE: Álvaro Zegers] Si se actualiza el manual.
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la

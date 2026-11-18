@@ -360,7 +360,9 @@ El sorteo se describe en la sección siguiente.
 **Inicio nacional**
 - *Requiere atención*: pagos anticipados sin registrar con llegada en 7 días, extintores
   vencidos o por vencer en 30 días, casas sin inventario y devoluciones pendientes.
-- *Regiones · próximos 30 días*: casas, ocupación y reservas nuevas de los últimos 7 días.
+- ~~*Regiones · próximos 30 días*~~: se quitó del panel del encargado nacional el
+  18-11-2026, a pedido de Bienestar (VERIFICADO, Álvaro Zegers). Ver «Panel nacional y
+  Dashboard (18-11-2026)».
 
 **Cobros** (Art. 10, 11 y 21; Anexo A)
 - *Nómina de descuentos* por mes: cada estadía finalizada con planilla se descuenta en sus
@@ -394,7 +396,8 @@ El sorteo se describe en la sección siguiente.
   afectadas; al confirmar, se anulan, se avisa a cada persona con el motivo y se marca la
   devolución si había pagado.
 
-**Dashboard para la toma de decisiones**
+**~~Dashboard para la toma de decisiones~~** (quitado el 18-11-2026; ver «Panel nacional y
+Dashboard (18-11-2026)»; lo que sigue describe lo que existió hasta `cfc24ff`)
 - Filtros: período (año a la fecha, últimos 90 días, este mes, próximos 90 días) y región.
 - Indicadores: usuarios distintos, reservas, noches ocupadas, ocupación, ingresos e
   ingreso por noche, anticipación promedio, desistimientos con sus cargos y reservas
@@ -582,7 +585,7 @@ personas piden a la encargada regional o al encargado nacional por cualquier ví
   reservas de la demostración tienen una vía ficticia repartida. Clave de almacenamiento
   `reserva_veraneo_v15`.
 - **Menú del encargado nacional agrupado**: Panel · Reservas · Cobros · Temporadas ·
-  Dashboard · Configuración. Configuración reúne Casas, Tarifas, Bloqueos de fechas y
+  Dashboard · Configuración (el Dashboard se quitó el 18-11-2026). Configuración reúne Casas, Tarifas, Bloqueos de fechas y
   Administración (las rutas antiguas `/central/casas` y `/central/administracion` llevan ahí).
 - **Inventario** queda como estaba (Álvaro Zegers: «el inventario está correcto»).
 - [PENDIENTE: Bienestar] Si la postulación al sorteo también debe registrar la vía (hoy no).
@@ -790,3 +793,21 @@ Todos los números están en `frontend/src/lib/reglas.js` (`PARAMETROS` y `ADICI
 - Casilla oficial de correo de cada encargada regional (hoy solo Valparaíso tiene una
   persona en la nómina de prueba; el resto usa una casilla genérica ficticia).
 - Clasificación de El Belloto y P.N. Puyehue; fila duplicada de Bahía Inglesa.
+
+## Panel nacional y Dashboard (18-11-2026)
+
+Fuente: Álvaro Zegers (UIA), 18-11-2026, a pedido de Bienestar (VERIFICADO).
+
+- **Se quitó la tabla «Regiones · próximos 30 días»** del Panel del encargado nacional
+  (casas, ocupación y reservas nuevas por región). El Panel conserva los indicadores, «Requiere
+  atención» y los movimientos.
+- **Se quitó el Dashboard completo**: la pestaña del menú, la página `/central/dashboard`
+  (indicadores, hallazgos del período, gráficos, tabla por casa y descarga CSV) y
+  `frontend/src/lib/indicadores.js`, que solo servía a esa página. Menú del encargado
+  nacional: Panel · Reservas · (Temporadas, en la etapa 2) · Cobros · Configuración.
+- Consecuencia: el sistema ya no muestra ocupación ni ingresos por casa o por región; queda
+  solo la ocupación nacional de los próximos 30 días en el Panel. Los datos siguen en las
+  reservas y en la nómina de Cobros.
+- [PENDIENTE: Bienestar] Si los indicadores de gestión se obtendrán de otro modo (por
+  ejemplo, un tablero institucional o una exportación desde la API en la fase 2), o si no se
+  necesitan.

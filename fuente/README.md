@@ -14,7 +14,7 @@ Descanso (propuesta de actualización, octubre 2026)**.
 | 0 | Ingreso con RUT y código al correo | Construido |
 | 1 | Solicitante (afiliado, plazo fijo, jubilado, no afiliado, otro servicio público) | Construido |
 | 2 | Encargada regional: inicio, reservas e inventario | Construido |
-| 3 | Oficina Central: inicio nacional, cobros (la transferencia registrada confirma la reserva), casas (retiro), tarifas (pantalla o planilla Excel/CSV), bloqueos, dashboard | Construido |
+| 3 | Oficina Central: inicio nacional, cobros (la transferencia registrada confirma la reserva), casas (retiro), tarifas (pantalla o planilla Excel/CSV), bloqueos (el dashboard se quitó el 18-11-2026) | Construido |
 | 3b | Oficina Central: temporadas altas (verano e invierno), habilitación de la postulación y sorteo de cada una | Construido |
 | 4 | Mantenimiento UIA | Pendiente |
 
@@ -38,7 +38,7 @@ vuelve los datos al estado inicial.
 ```
 frontend/src/
   datos/        casas.js, usuarios.js (nómina ficticia), inventarios.js y servicio.js (imita la futura API)
-  lib/          reglas.js (reglamento y parámetros), indicadores.js (dashboard), acta.js (PDF), csv.js, fechas.js, formato.js
+  lib/          reglas.js (reglamento y parámetros), acta.js (PDF), csv.js, fechas.js, formato.js
   componentes/  plantilla, calendario, botones y elementos comunes
   paginas/      Ingreso.jsx, solicitante/ (paso 1), encargada/ (paso 2), central/ (paso 3) y otros/ (pendientes)
 docs/DECISIONES.md  alcance, decisiones tomadas y puntos por confirmar

@@ -43,7 +43,8 @@ maqueta sin backend.
 - Administración (usuarios, nóminas, parámetros): solo se muestra lo que tendrá, en la
   pestaña del encargado nacional.
 - Mapa interactivo en la ficha (solicitud, req. 3): hoy es un enlace a un mapa externo.
-- Encuestas de satisfacción y reportes exportables en PDF (el dashboard exporta CSV).
+- Encuestas de satisfacción y reportes exportables en PDF.
+- Dashboard de indicadores (quitado el 18-11-2026 a pedido de Bienestar; [PENDIENTE: Bienestar] si se obtendrán de otro modo).
 
 ## Iteración mínima
 
@@ -81,7 +82,7 @@ actual por correo y planillas. El sorteo de temporada alta quedó fuera (decisi�
 | Configuración › Parámetros | Encargado nacional | Cambiar un parámetro del reglamento desde una fecha y con respaldo (incluye las veces por mes en la misma casa) | C27, C32 |
 | Configuración › Plantillas de correo | Encargado nacional | Ajustar lo que recibe la persona | C28 |
 | Configuración › Actividad | Encargado nacional | Saber quién hizo qué y cuándo | C29 |
-| Dashboard | Encargado nacional | Decidir sobre tarifas, mantenciones y oferta | C17 |
+| ~~Dashboard~~ (quitado el 18-11-2026) | Encargado nacional | — | ~~C17~~ |
 | Etapa (Configuración) | Encargado nacional | Elegir marcha blanca o abierto a trabajadores, desde una fecha y con respaldo | C33 |
 | Reservar (inicio del trabajador) | Trabajador/a, etapa 2 | Elegir región y casa; ver su próxima reserva | C34 |
 | Ficha de la casa con calendario | Trabajador/a, etapa 2 | Elegir fechas libres; ver total, equipamiento y condiciones | C34 |
@@ -144,7 +145,7 @@ correspondencia está en `02-RASTRO.md`.
 - **C14 · Bloqueo de fechas.** Dada una casa con reservas en las fechas elegidas, cuando
   se bloquea por mantención, entonces se advierte qué reservas se anularán y se anulan al
   confirmar.
-- **C17 · Dashboard.** Dado el período «año a la fecha», cuando el encargado nacional abre el
+- ~~**C17 · Dashboard.**~~ **(Retirado el 18-11-2026: se quitó el Dashboard.)** Dado el período «año a la fecha», cuando el encargado nacional abre el
   dashboard, entonces ve usuarios, reservas, noches, ocupación, ingresos y anticipación,
   sin indicadores de confirmación manual.
 - **C19 · Sin aprobación (decisión 13-11-2026; reemplaza la aprobación del 12-11-2026).**
@@ -259,7 +260,7 @@ correspondencia está en `02-RASTRO.md`.
 | Credencial de perro de asistencia | Acreditar el ingreso del perro (Art. 15) | Podría verificarse sin guardar el archivo | [VERIFICAR: dato sensible] |
 | Datos de otros servicios públicos | Reserva y cobro | No evitable | [VERIFICAR] |
 | Descuentos por persona | Nómina para Remuneraciones | No evitable | [VERIFICAR] |
-| Dashboard | Toma de decisiones | Agregado (sin personas) | Construido agregado |
+| ~~Dashboard~~ | Toma de decisiones | Agregado (sin personas) | Quitado el 18-11-2026 |
 
 ## Fuera de alcance / iteraciones posteriores
 
