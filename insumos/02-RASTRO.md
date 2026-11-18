@@ -464,7 +464,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `91d178e` (sha256 igual al local, 7.981.199 bytes: vuelven las
   fotografías de referencia de las casas, como en `d98e20d`); consola sin errores.
 
-### Etapa 2: temporadas con postulación y sorteo (18-11-2026, local, sin publicar)
+### Etapa 2: temporadas con postulación y sorteo (18-11-2026, publicado en `76181dc`)
 
 - Segunda entrega del pedido del 18-11-2026. Restaurado de `e81ce1d`: `lib/sorteo.js`,
   temporadas y sorteo del nacional, postulación (ahora para el trabajador y para los
@@ -479,6 +479,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   jueces: 0 bloqueantes.
 - Capturas miradas: Temporadas antes y después del sorteo, Postular al sorteo en escritorio
   y Mis reservas con la postulación en teléfono.
+- Pública: GitHub Pages sirve `76181dc` (sha256 igual al local, 8.059.414 bytes); consola sin
+  errores.
 
 ## Validación
 
