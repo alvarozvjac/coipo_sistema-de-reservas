@@ -513,6 +513,9 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Verificación local (390×844 y 1366×900): e2e14 62, e2e15 21, e2e16 22, e2e17 32, e2e18 31,
   e2e19 30, e2e4 y e2e9 28 sin fallas; axe 0 violaciones. Capturas del ingreso en teléfono y
   escritorio miradas: banner CONAF · UIA con «Casas de Veraneo» en la zona del título.
+- VERIFICADO: publicado en `dc9020d`; GitHub Pages sirve el mismo `index.html` (sha256
+  ea6772558e7d0dc3…, 7.974.249 bytes), pestaña «Reservas Casas de Veraneo», sin «Sistema de
+  Gestión de Reservas». Consola de Chrome: 0 errores.
 
 ## Validación
 
