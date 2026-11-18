@@ -496,6 +496,9 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   12-11-2026) todavía describe el Dashboard (sección 7.6) y la tabla por región. Ya estaba
   desfasado antes de este cambio (cita pestañas «Casas y tarifas» y «Administración»); no se
   regeneró. [PENDIENTE: Álvaro Zegers] Si se actualiza el manual.
+- VERIFICADO: publicado en `e7bed7c`; GitHub Pages sirve el mismo `index.html` (sha256
+  f855168f6d19e192…, 8.040.247 bytes), sin «Hallazgos del período» ni «Regiones · próximos
+  30 días». Consola de Chrome: 0 errores.
 
 ## Validación
 
