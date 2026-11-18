@@ -500,6 +500,20 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   f855168f6d19e192…, 8.040.247 bytes), sin «Hallazgos del período» ni «Regiones · próximos
   30 días». Consola de Chrome: 0 errores.
 
+### Vuelta al nombre y banner anteriores (18-11-2026)
+
+- Pedido de Álvaro Zegers (VERIFICADO, 18-11-2026, 15:01): «El ingreso a la maqueta debe ser
+  de la forma inicial que definimos, actualmente se encuentra de la forma posterior a los
+  cambios que luego fueron revertidos». Ante las preguntas eligió «IAM, antes del cambio de
+  nombre» y «toda la aplicación».
+- Cambios: banner CONAF · UIA recuperado de `fa487a1` (se borraron los de Desarrollo de las
+  Personas); «Casas de Veraneo · Servicio de Bienestar · CONAF» en el banner, la cabecera, el
+  ingreso, el IAM simulado, la pestaña y la firma de las cinco plantillas. El ingreso sigue
+  con el COIPO IAM simulado.
+- Verificación local (390×844 y 1366×900): e2e14 62, e2e15 21, e2e16 22, e2e17 32, e2e18 31,
+  e2e19 30, e2e4 y e2e9 28 sin fallas; axe 0 violaciones. Capturas del ingreso en teléfono y
+  escritorio miradas: banner CONAF · UIA con «Casas de Veraneo» en la zona del título.
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la

@@ -9,7 +9,7 @@ import { Aviso } from '../../componentes/ui.jsx'
 const MENSAJES = {
   sin_rol: {
     titulo: 'Su cuenta no tiene acceso a esta aplicación',
-    texto: 'Ingresó al COIPO IAM, pero no tiene un rol asignado en el Sistema de Gestión de Reservas. En esta etapa solo ingresan los encargados de Bienestar. Si necesita una reserva, pídasela a la encargada de Bienestar de su región; si usted es encargado, solicite el rol al administrador del sistema.',
+    texto: 'Ingresó al COIPO IAM, pero no tiene un rol asignado en Casas de Veraneo. En esta etapa solo ingresan los encargados de Bienestar. Si necesita una reserva, pídasela a la encargada de Bienestar de su región; si usted es encargado, solicite el rol al administrador del sistema.',
   },
   sin_rol_abierta: {
     titulo: 'Su cuenta no tiene acceso a esta aplicación',

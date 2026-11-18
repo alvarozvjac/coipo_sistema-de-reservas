@@ -679,7 +679,15 @@ lleva a Usuarios y encargadas.
 - [PENDIENTE: Bienestar] Quién aprueba en las regiones sin encargada (hoy el nacional) y
   cuántos días se conserva el registro de actividad.
 
-## Nombre del sistema y banner (decisión 12-11-2026, 17:07)
+## Nombre del sistema y banner (decisión 12-11-2026, 17:07) — revertida el 18-11-2026
+
+> **Revertida el 18-11-2026** (Álvaro Zegers, VERIFICADO: «El ingreso a la maqueta debe ser
+> de la forma inicial que definimos»; eligió «IAM, antes del cambio de nombre» y «toda la
+> aplicación»). Vuelven el nombre **Casas de Veraneo · Servicio de Bienestar · CONAF** y el
+> banner **CONAF · UIA** (`banner-conaf-uia.jpg`, recuperado de `fa487a1`) en el banner, la
+> cabecera, el ingreso, el IAM simulado, el título de la pestaña («Reservas Casas de
+> Veraneo») y la firma de los correos. El ingreso sigue siendo con el COIPO IAM simulado. Lo
+> que sigue describe la decisión que rigió entre `b0bcec0` y `b18ea84`.
 
 Fuente: Álvaro Zegers (UIA), 12-11-2026: «El título del sistema debe ser: Sistema de Gestión
 de Reservas […] Usa el mismo formato de la maqueta de Gestión de flota», y «al lado de UIA
