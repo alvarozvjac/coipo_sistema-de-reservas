@@ -442,7 +442,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `2d80015` (sha256 igual al local, 1.612.068 bytes); consola sin
   errores.
 
-### Etapa 2: selector y portal del trabajador (18-11-2026, local, sin publicar)
+### Etapa 2: selector y portal del trabajador (18-11-2026, publicado en `91d178e`)
 
 - Pedido: Álvaro Zegers, 18-11-2026 08:33; respuestas: ambas etapas con un selector; vuelven
   las temporadas con sorteo en la etapa 2 (segunda entrega); reservan los trabajadores de
@@ -461,6 +461,8 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   (mínimo 24); el radio de «Descuento por planilla» contenía controles (cuotas y
   autorización); una casilla se encogía a 13 px; y si la llegada estaba a menos de 10 días
   hábiles, el formulario decía «si desiste hasta el 23 oct» (fecha ya pasada).
+- Pública: GitHub Pages sirve `91d178e` (sha256 igual al local, 7.981.199 bytes: vuelven las
+  fotografías de referencia de las casas, como en `d98e20d`); consola sin errores.
 
 ## Validación
 
