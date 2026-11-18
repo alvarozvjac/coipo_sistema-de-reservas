@@ -10,6 +10,7 @@ import { CASAS } from './casas.js'
 import { inventarioInicial } from './inventarios.js'
 import { sumarDias } from '../lib/fechas.js'
 import { ADICIONAL_TARIFA, cargoDesistimiento, tarifaTramo, tramoDe } from '../lib/reglas.js'
+import { enTemporada, semillaSorteo, temporadasIniciales } from './semillasTemporadas.js'
 
 export const ADICIONAL_BASE = { ...ADICIONAL_TARIFA }
 
@@ -157,6 +158,8 @@ export function semillas(hoy) {
   let n = 300
   const inicio = '2026-01-03'
   const finFuturo = sumarDias(hoy, 110)
+  // Las temporadas altas futuras quedan libres: en la etapa 2 se asignan por sorteo (18-11-2026).
+  const temporadas = temporadasIniciales(hoy)
   for (const casa of CASAS) {
     const rnd = aleatorio(casa.id * 7919)
     const demanda = DEMANDA[casa.id] ?? 0.85
@@ -169,7 +172,8 @@ export function semillas(hoy) {
       const brecha = Math.max(1, Math.round((verano ? 1 + rnd() * 3 : 3 + rnd() * 11) / demanda))
       const choca = lista.some((p) => p.casa_id === casa.id && d <= sumarDias(p.salida, 1) && sumarDias(p.entrada, -1) <= salida)
       const enBloqueo = bloqueos.some((b) => b.casa_id === casa.id && d <= b.salida && b.entrada <= salida)
-      if (!choca && !enBloqueo) {
+      const futuraAlta = d > hoy && enTemporada(temporadas, d, salida)
+      if (!choca && !enBloqueo && !futuraAlta) {
         n += 1
         const titular = personas[Math.floor(rnd() * personas.length)]
         const codigo = `R-2026-${String(n).padStart(4, '0')}`
@@ -197,7 +201,8 @@ export function semillas(hoy) {
   }
 
   const inventarios = inventarioInicial(hoy)
-  const estado = { reservas: lista, correlativo: n, inventarios, bloqueos, tarifas: {}, inactivas: [], retiros: [], historial_tarifas: [], adicionales: { ...ADICIONAL_BASE }, nominas: {} }
+  const sorteo = semillaSorteo(hoy, personas, lista, hernan, temporadas[0], aleatorio, DEMANDA)
+  const estado = { reservas: lista, correlativo: n, inventarios, bloqueos, tarifas: {}, inactivas: [], retiros: [], historial_tarifas: [], adicionales: { ...ADICIONAL_BASE }, nominas: {}, temporadas, sorteos: [sorteo] }
   return estado
 }
 

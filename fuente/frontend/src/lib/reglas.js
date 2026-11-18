@@ -20,6 +20,9 @@ export const PARAMETROS = {
   aviso_desistimiento_dias_habiles: 10, // Memo 6188/2026 (el reglamento propuesto dice 7 días corridos, Art. 10 a)
   aviso_retiro_anticipado_dias: 2, // Art. 10 e)
   dias_aseo_entre_reservas: 1, // decisión de Bienestar
+  // Temporadas altas con sorteo, solo en la etapa 2 (decisión 18-11-2026); cada temporada puede fijar otros.
+  noches_turno_temporada_alta: 6, // Memo 6188/2026 (el reglamento propuesto dice máximo 7, Art. 6 b)
+  cuotas_temporada_alta: 6, // Memo 6188/2026: 6 cuotas; cada temporada fija el mes de la primera
   // Decisión 13-11-2026 (15:59): reemplaza la regla del Art. 7 (una reserva por mes en cualquier casa).
   reservas_misma_casa_por_mes: 1, // veces que una persona puede reservar la misma casa en un mes calendario
   cuotas_maximas_planilla: 3, // reserva directa: decisión de Bienestar (Anexo A pide el número de cuotas)
@@ -35,6 +38,9 @@ export const PARAMETROS = {
  * exista la resolución, se usa un adicional REFERENCIAL por noche sobre la
  * tarifa de afiliado.
  */
+/** Frase para los mensajes: «la temporada de verano 2027», «las vacaciones de invierno 2027». */
+export const fraseTemporada = (t) => (t.tipo === 'invierno' ? `las vacaciones de invierno ${t.desde.slice(0, 4)}` : `la temporada de verano ${t.desde.slice(0, 4)}`)
+
 export const ADICIONAL_TARIFA = { afiliado: 0, jubilado: 0, no_afiliado: 5000, otro_servicio: 15000 }
 
 /** Calidad del usuario/a responsable (Anexo A). */

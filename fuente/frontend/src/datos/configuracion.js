@@ -212,6 +212,17 @@ export function actividad() {
     add(p.en, p.por, 'configuracion', 'Cambió un parámetro', `${def?.etiqueta ?? p.clave}: ${p.anterior} → ${p.valor}, desde ${p.vigente_desde} · ${p.respaldo}`)
     if (p.anulado) add(p.anulado_en, p.anulado_por, 'configuracion', 'Anuló un cambio programado', def?.etiqueta ?? p.clave)
   }
+  for (const s of e.sorteos ?? []) {
+    add(s.abierta_en, s.abierta_por, 'reservas', 'Habilitó la postulación', s.nombre)
+    add(s.sorteado_en, s.sorteado_por, 'reservas', 'Realizó el sorteo', `${s.nombre} · semilla ${s.semilla}`)
+    // Las postulaciones de la demostración (`demo`) no aparecen, como las demás acciones automáticas.
+    for (const p of s.postulaciones.filter((x) => !x.demo)) {
+      const ref = `${p.codigo} · ${casa(p.casa_id)} · ${rangoFechas(p.turno, p.salida)}`
+      if (p.registrada_por) add(p.creada_en, p.registrada_por.nombre, 'reservas', 'Registró una postulación', `${ref} · a nombre de ${p.titular.nombre}`)
+      else add(p.creada_en, p.titular.nombre, 'reservas', 'Postuló desde el aplicativo', ref)
+      if (p.retirada_en) add(p.retirada_en, p.retirada_por ?? p.titular.nombre, 'reservas', 'Retiró una postulación', ref)
+    }
+  }
   for (const c of e.etapas ?? []) {
     add(c.en, c.por, 'configuracion', 'Cambió la etapa del sistema', `${ETAPAS[c.anterior]?.nombre ?? c.anterior} → ${ETAPAS[c.etapa].nombre}, desde ${c.vigente_desde} · ${c.respaldo}`)
     if (c.anulado) add(c.anulado_en, c.anulado_por, 'configuracion', 'Anuló un cambio de etapa programado', ETAPAS[c.etapa].nombre)

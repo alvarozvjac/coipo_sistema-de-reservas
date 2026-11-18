@@ -32,7 +32,7 @@ import { ADICIONAL_BASE, aleatorio, crearPersonas, semillas as semillasBase } fr
 import { hoyISO, mesDe, primerDiaMes, sumarDias, sumarMeses } from '../lib/fechas.js'
 import { ADICIONAL_TARIFA, cargoDesistimiento, noches, tarifaTramo } from '../lib/reglas.js'
 
-const CLAVE = 'reserva_veraneo_v22'
+const CLAVE = 'reserva_veraneo_v23'
 
 const ahora = () => new Date().toISOString().slice(0, 19)
 
@@ -62,7 +62,7 @@ aplicarAdicionales()
 function cargar() {
   try {
     const guardado = JSON.parse(localStorage.getItem(CLAVE))
-    if (guardado?.reservas && guardado?.inventarios && guardado?.bloqueos) return guardado
+    if (guardado?.reservas && guardado?.inventarios && guardado?.bloqueos && guardado?.temporadas && guardado?.sorteos) return guardado
   } catch {
     // sin persistencia disponible
   }
@@ -81,6 +81,9 @@ function guardar() {
 
 /** Para los módulos de datos que viven aparte (configuracion.js): el mismo estado y el mismo guardado. */
 export const almacen = { leer: () => estado, guardar: () => guardar() }
+
+/** Funciones internas que usa temporadas.js (el sorteo crea reservas con su ficha). */
+export const interno = { nuevoCodigo: () => nuevoCodigo(), enviarFicha: (r) => enviarFicha(r) }
 
 /** Las tarifas diferenciadas vigentes se aplican a las reglas de cálculo. */
 function aplicarAdicionales() {
@@ -282,8 +285,13 @@ export function desistirReserva(codigo, gestor) {
   if (gestor && gestor.perfil !== 'trabajador') r.desistimiento_registrado_por = gestor.nombre
   else r.desistida_por_titular = true
   r.notificaciones.push({ tipo: 'desistimiento', en: ahora(), detalle: r.cargo_desistimiento ? 'Desistimiento fuera de plazo: se cobra la estadía completa' : 'Desistimiento sin costo' })
+  for (const f of alDesistir) f(r)
   guardar()
 }
+
+/** Otros módulos reaccionan a un desistimiento (temporadas.js: lista de espera y Art. 10 d). */
+const alDesistir = []
+export const registrarAlDesistir = (f) => alDesistir.push(f)
 
 /* ---------- Cobros (Art. 21, Anexo A) ---------- */
 
@@ -313,10 +321,12 @@ export function nominaPlanilla(periodo, region = '') {
   for (const r of estado.reservas) {
     if (r.forma_pago.tipo !== 'planilla') continue
     if (region && casaBase(r.casa_id)?.region !== region) continue
-    if (r.estado === 'confirmada' && r.salida <= hoyISO()) {
+    // Un turno de temporada alta se descuenta desde el mes que fija la temporada (Memo 6188/2026: 6 cuotas desde marzo).
+    const desdeMes = r.forma_pago.desde_mes
+    if (r.estado === 'confirmada' && (desdeMes || r.salida <= hoyISO())) {
       const cuotas = r.forma_pago.cuotas ?? 1
       for (let k = 1; k <= cuotas; k++) {
-        const mes = mesDe(sumarMeses(r.salida, k))
+        const mes = desdeMes ? mesDe(sumarMeses(desdeMes + '-01', k - 1)) : mesDe(sumarMeses(r.salida, k))
         if (mes === periodo) {
           lineas.push({ reserva: r.codigo, titular: r.titular, casa: casaBase(r.casa_id).nombre, concepto: `Estadía ${r.entrada} a ${r.salida}`, cuota: `${k} de ${cuotas}`, monto: Math.round(r.total / cuotas) })
         }
@@ -378,7 +388,15 @@ export const resumenCobranza = (region = '') =>
 
 export const periodosNomina = () => {
   const actual = primerDiaMes(hoyISO())
-  return Array.from({ length: 8 }, (_, i) => mesDe(sumarMeses(actual, 2 - i)))
+  // Los turnos de temporada alta se descuentan desde el mes que fija la temporada (etapa 2): esos meses también se muestran.
+  const ultima = estado.reservas
+    .filter((r) => r.estado === 'confirmada' && r.forma_pago.tipo === 'planilla' && r.forma_pago.desde_mes)
+    .map((r) => mesDe(sumarMeses(r.forma_pago.desde_mes + '-01', (r.forma_pago.cuotas ?? 1) - 1)))
+    .sort()
+    .at(-1)
+  let adelante = 2
+  while (ultima && adelante < 12 && mesDe(sumarMeses(actual, adelante)) < ultima) adelante++
+  return Array.from({ length: adelante + 6 }, (_, i) => mesDe(sumarMeses(actual, adelante - i)))
 }
 
 /* ---------- Inventario y acta de entrega (Art. 2 e-f, Art. 13, Anexo B) ---------- */

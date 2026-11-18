@@ -20,8 +20,10 @@ El sistema tiene dos etapas (decisión 18-11-2026), que el encargado nacional el
 **Configuración › Etapa**. Parte en **marcha blanca** (etapa 1): solo la encargada regional
 y el encargado nacional registran reservas, a pedido de la persona, y todas las fechas van
 por orden de llegada. En la etapa 2, **abierto a trabajadores**, además los trabajadores de
-CONAF ingresan y reservan a su nombre; las temporadas altas con sorteo vuelven en una
-segunda entrega.
+CONAF ingresan y reservan a su nombre, y las temporadas altas (verano e invierno) se
+asignan por postulación y sorteo: el trabajador postula desde el aplicativo, la encargada
+registra las postulaciones que le piden (por ejemplo, de jubilados/as) y el encargado nacional
+realiza el sorteo en **Temporadas**.
 
 El ingreso es con el **COIPO IAM, simulado**: pulse **«Ingresar con COIPO IAM»** y, en la
 pantalla del IAM, elija una cuenta de prueba (contraseña «maqueta»): `cnunez` (encargada
@@ -33,7 +35,7 @@ asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro)
 | Perfil | Qué se puede probar |
 |---|---|
 | Encargada regional | Entra a Reservas (sin Panel ni Cobros desde el 13-11-2026): tablero de ocupación de todo el país y listado; registra en un panel lateral, en las casas de su región, lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), solo si hay disponibilidad, viendo antes sus antecedentes (queda confirmada al registrarla), registra desistimientos; Inventario |
-| Trabajador/a (etapa 2) | Reservar: casas por región, ficha de la casa con calendario de disponibilidad, reserva a su nombre con aceptación del reglamento; Mis reservas, con la ficha y el desistimiento |
+| Trabajador/a (etapa 2) | Reservar: casas por región, ficha de la casa con calendario de disponibilidad, reserva a su nombre con aceptación del reglamento; postular al sorteo de temporada alta; Mis reservas, con postulaciones, la ficha y el desistimiento |
 | Encargado nacional | Panel nacional (con la etapa vigente); Reservas con tablero de todo el país (registra en cualquier casa, queda confirmada al registrarla); Cobros (panel de descuentos por mes con planilla y transferencias, nómina para Remuneraciones, transferencias por registrar); Dashboard; Configuración (etapa del sistema, casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
 
 Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María

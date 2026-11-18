@@ -20,6 +20,8 @@ import { Buscar } from './paginas/trabajador/Buscar.jsx'
 import { Casa } from './paginas/trabajador/Casa.jsx'
 import { ReservarCasa } from './paginas/trabajador/ReservarCasa.jsx'
 import { MisReservas } from './paginas/trabajador/MisReservas.jsx'
+import { PostulacionAsistida, PostularTrabajador } from './paginas/gestion/Postular.jsx'
+import { SorteoCentral } from './paginas/central/Sorteo.jsx'
 
 /** Exige sesión y, si se indica, un perfil. Sin sesión lleva al ingreso. */
 function Requiere({ perfil, children }) {
@@ -94,6 +96,9 @@ createRoot(document.getElementById('root')).render(
             <Route path="trabajador/casa/:id" element={trabajador(<Casa />)} />
             <Route path="trabajador/casa/:id/reservar" element={trabajador(<ReservarCasa />)} />
             <Route path="trabajador/mis-reservas" element={trabajador(<MisReservas />)} />
+            <Route path="trabajador/sorteo" element={trabajador(<PostularTrabajador />)} />
+            <Route path="gestion/postular" element={gestion(<PostulacionAsistida />)} />
+            <Route path="central/temporadas" element={<Requiere perfil="central"><SorteoCentral /></Requiere>} />
             <Route path="trabajador/reserva/:codigo" element={trabajador(<Comprobante />)} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

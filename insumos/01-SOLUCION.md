@@ -86,6 +86,9 @@ actual por correo y planillas. El sorteo de temporada alta quedó fuera (decisi�
 | Reservar (inicio del trabajador) | Trabajador/a, etapa 2 | Elegir región y casa; ver su próxima reserva | C34 |
 | Ficha de la casa con calendario | Trabajador/a, etapa 2 | Elegir fechas libres; ver total, equipamiento y condiciones | C34 |
 | Mis reservas y comprobante | Trabajador/a, etapa 2 | Ver sus reservas, la ficha y desistir | C35 |
+| Postular al sorteo | Trabajador/a, etapa 2 | Elegir casa y turno libre de una temporada alta; ver prioridad y forma de pago | C36 |
+| Registrar postulación | Encargada regional, encargado nacional, etapa 2 | Registrar la postulación que pide una persona (por ejemplo, jubilada) | C37 |
+| Temporadas y sorteo | Encargado nacional, etapa 2 | Definir temporadas, habilitar la postulación, ver la demanda, realizar el sorteo, gestionar lista de espera y vacantes | C37 |
 
 ## Criterios de aceptación
 
@@ -221,6 +224,20 @@ correspondencia está en `02-RASTRO.md`.
   reservas y desiste, entonces queda «Desistida» por la titular (Actividad: «Desistió desde
   el aplicativo»); y si escribe la dirección de una reserva ajena o de una pantalla de
   encargados, no la ve.
+
+- **C36 · Temporadas con sorteo en la etapa 2 (decisión 18-11-2026).** Dada la marcha
+  blanca, cuando la encargada registra a Nora en Rocas de Santo Domingo del 12 al 14-01-2027,
+  entonces no aparece ningún aviso de sorteo y el menú del nacional no tiene «Temporadas»;
+  abierta la etapa 2, el nacional ve «Temporadas» con el verano 2027 en postulación, y
+  `mfuentes` ya no puede reservar esas fechas («se asigna por sorteo»), ve la temporada
+  marcada en el calendario y postula a un turno libre de esa casa con descuento por planilla
+  (6 cuotas desde marzo 2027); la ve en Mis reservas, la retira y vuelve a postular.
+- **C37 · Postulación registrada y sorteo (decisión 18-11-2026).** Dada la etapa 2, cuando
+  la encargada usa «Registrar postulación» para la RUT de Nora (jubilada), entonces queda a
+  nombre de Nora, por transferencia y registrada por la encargada; y cuando el nacional
+  realiza el sorteo, queda la semilla y quién lo hizo, cada turno adjudicado tiene su reserva
+  confirmada con ficha, las de planilla van en 6 cuotas desde marzo y marzo 2027 aparece en
+  el panel de descuentos; `mfuentes` ve su resultado en Mis reservas.
 
 ## Instrumentos de datos candidatos para la fábrica
 

@@ -3,8 +3,8 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, BedDouble, Check, MapPin, Users } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
 import { misReservas, obtenerCasa, ocupacionesDe, useDatos } from '../../datos/servicio.js'
-import { nochesEnSorteo } from '../../datos/temporadas.js'
-import { rangoFechas, sumarDias } from '../../lib/fechas.js'
+import { erroresTemporada, nochesEnSorteo } from '../../datos/temporadas.js'
+import { rangoFechas } from '../../lib/fechas.js'
 import { pesos, plural } from '../../lib/formato.js'
 import { CONDICIONES_USO, PARAMETROS, TRAMOS, nochesNoDisponibles, noches, tarifaPara, tramoDe, validarFechas } from '../../lib/reglas.js'
 import { Calendario } from '../../componentes/Calendario.jsx'
@@ -42,7 +42,7 @@ export function Casa() {
   const noDisponibles = nochesNoDisponibles(ocupacionesDe(casa.id))
   const sorteo = nochesEnSorteo(casa.id)
   const enSorteo = (d) => sorteo.has(d)
-  const errores = entrada && salida ? [...validarFechas({ entrada, salida, noDisponibles, reservasUsuario: misReservas(usuario.id), calidad: usuario.calidad, casaId: casa.id }), ...mensajeSorteo(entrada, salida, enSorteo)] : []
+  const errores = entrada && salida ? [...validarFechas({ entrada, salida, noDisponibles, reservasUsuario: misReservas(usuario.id), calidad: usuario.calidad, casaId: casa.id }), ...erroresTemporada(casa.id, entrada, salida)] : []
   const n = noches(entrada, salida)
   const region = REGIONES.find((r) => r.codigo === casa.region)?.nombre
   const tarifa = tarifaPara(casa, usuario)
@@ -189,10 +189,4 @@ export function Casa() {
       </div>
     </>
   )
-}
-
-/** Las noches de temporada alta se asignan por sorteo (Art. 6): no se reservan directo. */
-function mensajeSorteo(entrada, salida, enSorteo) {
-  for (let d = entrada; d < salida; d = sumarDias(d, 1)) if (enSorteo(d)) return ['Las fechas caen en una temporada alta, que se asigna por sorteo entre quienes postulan (Art. 6). Postule desde el aviso de la búsqueda.']
-  return []
 }

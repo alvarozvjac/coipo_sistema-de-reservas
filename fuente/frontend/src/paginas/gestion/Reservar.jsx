@@ -9,6 +9,7 @@ import {
   useDatos,
 } from "../../datos/servicio.js";
 import { fechaCorta, hoyISO } from "../../lib/fechas.js";
+import { erroresTemporada } from "../../datos/temporadas.js";
 import { pesos, plural } from "../../lib/formato.js";
 import {
   CONDICIONES_USO,
@@ -77,14 +78,18 @@ export function Reservar({ titular, gestor, casaId, panel }) {
 
   const tarifa = tarifaPara(casa, usuario);
   const noDisponibles = nochesNoDisponibles(ocupacionesDe(casa.id));
-  const erroresFechas = validarFechas({
-    entrada,
-    salida,
-    noDisponibles,
-    reservasUsuario: misReservas(usuario.id),
-    calidad: usuario.calidad,
-    casaId: casa.id,
-  });
+  // Etapa 2 (18-11-2026): las noches de temporada alta se asignan por sorteo.
+  const erroresFechas = [
+    ...erroresTemporada(casa.id, entrada, salida),
+    ...validarFechas({
+      entrada,
+      salida,
+      noDisponibles,
+      reservasUsuario: misReservas(usuario.id),
+      calidad: usuario.calidad,
+      casaId: casa.id,
+    }),
+  ];
   const n = noches(entrada, salida);
   const total = tarifa * n;
 

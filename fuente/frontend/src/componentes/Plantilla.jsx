@@ -4,7 +4,8 @@ import { LogOut } from 'lucide-react'
 import { Banner } from './Banner.jsx'
 import { BotonTema } from './BotonTema.jsx'
 import { aplicarParametros } from '../datos/configuracion.js'
-import { reiniciarDemo } from '../datos/servicio.js'
+import { reiniciarDemo, useDatos } from '../datos/servicio.js'
+import { etapaAbierta } from '../datos/etapa.js'
 import { INICIO, PERFIL_ETIQUETA, useSesion } from './Perfil.jsx'
 
 /** Menú de cada perfil. Los trabajadores ingresan solo en la etapa 2 (decisión 18-11-2026). */
@@ -29,7 +30,11 @@ const NAV = {
 /** Manual de usuario (public/manual-usuario.pdf). En la página única va junto al index.html publicado. */
 export const MANUAL = import.meta.env.MODE === 'pagina' ? 'manual-usuario.pdf' : '/manual-usuario.pdf'
 
+/** Temporadas y sorteo aparecen en el menú del nacional solo en la etapa 2 (decisión 18-11-2026). */
+const menu = (perfil) => (perfil === 'central' && etapaAbierta() ? [...NAV.central.slice(0, 2), { a: '/central/temporadas', texto: 'Temporadas' }, ...NAV.central.slice(2)] : NAV[perfil])
+
 export function Plantilla() {
+  useDatos()
   const { usuario, salir } = useSesion()
   const navegar = useNavigate()
   const { pathname } = useLocation()
@@ -53,7 +58,7 @@ export function Plantilla() {
           </NavLink>
 
           <nav aria-label="Principal" className="order-3 -mx-1 flex w-full gap-1 overflow-x-auto px-1 sm:order-none sm:mx-0 sm:w-auto sm:px-0 lg:ml-auto">
-            {NAV[usuario.perfil].map((n) => (
+            {menu(usuario.perfil).map((n) => (
               <NavLink
                 key={n.a}
                 to={n.a}

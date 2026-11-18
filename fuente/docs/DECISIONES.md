@@ -34,10 +34,29 @@ reservan desde el aplicativo. Respuestas del mismo día:
   puede desistir; no ve reservas de otras personas ni las pantallas de los encargados.
 - **Reglas:** las mismas de la marcha blanca (misma casa una vez por mes, anticipación,
   capacidad, desistimiento, formas de pago); no hay aprobación.
-- **Temporadas altas con postulación y sorteo vuelven en la etapa 2** (segunda entrega, en
-  construcción): se quitaron el 13-11-2026 porque «el sistema no será utilizado por los
-  usuarios», premisa que cambió. En la marcha blanca verano e invierno siguen por orden de
-  llegada.
+- **Temporadas altas con postulación y sorteo vuelven en la etapa 2** (segunda entrega): se
+  quitaron el 13-11-2026 porque «el sistema no será utilizado por los usuarios», premisa que
+  cambió. Se restauró lo de `e81ce1d` (temporadas con turnos y dos calendarios, postulación
+  con prioridad, sorteo con semilla, lista de espera con oferta de 48 horas, vacantes y
+  descuento en 6 cuotas desde marzo) y se adaptó a lo vigente:
+  - Solo rige en la etapa 2. En la marcha blanca verano e invierno siguen por orden de
+    llegada, el menú no muestra «Temporadas» y no hay «Registrar postulación».
+  - En la etapa 2 las noches de temporada alta no se reservan directo (ni el trabajador ni los
+    encargados), salvo los turnos que queden vacantes después del sorteo.
+  - Los trabajadores postulan desde el aplicativo («Postular al sorteo») y ven, retiran o
+    responden su postulación en Mis reservas. Los encargados registran las de quien se lo pida,
+    por ejemplo jubilados/as, con «Registrar postulación» en Reservas. Otros servicios no
+    postulan (Art. 9).
+  - Sin aprobación: el turno adjudicado queda confirmado y se envía la ficha; con
+    transferencia, también los datos para transferir.
+  - Un turno ya ocupado por una reserva registrada antes (por ejemplo, en la marcha blanca) no
+    se puede postular y, si lo estuviera al sortear, la postulación queda «sin cupo».
+  - El panel de descuentos muestra también los meses futuros en que caen las cuotas de
+    temporada (marzo a agosto 2027 en el ejemplo).
+  - Los datos de prueba ya no traen reservas futuras dentro de las temporadas; la postulación
+    de verano 2027 está abierta con postulaciones ficticias. Clave `reserva_veraneo_v23`.
+  - [PENDIENTE: con Bienestar] qué pasa con las reservas que se registraron en la marcha blanca
+    dentro de una temporada alta cuando se abre la etapa 2 (en la maqueta se respetan).
 - La sección «Primera etapa solo con encargados» (12-11-2026) sigue vigente como descripción
   de la etapa 1.
 

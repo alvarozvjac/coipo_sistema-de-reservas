@@ -15,8 +15,8 @@ de veraneo a nombre de funcionarios/as de CONAF, jubilados/as y funcionarios/as 
 servicios públicos, según el reglamento, y que gestionen ocupación, inventario, cobros,
 tarifas y casas. Tiene dos etapas que elige el encargado nacional (decisión del 18-11-2026):
 en la marcha blanca solo registran los encargados y no hay temporadas altas ni sorteo; en la
-etapa 2 los trabajadores de CONAF además reservan a su nombre desde el aplicativo (las
-temporadas altas con sorteo de la etapa 2 están en construcción). La encargada regional registra en su región y el encargado
+etapa 2 los trabajadores de CONAF además reservan a su nombre desde el aplicativo, y las
+temporadas altas se asignan por postulación y sorteo. La encargada regional registra en su región y el encargado
 nacional en todas; lo registrado queda confirmado sin aprobación y la persona recibe una
 ficha con acompañantes, direcciones e inventario; jubilados/as y otros servicios pagan por
 transferencia electrónica, que registra el encargado nacional, quien además controla por mes

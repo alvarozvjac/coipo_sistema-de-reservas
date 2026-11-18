@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Plus, Search, X } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Search,
+  Ticket,
+  X,
+} from "lucide-react";
+import { postulacionAbierta } from "../../datos/temporadas.js";
 import { REGIONES } from "../../datos/casas.js";
 import { listarCasas, reservasRegion, useDatos } from "../../datos/servicio.js";
 import {
@@ -162,6 +170,12 @@ export function Reservas() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          {/* Etapa 2 (18-11-2026): postulaciones al sorteo que la persona pide, por ejemplo un jubilado/a. */}
+          {postulacionAbierta() && (
+            <Boton variante="secundario" a="/gestion/postular">
+              <Ticket className="size-4" aria-hidden /> Registrar postulación
+            </Boton>
+          )}
           <Boton onClick={() => nuevaSolicitud()}>
             <Plus className="size-4" aria-hidden /> Nueva solicitud
           </Boton>

@@ -464,6 +464,22 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Pública: GitHub Pages sirve `91d178e` (sha256 igual al local, 7.981.199 bytes: vuelven las
   fotografías de referencia de las casas, como en `d98e20d`); consola sin errores.
 
+### Etapa 2: temporadas con postulación y sorteo (18-11-2026, local, sin publicar)
+
+- Segunda entrega del pedido del 18-11-2026. Restaurado de `e81ce1d`: `lib/sorteo.js`,
+  temporadas y sorteo del nacional, postulación (ahora para el trabajador y para los
+  encargados) y su tarjeta; el servicio pasó a `datos/temporadas.js` para no inflar
+  `servicio.js`.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844, 0 fallas: e2e19 30 (nueva: marcha
+  blanca sin sorteo; etapa 2 con Temporadas; la trabajadora no reserva en temporada, postula,
+  retira y vuelve a postular; la encargada registra la postulación de Nora; el sorteo deja
+  semilla, reservas confirmadas con ficha y cuotas desde marzo 2027; ella ve su resultado),
+  e2e14 62, e2e15 21, e2e16 23, e2e17 32, e2e18 31, e2e4 17, e2e9 28. axe-core: 0
+  infracciones, ahora también en Temporadas, Registrar postulación y Postular al sorteo;
+  jueces: 0 bloqueantes.
+- Capturas miradas: Temporadas antes y después del sorteo, Postular al sorteo en escritorio
+  y Mis reservas con la postulación en teléfono.
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la
