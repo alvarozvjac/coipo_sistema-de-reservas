@@ -7,7 +7,7 @@ import { aplicarParametros } from '../datos/configuracion.js'
 import { reiniciarDemo } from '../datos/servicio.js'
 import { INICIO, PERFIL_ETIQUETA, useSesion } from './Perfil.jsx'
 
-/** Menú de cada perfil. Desde el 12-11-2026 solo ingresan los encargados. */
+/** Menú de cada perfil. Los trabajadores ingresan solo en la etapa 2 (decisión 18-11-2026). */
 const NAV = {
   encargada: [
     { a: '/encargada/reservas', texto: 'Reservas' },
@@ -19,6 +19,10 @@ const NAV = {
     { a: '/central/cobros', texto: 'Cobros' },
     { a: '/central/dashboard', texto: 'Dashboard' },
     { a: '/central/configuracion', texto: 'Configuración' },
+  ],
+  trabajador: [
+    { a: '/trabajador', texto: 'Reservar', fin: true },
+    { a: '/trabajador/mis-reservas', texto: 'Mis reservas' },
   ],
 }
 

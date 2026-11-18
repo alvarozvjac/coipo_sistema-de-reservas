@@ -6,6 +6,7 @@ import { diasEntre, fechaCorta, hoyISO, sumarDias } from '../../lib/fechas.js'
 import { plural } from '../../lib/formato.js'
 import { estadoReserva } from '../../lib/reglas.js'
 import { Tarjeta } from '../../componentes/ui.jsx'
+import { ETAPAS, etapaVigente } from '../../datos/etapa.js'
 import { AccionesRegistro, Indicador, Movimientos, ocupacion } from '../../componentes/Panel.jsx'
 
 const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? ''
@@ -55,7 +56,10 @@ export function InicioCentral() {
         <div>
           <h1 className="text-2xl font-bold">Panel nacional</h1>
           <p className="mt-1 text-[15px] text-tinta-500">
-            {plural(casas.filter((c) => c.activa).length, 'casa activa', 'casas activas')} en {resumen.length} regiones · {fechaCorta(hoy, true)}
+            {plural(casas.filter((c) => c.activa).length, 'casa activa', 'casas activas')} en {resumen.length} regiones · {fechaCorta(hoy, true)} ·{' '}
+            <Link to="/central/configuracion?pestana=etapa" className="font-medium text-verde-700 underline-offset-2 hover:underline">
+              {ETAPAS[etapaVigente()].corto}: {ETAPAS[etapaVigente()].nombre.toLowerCase()}
+            </Link>
           </p>
         </div>
         <AccionesRegistro reservas="/central/reservas" />

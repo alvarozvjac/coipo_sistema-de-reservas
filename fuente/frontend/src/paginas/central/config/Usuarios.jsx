@@ -1,18 +1,22 @@
 import { KeyRound } from 'lucide-react'
 import { usuariosConAcceso } from '../../../datos/configuracion.js'
 import { REGIONES } from '../../../datos/casas.js'
-import { CLIENT_ID } from '../../../datos/iam.js'
+import { CALIDADES_TRABAJADOR, CLIENT_ID } from '../../../datos/iam.js'
+import { porId } from '../../../datos/usuarios.js'
+import { etapaAbierta } from '../../../datos/etapa.js'
 import { Tarjeta } from '../../../componentes/ui.jsx'
 
 const nombreRegion = (c) => REGIONES.find((r) => r.codigo === c)?.nombre ?? '—'
-const PERFIL = { encargada: 'Encargada regional', central: 'Encargado nacional' }
+const PERFIL = { encargada: 'Encargada regional', central: 'Encargado nacional', trabajador: 'Trabajador/a' }
 
 /**
  * Usuarios y encargadas (decisión 12-11-2026): quién entra, con qué rol y
  * región. Los roles se dan y se quitan en el COIPO IAM; aquí solo se ven.
  */
 export function Usuarios() {
-  const usuarios = usuariosConAcceso()
+  const abierta = etapaAbierta()
+  // Etapa 2 (18-11-2026): sin rol, entra como trabajador/a quien lo es según la nómina.
+  const usuarios = usuariosConAcceso().map((u) => (!u.perfil && CALIDADES_TRABAJADOR.includes(porId(u.nomina)?.calidad) ? { ...u, trabajador: true } : u))
   return (
     <div className="space-y-8">
       <section aria-labelledby="t-usuarios">
@@ -48,7 +52,19 @@ export function Usuarios() {
                   <td className="px-4 py-3">
                     <code className="text-[13px]">{u.role ?? 'sin rol'}</code>
                   </td>
-                  <td className="px-4 py-3">{u.perfil ? PERFIL[u.perfil] : <span className="text-tinta-500">No entra</span>}</td>
+                  <td className="px-4 py-3">
+                    {u.perfil ? (
+                      PERFIL[u.perfil]
+                    ) : u.trabajador ? (
+                      abierta ? (
+                        PERFIL.trabajador
+                      ) : (
+                        <span className="text-tinta-500">Trabajador/a, entra en la etapa 2</span>
+                      )
+                    ) : (
+                      <span className="text-tinta-500">No entra</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3">{u.region_id ? nombreRegion(u.region_id) : u.perfil === 'central' ? 'Todo el país' : '—'}</td>
                 </tr>
               ))}

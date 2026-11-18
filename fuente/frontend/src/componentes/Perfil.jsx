@@ -57,8 +57,8 @@ export const useSesion = () => useContext(Contexto)
 
 /** Inicio de cada perfil. */
 // eslint-disable-next-line react-refresh/only-export-components
-export const INICIO = { encargada: '/encargada/reservas', central: '/central' }
+export const INICIO = { encargada: '/encargada/reservas', central: '/central', trabajador: '/trabajador' }
 
 /** Nombre de cada perfil con ingreso. Oficina Central se llama Encargado nacional desde el 12-11-2026. */
 // eslint-disable-next-line react-refresh/only-export-components
-export const PERFIL_ETIQUETA = { encargada: 'Encargada regional', central: 'Encargado nacional' }
+export const PERFIL_ETIQUETA = { encargada: 'Encargada regional', central: 'Encargado nacional', trabajador: 'Trabajador/a de CONAF' }

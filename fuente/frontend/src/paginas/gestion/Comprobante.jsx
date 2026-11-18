@@ -32,15 +32,17 @@ export function Comprobante() {
   const [desistir, setDesistir] = useState(false)
   const { codigo } = useParams()
   const [p] = useSearchParams()
+  const { usuario } = useSesion()
   const r = obtenerReserva(codigo)
-  if (!r) return <p>No encontramos la reserva {codigo}.</p>
+  // Etapa 2 (18-11-2026): el trabajador ve solo sus propias reservas.
+  const propio = usuario.perfil === 'trabajador'
+  if (!r || (propio && r.titular_id !== usuario.id)) return <p>No encontramos la reserva {codigo}.</p>
 
   const estado = estadoReserva(r)
   const nueva = p.get('nueva') === '1'
   const n = noches(r.entrada, r.salida)
   const region = REGIONES.find((x) => x.codigo === r.casa.region)?.nombre
-  const { usuario } = useSesion()
-  const reservas = usuario.perfil === 'central' ? '/central/reservas' : '/encargada/reservas'
+  const reservas = propio ? '/trabajador/mis-reservas' : usuario.perfil === 'central' ? '/central/reservas' : '/encargada/reservas'
   const puedeDesistir = estado === 'confirmada'
   const ficha = r.fichas?.at(-1)
 
@@ -49,7 +51,7 @@ export function Comprobante() {
       {nueva && (
         <div className="mb-6 text-center">
           <CheckCircle2 className="mx-auto size-12 text-verde-600" aria-hidden />
-          <h1 className="mt-3 text-2xl font-bold">Reserva confirmada a nombre de {r.titular.nombre}</h1>
+          <h1 className="mt-3 text-2xl font-bold">{propio ? 'Su reserva está confirmada' : `Reserva confirmada a nombre de ${r.titular.nombre}`}</h1>
           <p className="mx-auto mt-1 max-w-md text-[15px] text-tinta-500">
             Se envió a {r.contacto?.correo} la ficha de la reserva, con quienes viajan, las direcciones de la casa y el inventario.
             {r.forma_pago.tipo === 'transferencia' && !r.pago ? ' También se enviaron los datos para transferir; la transferencia queda pendiente hasta que el encargado nacional registre que llegó.' : ''}
@@ -137,14 +139,14 @@ export function Comprobante() {
         )}
         {puedeDesistir && (
           <Boton variante="secundario" onClick={() => setDesistir(true)}>
-            Registrar desistimiento
+            {propio ? 'Desistir de la reserva' : 'Registrar desistimiento'}
           </Boton>
         )}
-        <Boton a={reservas}>Ver reservas</Boton>
+        <Boton a={reservas}>{propio ? 'Mis reservas' : 'Ver reservas'}</Boton>
       </div>
       <p className="no-imprimir mt-4 text-center text-sm">
-        <Link to="/gestion/reservar" className="font-medium text-verde-700 hover:underline">
-          Registrar otra reserva
+        <Link to={propio ? '/trabajador' : '/gestion/reservar'} className="font-medium text-verde-700 hover:underline">
+          {propio ? 'Buscar otra casa' : 'Registrar otra reserva'}
         </Link>
         {' · '}
         <Link to={INICIO[usuario.perfil]} className="font-medium text-verde-700 hover:underline">
@@ -161,10 +163,11 @@ export function Comprobante() {
 function DialogoDesistir({ reserva: r, gestor, onCerrar }) {
   const cargo = cargoDesistimiento(r)
   const limite = limiteDesistimiento(r.entrada)
+  const propio = gestor.perfil === 'trabajador'
   return (
-    <Dialogo titulo="¿Registrar el desistimiento?" onCerrar={onCerrar}>
+    <Dialogo titulo={propio ? '¿Desistir de la reserva?' : '¿Registrar el desistimiento?'} onCerrar={onCerrar}>
       <p className="mt-2 text-[15px] text-tinta-700">
-        {r.titular.nombre} desiste de {r.casa.nombre}, {fechaCorta(r.entrada)} al {fechaCorta(r.salida, true)}.
+        {propio ? 'Desiste' : `${r.titular.nombre} desiste`} de {r.casa.nombre}, {fechaCorta(r.entrada)} al {fechaCorta(r.salida, true)}.
       </p>
       <div className="mt-3">
         <Aviso tipo={cargo ? 'alerta' : 'info'}>
@@ -173,7 +176,7 @@ function DialogoDesistir({ reserva: r, gestor, onCerrar }) {
             : `Avisa dentro del plazo (hasta el ${fechaCorta(limite, true)}, ${PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles antes de la llegada): no tiene costo.`}
         </Aviso>
       </div>
-      <p className="mt-3 text-[13px] text-tinta-500">Queda registrado que usted lo registró. Se avisa a la persona por correo.</p>
+      <p className="mt-3 text-[13px] text-tinta-500">{propio ? 'Le llegará la confirmación por correo y las fechas quedan libres.' : 'Queda registrado que usted lo registró. Se avisa a la persona por correo.'}</p>
       <div className="mt-6 flex justify-end gap-3">
         <Boton variante="secundario" onClick={onCerrar}>
           Volver
@@ -185,7 +188,7 @@ function DialogoDesistir({ reserva: r, gestor, onCerrar }) {
             onCerrar()
           }}
         >
-          Sí, registrar
+          {propio ? 'Sí, desistir' : 'Sí, registrar'}
         </Boton>
       </div>
     </Dialogo>

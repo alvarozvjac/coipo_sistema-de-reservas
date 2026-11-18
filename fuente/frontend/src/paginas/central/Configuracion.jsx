@@ -5,11 +5,13 @@ import { Usuarios } from './config/Usuarios.jsx'
 import { Parametros } from './config/Parametros.jsx'
 import { Plantillas } from './config/Plantillas.jsx'
 import { Actividad } from './config/Actividad.jsx'
+import { Etapa } from './config/Etapa.jsx'
 
 const PESTANAS = [
   ['casas', 'Casas', Casas],
   ['tarifas', 'Tarifas', Tarifas],
   ['bloqueos', 'Bloqueos de fechas', Bloqueos],
+  ['etapa', 'Etapa', Etapa],
   ['usuarios', 'Usuarios y encargadas', Usuarios],
   ['parametros', 'Parámetros', Parametros],
   ['plantillas', 'Plantillas de correo', Plantillas],

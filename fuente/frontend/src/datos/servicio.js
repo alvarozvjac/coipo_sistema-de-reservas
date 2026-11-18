@@ -244,7 +244,7 @@ export function crearReserva({ usuario, casa, entrada, salida, tarifa_noche, ocu
     notificaciones: [],
   }
   // Decisión 13-11-2026: no hay aprobación; lo que registra un encargado queda confirmado.
-  confirmar(r, registrada_por?.nombre ?? 'Encargada regional')
+  confirmar(r, registrada_por?.nombre ?? usuario.nombre)
   estado.reservas.push(r)
   guardar()
   return codigo
@@ -278,7 +278,9 @@ export function desistirReserva(codigo, gestor) {
   r.cargo_desistimiento = cargoDesistimiento(r)
   r.estado = 'desistida'
   r.desistida_en = hoyISO()
-  if (gestor) r.desistimiento_registrado_por = gestor.nombre
+  // Etapa 2 (18-11-2026): el trabajador desiste de su propia reserva desde el aplicativo.
+  if (gestor && gestor.perfil !== 'trabajador') r.desistimiento_registrado_por = gestor.nombre
+  else r.desistida_por_titular = true
   r.notificaciones.push({ tipo: 'desistimiento', en: ahora(), detalle: r.cargo_desistimiento ? 'Desistimiento fuera de plazo: se cobra la estadía completa' : 'Desistimiento sin costo' })
   guardar()
 }

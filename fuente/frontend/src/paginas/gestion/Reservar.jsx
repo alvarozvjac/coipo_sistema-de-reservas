@@ -8,7 +8,7 @@ import {
   proximoCodigo,
   useDatos,
 } from "../../datos/servicio.js";
-import { fechaCorta } from "../../lib/fechas.js";
+import { fechaCorta, hoyISO } from "../../lib/fechas.js";
 import { pesos, plural } from "../../lib/formato.js";
 import {
   CONDICIONES_USO,
@@ -162,14 +162,17 @@ export function Reservar({ titular, gestor, casaId, panel }) {
         pago === "planilla"
           ? { tipo: "planilla", cuotas, autorizacion: true }
           : { tipo: "transferencia", anticipado: true, glosa },
-      ...(asistida && {
-        registrada_por: {
-          nombre: gestor.nombre,
-          perfil: gestor.perfil,
-          region: gestor.region ?? null,
-        },
-        via,
-      }),
+      // Etapa 2 (18-11-2026): lo que reserva el trabajador queda con vía «aplicativo».
+      ...(asistida
+        ? {
+            registrada_por: {
+              nombre: gestor.nombre,
+              perfil: gestor.perfil,
+              region: gestor.region ?? null,
+            },
+            via,
+          }
+        : { via: "aplicativo" }),
     });
     if (!codigo) {
       setOcupada(true);
@@ -343,7 +346,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
               <label className="mt-5 flex cursor-pointer items-start gap-3">
                 <input
                   type="checkbox"
-                  className="mt-0.5 size-5 accent-verde-700"
+                  className="mt-0.5 size-5 shrink-0 accent-verde-700"
                   checked={perro}
                   onChange={(e) => setPerro(e.target.checked)}
                 />
@@ -490,7 +493,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
                         <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-lg bg-white p-3 ring-1 ring-borde">
                           <input
                             type="checkbox"
-                            className="mt-0.5 size-5 accent-verde-700"
+                            className="mt-0.5 size-5 shrink-0 accent-verde-700"
                             checked={autoriza}
                             onChange={(e) => setAutoriza(e.target.checked)}
                           />
@@ -566,14 +569,24 @@ export function Reservar({ titular, gestor, casaId, panel }) {
                   {pago === "transferencia" &&
                     " También se envían los datos para transferir; la transferencia queda pendiente hasta que el encargado nacional registre en Cobros que llegó, antes de la llegada."}
                 </li>
-                <li>
-                  Si desiste{" "}
-                  <strong>hasta el {fechaCorta(limiteDesistir, true)}</strong> (
-                  {PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles
-                  antes de la llegada) no tiene costo. Después, o si no se
-                  presenta, se paga la estadía completa ({pesos(total)}), salvo
-                  fuerza mayor acreditada.
-                </li>
+                {limiteDesistir < hoyISO() ? (
+                  <li>
+                    La llegada es en menos de{" "}
+                    {PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles:
+                    si desiste después de confirmar, o no se presenta, se paga
+                    la <strong>estadía completa ({pesos(total)})</strong>, salvo
+                    fuerza mayor acreditada.
+                  </li>
+                ) : (
+                  <li>
+                    Si desiste{" "}
+                    <strong>hasta el {fechaCorta(limiteDesistir, true)}</strong>{" "}
+                    ({PARAMETROS.aviso_desistimiento_dias_habiles} días hábiles
+                    antes de la llegada) no tiene costo. Después, o si no se
+                    presenta, se paga la estadía completa ({pesos(total)}),
+                    salvo fuerza mayor acreditada.
+                  </li>
+                )}
               </ul>
               <details className="mt-3 rounded-lg bg-stone-50 px-4 py-3">
                 <summary className="cursor-pointer text-[15px] font-medium text-verde-800">
@@ -591,22 +604,24 @@ export function Reservar({ titular, gestor, casaId, panel }) {
                     ¿Por qué vía le pidió la reserva?
                   </legend>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {Object.entries(VIAS).map(([k, t]) => (
-                      <label
-                        key={k}
-                        className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg px-3 text-[15px] ring-1 ring-inset ${via === k ? "bg-verde-50 font-semibold text-verde-800 ring-verde-600" : "bg-white text-tinta-700 ring-borde hover:bg-stone-50"}`}
-                      >
-                        <input
-                          type="radio"
-                          name="via"
-                          value={k}
-                          checked={via === k}
-                          onChange={() => setVia(k)}
-                          className="size-4 accent-verde-700"
-                        />
-                        {t}
-                      </label>
-                    ))}
+                    {Object.entries(VIAS)
+                      .filter(([k]) => k !== "aplicativo")
+                      .map(([k, t]) => (
+                        <label
+                          key={k}
+                          className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg px-3 text-[15px] ring-1 ring-inset ${via === k ? "bg-verde-50 font-semibold text-verde-800 ring-verde-600" : "bg-white text-tinta-700 ring-borde hover:bg-stone-50"}`}
+                        >
+                          <input
+                            type="radio"
+                            name="via"
+                            value={k}
+                            checked={via === k}
+                            onChange={() => setVia(k)}
+                            className="size-4 accent-verde-700"
+                          />
+                          {t}
+                        </label>
+                      ))}
                   </div>
                   {intento && !via && (
                     <div className="mt-2">
@@ -620,7 +635,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
               <label className="mt-4 flex cursor-pointer items-start gap-3">
                 <input
                   type="checkbox"
-                  className="mt-0.5 size-5 accent-verde-700"
+                  className="mt-0.5 size-5 shrink-0 accent-verde-700"
                   checked={acepta}
                   onChange={(e) => setAcepta(e.target.checked)}
                 />
@@ -656,7 +671,9 @@ export function Reservar({ titular, gestor, casaId, panel }) {
             <Boton variante="secundario" onClick={panel.onCancelar}>
               Cancelar
             </Boton>
-            <Boton onClick={avanzar}>Registrar reserva</Boton>
+            <Boton onClick={avanzar}>
+              {asistida ? "Registrar reserva" : "Confirmar reserva"}
+            </Boton>
           </div>
         }
         {cuadro && (
@@ -676,7 +693,9 @@ export function Reservar({ titular, gestor, casaId, panel }) {
       {erroresFechas.length > 0 && (
         <Tarjeta className="p-5">
           <h3 className="font-semibold">
-            No se puede registrar para esta persona
+            {asistida
+              ? "No se puede registrar para esta persona"
+              : "No puede reservar estas fechas"}
           </h3>
           {erroresFechas.map((e) => (
             <div key={e} className="mt-3">
@@ -684,8 +703,9 @@ export function Reservar({ titular, gestor, casaId, panel }) {
             </div>
           ))}
           <p className="mt-3 text-[15px] text-tinta-700">
-            Elija otras fechas u otra casa con disponibilidad: solo se registran
-            las reservas que se pueden dar.
+            {asistida
+              ? "Elija otras fechas u otra casa con disponibilidad: solo se registran las reservas que se pueden dar."
+              : "Elija otras fechas u otra casa con disponibilidad."}
           </p>
         </Tarjeta>
       )}
@@ -694,32 +714,40 @@ export function Reservar({ titular, gestor, casaId, panel }) {
   );
 }
 
+/**
+ * Opción de pago. Lo que va dentro (cuotas, autorización) queda fuera del
+ * elemento con rol de radio, que no puede contener controles (axe, 18-11-2026).
+ */
 function OpcionPago({ activa, onClick, titulo, detalle, children }) {
   return (
     <div
-      role="radio"
-      aria-checked={activa}
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={(e) =>
-        (e.key === " " || e.key === "Enter") &&
-        e.target === e.currentTarget &&
-        (e.preventDefault(), onClick())
-      }
-      className={`cursor-pointer rounded-lg p-4 ring-inset ${activa ? "bg-verde-50 ring-2 ring-verde-600" : "bg-white ring-1 ring-borde hover:bg-stone-50"}`}
+      className={`rounded-lg ring-inset ${activa ? "bg-verde-50 ring-2 ring-verde-600" : "bg-white ring-1 ring-borde hover:bg-stone-50"}`}
     >
-      <span className="flex items-center gap-3">
-        <span
-          className={`grid size-5 shrink-0 place-items-center rounded-full ring-2 ${activa ? "ring-verde-700" : "ring-stone-300"}`}
-        >
-          {activa && <span className="size-2.5 rounded-full bg-verde-700" />}
+      <div
+        role="radio"
+        aria-checked={activa}
+        tabIndex={0}
+        onClick={onClick}
+        onKeyDown={(e) =>
+          (e.key === " " || e.key === "Enter") &&
+          e.target === e.currentTarget &&
+          (e.preventDefault(), onClick())
+        }
+        className="cursor-pointer rounded-lg p-4"
+      >
+        <span className="flex items-center gap-3">
+          <span
+            className={`grid size-5 shrink-0 place-items-center rounded-full ring-2 ${activa ? "ring-verde-700" : "ring-stone-300"}`}
+          >
+            {activa && <span className="size-2.5 rounded-full bg-verde-700" />}
+          </span>
+          <span>
+            <span className="block font-semibold">{titulo}</span>
+            <span className="block text-sm text-tinta-500">{detalle}</span>
+          </span>
         </span>
-        <span>
-          <span className="block font-semibold">{titulo}</span>
-          <span className="block text-sm text-tinta-500">{detalle}</span>
-        </span>
-      </span>
-      {children}
+      </div>
+      {children && <div className="px-4 pb-4">{children}</div>}
     </div>
   );
 }

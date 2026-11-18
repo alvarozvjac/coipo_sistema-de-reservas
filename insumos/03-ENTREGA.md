@@ -13,8 +13,10 @@ Permite que las encargadas regionales y el encargado nacional de Bienestar regis
 orden de llegada y solo si hay disponibilidad, las reservas que les piden para las 22 casas
 de veraneo a nombre de funcionarios/as de CONAF, jubilados/as y funcionarios/as de otros
 servicios públicos, según el reglamento, y que gestionen ocupación, inventario, cobros,
-tarifas y casas (primera etapa, decisión del 12-11-2026: los afiliados/as no ingresan y no
-hay temporadas altas ni sorteo). La encargada regional registra en su región y el encargado
+tarifas y casas. Tiene dos etapas que elige el encargado nacional (decisión del 18-11-2026):
+en la marcha blanca solo registran los encargados y no hay temporadas altas ni sorteo; en la
+etapa 2 los trabajadores de CONAF además reservan a su nombre desde el aplicativo (las
+temporadas altas con sorteo de la etapa 2 están en construcción). La encargada regional registra en su región y el encargado
 nacional en todas; lo registrado queda confirmado sin aprobación y la persona recibe una
 ficha con acompañantes, direcciones e inventario; jubilados/as y otros servicios pagan por
 transferencia electrónica, que registra el encargado nacional, quien además controla por mes

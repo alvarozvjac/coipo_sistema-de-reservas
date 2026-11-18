@@ -16,21 +16,25 @@ Bienestar de CONAF, elaborada por la Unidad de Información y Análisis (UIA).
 
 ## Cómo probarla
 
-Desde el 12-11-2026 la primera etapa es solo para los encargados de Bienestar: los
-afiliados/as no ingresan, y la encargada regional o el encargado nacional (antes Oficina
-Central) registra sus reservas. No hay temporadas altas ni sorteo: todas las fechas se
-registran por orden de llegada si hay disponibilidad.
+El sistema tiene dos etapas (decisión 18-11-2026), que el encargado nacional elige en
+**Configuración › Etapa**. Parte en **marcha blanca** (etapa 1): solo la encargada regional
+y el encargado nacional registran reservas, a pedido de la persona, y todas las fechas van
+por orden de llegada. En la etapa 2, **abierto a trabajadores**, además los trabajadores de
+CONAF ingresan y reservan a su nombre; las temporadas altas con sorteo vuelven en una
+segunda entrega.
 
 El ingreso es con el **COIPO IAM, simulado**: pulse **«Ingresar con COIPO IAM»** y, en la
 pantalla del IAM, elija una cuenta de prueba (contraseña «maqueta»): `cnunez` (encargada
-regional de Valparaíso), `pherrera` (encargado nacional) o `mfuentes` (afiliada sin rol en
-esta aplicación, para ver el rechazo). El perfil y la región salen del rol que el IAM
+regional de Valparaíso), `pherrera` (encargado nacional), `mfuentes` (trabajadora afiliada)
+o `jpavez` (trabajador no afiliado). Las dos últimas no tienen rol en esta aplicación: en la
+marcha blanca no entran y en la etapa 2 entran como trabajadores. El perfil y la región salen del rol que el IAM
 asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro).
 
 | Perfil | Qué se puede probar |
 |---|---|
 | Encargada regional | Entra a Reservas (sin Panel ni Cobros desde el 13-11-2026): tablero de ocupación de todo el país y listado; registra en un panel lateral, en las casas de su región, lo que una persona le pidió por cualquier vía (teléfono, correo, presencial, WhatsApp u otra), solo si hay disponibilidad, viendo antes sus antecedentes (queda confirmada al registrarla), registra desistimientos; Inventario |
-| Encargado nacional | Panel nacional; Reservas con tablero de todo el país (registra en cualquier casa, queda confirmada al registrarla); Cobros (panel de descuentos por mes con planilla y transferencias, nómina para Remuneraciones, transferencias por registrar); Dashboard; Configuración (casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
+| Trabajador/a (etapa 2) | Reservar: casas por región, ficha de la casa con calendario de disponibilidad, reserva a su nombre con aceptación del reglamento; Mis reservas, con la ficha y el desistimiento |
+| Encargado nacional | Panel nacional (con la etapa vigente); Reservas con tablero de todo el país (registra en cualquier casa, queda confirmada al registrarla); Cobros (panel de descuentos por mes con planilla y transferencias, nómina para Remuneraciones, transferencias por registrar); Dashboard; Configuración (etapa del sistema, casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
 
 Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María
 Fuentes, afiliada), 16.882.409-2 (Paula Ortiz, plazo fijo), 6.884.215-8 (Hernán Soto,

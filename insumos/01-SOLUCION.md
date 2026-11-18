@@ -27,9 +27,11 @@ No administra las casas de huéspedes ni procesa pagos, correos o datos reales: 
 maqueta sin backend.
 
 - Casas solo de huéspedes (fuera de alcance desde la decisión de octubre de 2026).
-- Ingreso de los afiliados/as: en la primera etapa no entran al sistema (2026-11-12).
-- Temporadas altas, postulaciones y sorteo (quitados el 2026-11-12): todas las fechas, también
-  las de verano e invierno, se registran por orden de llegada si hay disponibilidad.
+- En la marcha blanca (etapa 1), el ingreso de los afiliados/as (2026-11-12) y las temporadas
+  altas con sorteo: todas las fechas se registran por orden de llegada. Desde el 2026-11-18
+  ambas cosas vuelven en la etapa 2, que el encargado nacional abre en Configuración.
+- Ingreso de jubilados/as y de funcionarios/as de otros servicios públicos: también en la
+  etapa 2 piden la reserva a la encargada.
 - Pago en línea: el pago es por planilla o por transferencia que el encargado nacional registra.
 - Envío real de correos (simulado) y el COIPO IAM real: en la maqueta el inicio de sesión del IAM está simulado.
 - Integración con las nóminas de afiliados y de personal, IAM o ClaveÚnica (simulado).
@@ -57,7 +59,8 @@ actual por correo y planillas. El sorteo de temporada alta quedó fuera (decisi�
 
 | Perfil | Dispositivo | Momento de uso | Qué necesita decidir |
 |---|---|---|---|
-| Beneficiario/a (afiliado/a, plazo fijo, no afiliado/a, jubilado/a, otro servicio público) | No ingresa (desde 2026-11-12) | Pide la reserva a su encargada, por cualquier vía (teléfono, correo, en persona, WhatsApp) | Qué casa y qué fechas, quiénes van, cómo paga; recibe la ficha de la reserva por correo |
+| Beneficiario/a (afiliado/a, plazo fijo, no afiliado/a, jubilado/a, otro servicio público) | No ingresa en la marcha blanca (desde 2026-11-12) | Pide la reserva a su encargada, por cualquier vía (teléfono, correo, en persona, WhatsApp) | Qué casa y qué fechas, quiénes van, cómo paga; recibe la ficha de la reserva por correo |
+| Trabajador/a de CONAF (afiliado/a, no afiliado/a, plazo fijo), etapa 2 | Celular o computador (INFERIDO) | Cuando planifica sus vacaciones | Qué casa y qué fechas están libres, quiénes van, cómo paga; ver y desistir de sus reservas |
 | Encargada regional | Computador de oficina (INFERIDO) | Jornada laboral, varias veces por semana | Quién llega y sale, qué casa necesita mantención; registrar las reservas y desistimientos que le piden |
 | Encargado nacional (antes Oficina Central) | Computador de oficina (INFERIDO) | Cierre mensual de descuentos, cambios de tarifa | Qué se descuenta, qué pagos registrar, tarifas, casas; reservas de todo el país; configuración del sistema |
 
@@ -79,6 +82,10 @@ actual por correo y planillas. El sorteo de temporada alta quedó fuera (decisi�
 | Configuración › Plantillas de correo | Encargado nacional | Ajustar lo que recibe la persona | C28 |
 | Configuración › Actividad | Encargado nacional | Saber quién hizo qué y cuándo | C29 |
 | Dashboard | Encargado nacional | Decidir sobre tarifas, mantenciones y oferta | C17 |
+| Etapa (Configuración) | Encargado nacional | Elegir marcha blanca o abierto a trabajadores, desde una fecha y con respaldo | C33 |
+| Reservar (inicio del trabajador) | Trabajador/a, etapa 2 | Elegir región y casa; ver su próxima reserva | C34 |
+| Ficha de la casa con calendario | Trabajador/a, etapa 2 | Elegir fechas libres; ver total, equipamiento y condiciones | C34 |
+| Mis reservas y comprobante | Trabajador/a, etapa 2 | Ver sus reservas, la ficha y desistir | C35 |
 
 ## Criterios de aceptación
 
@@ -198,6 +205,22 @@ correspondencia está en `02-RASTRO.md`.
   reservó esta casa una vez en diciembre 2026 (R-2026-0195)» y no se registra; en noviembre
   en esa casa, o en diciembre en otra casa, sí se puede (ya no rige una reserva por mes); y
   con el parámetro cambiado a 2 desde hoy, la misma casa en diciembre sí se puede.
+
+- **C33 · Selector de etapa (decisión 18-11-2026).** Dado el encargado nacional en marcha
+  blanca, cuando en Configuración › Etapa elige «Abierto a trabajadores» desde hoy con un
+  respaldo, entonces el Panel muestra «Etapa 2», Usuarios muestra a `mfuentes` como
+  Trabajador/a y la Actividad registra el cambio; sin respaldo no se guarda; un cambio a
+  futuro se puede anular; y al volver a «Marcha blanca», `mfuentes` ya no entra.
+- **C34 · El trabajador reserva (decisión 18-11-2026).** Dada la etapa 2, cuando `mfuentes`
+  ingresa con el IAM, entonces llega a «Reservar» con su menú (Reservar, Mis reservas), elige
+  Rocas de Santo Domingo y dos noches libres en el calendario (que no muestra quién ocupa),
+  y al confirmar sin aceptar el reglamento ve «Debe aceptar el reglamento»; con la
+  autorización del descuento y la aceptación, la reserva queda «Confirmada» a su nombre, con
+  vía «Aplicativo», sin «Registrada por» y con la ficha enviada.
+- **C35 · Mis reservas (decisión 18-11-2026).** Dada esa reserva, cuando la abre desde Mis
+  reservas y desiste, entonces queda «Desistida» por la titular (Actividad: «Desistió desde
+  el aplicativo»); y si escribe la dirección de una reserva ajena o de una pantalla de
+  encargados, no la ve.
 
 ## Instrumentos de datos candidatos para la fábrica
 

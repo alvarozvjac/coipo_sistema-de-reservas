@@ -21,7 +21,15 @@
  * [PENDIENTE] Los nombres de los roles (`encargado_regional`, `encargado_nacional`)
  * y el atributo `region_id` se fijan al registrar la aplicación en el IAM
  * (prompts/15-registrar-en-el-iam.md de coipo_master_produccion).
+ *
+ * Etapa 2 (decisión 18-11-2026): con el sistema abierto a trabajadores, una
+ * cuenta sin rol de esta aplicación entra como «trabajador» si la nómina dice
+ * que es trabajador/a de CONAF (afiliado/a o no afiliado/a, también plazo fijo).
+ * [PENDIENTE: con Luis Monsalve] si el IAM asignará un rol `trabajador` a todas
+ * las cuentas institucionales o si la aplicación lo decide por la nómina, como aquí.
  */
+import { porId } from './usuarios.js'
+import { etapaAbierta } from './etapa.js'
 
 export const CLIENT_ID = 'reservas-casas-veraneo'
 export const RUTA_IAM = '/iam/autorizar'
@@ -44,7 +52,8 @@ export const PERFIL_POR_ROL = {
 export const CUENTAS = [
   { username: 'cnunez', sub: 'iam-105', nomina: 5, email: 'carolina.nunez@conaf.cl', role: 'encargado_regional', region_id: '05', etiqueta: 'Encargada regional (Valparaíso)' },
   { username: 'pherrera', sub: 'iam-106', nomina: 6, email: 'patricia.herrera@conaf.cl', role: 'encargado_nacional', region_id: null, etiqueta: 'Encargado nacional' },
-  { username: 'mfuentes', sub: 'iam-101', nomina: 1, email: 'maria.fuentes@conaf.cl', role: null, region_id: null, etiqueta: 'Afiliada, sin rol en esta aplicación' },
+  { username: 'mfuentes', sub: 'iam-101', nomina: 1, email: 'maria.fuentes@conaf.cl', role: null, region_id: null, etiqueta: 'Trabajadora afiliada (entra solo en la etapa 2)' },
+  { username: 'jpavez', sub: 'iam-104', nomina: 4, email: 'jorge.pavez@conaf.cl', role: null, region_id: null, etiqueta: 'Trabajador no afiliado (entra solo en la etapa 2)' },
 ]
 
 const CLAVE_ESTADO = 'iam_maqueta_state'
@@ -111,8 +120,19 @@ export function canjearCodigo({ code, state, error }) {
   return { claims: { sub, username, email, role, app_id: CLIENT_ID, region_id } }
 }
 
-/** Paso 4: el perfil sale solo del rol que el IAM asignó para esta aplicación. */
-export const perfilDeClaims = (claims) => PERFIL_POR_ROL[claims?.role] ?? null
+/** Calidades de la nómina que corresponden a trabajadores/as de CONAF. */
+export const CALIDADES_TRABAJADOR = ['afiliado', 'no_afiliado']
+
+/**
+ * Paso 4: el perfil sale del rol que el IAM asignó para esta aplicación. Sin
+ * rol, y solo en la etapa 2, entra como trabajador quien lo es según la nómina.
+ */
+export function perfilDeClaims(claims) {
+  const porRol = PERFIL_POR_ROL[claims?.role]
+  if (porRol) return porRol
+  if (!claims || !etapaAbierta()) return null
+  return CALIDADES_TRABAJADOR.includes(porId(nominaDeClaims(claims))?.calidad) ? 'trabajador' : null
+}
 
 /** La persona de la nómina que corresponde a la cuenta del IAM. */
 export const nominaDeClaims = (claims) => CUENTAS.find((c) => c.sub === claims?.sub)?.nomina ?? null

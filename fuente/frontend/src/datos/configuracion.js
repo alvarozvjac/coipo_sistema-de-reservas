@@ -3,6 +3,7 @@ import { CUENTAS, PERFIL_POR_ROL } from './iam.js'
 import { fechaLarga, hoyISO, rangoFechas } from '../lib/fechas.js'
 import { pesos } from '../lib/formato.js'
 import { PARAMETROS, glosaTransferencia } from '../lib/reglas.js'
+import { ETAPAS } from './etapa.js'
 
 /*
  * Configuración del encargado nacional (decisión 12-11-2026): usuarios y
@@ -194,6 +195,8 @@ export function actividad() {
   for (const r of e.reservas) {
     const ref = `${r.codigo} · ${casa(r.casa_id)} · ${rangoFechas(r.entrada, r.salida)}`
     if (r.registrada_por) add(r.declaracion_encargado ?? r.creada_en, r.registrada_por.nombre, 'reservas', 'Registró una reserva', `${ref} · a nombre de ${r.titular.nombre}`)
+    else if (r.via === 'aplicativo') add(r.creada_en, r.titular.nombre, 'reservas', 'Reservó desde el aplicativo', ref)
+    if (r.desistida_por_titular) add(r.desistida_en, r.titular.nombre, 'reservas', 'Desistió desde el aplicativo', ref)
     if (r.desistimiento_registrado_por) add(r.desistida_en, r.desistimiento_registrado_por, 'reservas', 'Registró un desistimiento', ref)
     if (r.pago?.por && r.pago.por !== 'Encargada regional') add(r.pago.registrado_en, r.pago.por, 'cobros', 'Registró un pago', `${ref} · ${r.pago.comprobante}`)
     if (r.devolucion) add(r.devolucion.registrada_en, r.devolucion.por, 'cobros', 'Registró una devolución', ref)
@@ -208,6 +211,10 @@ export function actividad() {
     const def = EDITABLES.find((d) => d.clave === p.clave)
     add(p.en, p.por, 'configuracion', 'Cambió un parámetro', `${def?.etiqueta ?? p.clave}: ${p.anterior} → ${p.valor}, desde ${p.vigente_desde} · ${p.respaldo}`)
     if (p.anulado) add(p.anulado_en, p.anulado_por, 'configuracion', 'Anuló un cambio programado', def?.etiqueta ?? p.clave)
+  }
+  for (const c of e.etapas ?? []) {
+    add(c.en, c.por, 'configuracion', 'Cambió la etapa del sistema', `${ETAPAS[c.anterior]?.nombre ?? c.anterior} → ${ETAPAS[c.etapa].nombre}, desde ${c.vigente_desde} · ${c.respaldo}`)
+    if (c.anulado) add(c.anulado_en, c.anulado_por, 'configuracion', 'Anuló un cambio de etapa programado', ETAPAS[c.etapa].nombre)
   }
   for (const h of e.historial_plantillas ?? []) add(h.en, h.por, 'configuracion', h.restaurada ? 'Restauró una plantilla' : 'Editó una plantilla', PLANTILLAS_BASE[h.clave]?.nombre ?? h.clave)
   return l.sort((a, b) => (a.en < b.en ? 1 : -1))

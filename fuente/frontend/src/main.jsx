@@ -16,6 +16,10 @@ import { Cobros } from './paginas/gestion/Cobros.jsx'
 import { Configuracion } from './paginas/central/Configuracion.jsx'
 import { aplicarParametros } from './datos/configuracion.js'
 import { Dashboard } from './paginas/central/Dashboard.jsx'
+import { Buscar } from './paginas/trabajador/Buscar.jsx'
+import { Casa } from './paginas/trabajador/Casa.jsx'
+import { ReservarCasa } from './paginas/trabajador/ReservarCasa.jsx'
+import { MisReservas } from './paginas/trabajador/MisReservas.jsx'
 
 /** Exige sesión y, si se indica, un perfil. Sin sesión lleva al ingreso. */
 function Requiere({ perfil, children }) {
@@ -27,13 +31,15 @@ function Requiere({ perfil, children }) {
   return children
 }
 
-/** Inicio según el perfil (solo ingresan los encargados, decisión 12-11-2026). */
+/** Inicio según el perfil (en la etapa 2 también ingresan los trabajadores, decisión 18-11-2026). */
 function AlInicio() {
   const { usuario } = useSesion()
   return <Navigate to={INICIO[usuario.perfil]} replace />
 }
 
 const gestion = (el) => <Requiere perfil={['encargada', 'central']}>{el}</Requiere>
+/** Etapa 2 (decisión 18-11-2026): los trabajadores de CONAF reservan desde el aplicativo. */
+const trabajador = (el) => <Requiere perfil="trabajador">{el}</Requiere>
 
 /** La versión publicada como página de claude.ai navega en memoria: su dirección no se puede cambiar. */
 /** Disponibilidad y el registro de reservas se fusionaron con Reservas (decisión 12-11-2026). */
@@ -84,6 +90,11 @@ createRoot(document.getElementById('root')).render(
             <Route path="gestion/reservar" element={<IrAReservas nueva />} />
             <Route path="gestion/disponibilidad" element={<IrAReservas />} />
             <Route path="gestion/reserva/:codigo" element={gestion(<Comprobante />)} />
+            <Route path="trabajador" element={trabajador(<Buscar />)} />
+            <Route path="trabajador/casa/:id" element={trabajador(<Casa />)} />
+            <Route path="trabajador/casa/:id/reservar" element={trabajador(<ReservarCasa />)} />
+            <Route path="trabajador/mis-reservas" element={trabajador(<MisReservas />)} />
+            <Route path="trabajador/reserva/:codigo" element={trabajador(<Comprobante />)} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

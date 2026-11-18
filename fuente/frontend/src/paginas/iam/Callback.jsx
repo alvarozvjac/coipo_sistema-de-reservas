@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import { Banner } from '../../componentes/Banner.jsx'
 import { canjearCodigo, perfilDeClaims } from '../../datos/iam.js'
+import { etapaAbierta } from '../../datos/etapa.js'
 import { INICIO, useSesion } from '../../componentes/Perfil.jsx'
 import { Aviso } from '../../componentes/ui.jsx'
 
@@ -9,6 +10,10 @@ const MENSAJES = {
   sin_rol: {
     titulo: 'Su cuenta no tiene acceso a esta aplicación',
     texto: 'Ingresó al COIPO IAM, pero no tiene un rol asignado en el Sistema de Gestión de Reservas. En esta etapa solo ingresan los encargados de Bienestar. Si necesita una reserva, pídasela a la encargada de Bienestar de su región; si usted es encargado, solicite el rol al administrador del sistema.',
+  },
+  sin_rol_abierta: {
+    titulo: 'Su cuenta no tiene acceso a esta aplicación',
+    texto: 'Ingresó al COIPO IAM, pero según la nómina no es trabajador/a de CONAF ni tiene un rol de encargado. Si necesita una reserva, pídasela a la encargada de Bienestar de su región.',
   },
   cancelado: { titulo: 'Ingreso cancelado', texto: 'Volvió del COIPO IAM sin iniciar sesión.' },
   estado: { titulo: 'No pudimos completar el ingreso', texto: 'La respuesta del COIPO IAM no corresponde a esta solicitud o ya se usó. Vuelva a intentarlo desde el inicio.' },
@@ -29,7 +34,7 @@ export function Callback() {
   useEffect(() => {
     const q = new URLSearchParams(search)
     const r = canjearCodigo({ code: q.get('code'), state: q.get('state'), error: q.get('error') })
-    if (r.claims && !perfilDeClaims(r.claims)) setResultado({ error: 'sin_rol' })
+    if (r.claims && !perfilDeClaims(r.claims)) setResultado({ error: etapaAbierta() ? 'sin_rol_abierta' : 'sin_rol' })
     else if (r.claims) {
       ingresar({ claims: r.claims })
       setResultado({ ok: true })

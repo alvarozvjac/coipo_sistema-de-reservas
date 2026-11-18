@@ -7,6 +7,40 @@ actualización de octubre de 2026 (en adelante, "el reglamento"). Reemplaza a la
 agosto y prevalece sobre la solicitud de julio y sobre la especificación del 08-10-2026
 cuando se contradicen.
 
+## Dos etapas: marcha blanca y abierto a trabajadores (decisión 18-11-2026)
+
+Fuente: Álvaro Zegers (UIA), 18-11-2026, 08:33, transmitiendo lo que explicó el cliente
+(Departamento de Bienestar): no quería quitar que los afiliados reserven desde el aplicativo;
+quiere partir con una **marcha blanca** en que reservan solo las encargadas regionales y el
+encargado nacional y, cuando se acostumbren, una **etapa 2** en que los trabajadores de CONAF
+reservan desde el aplicativo. Respuestas del mismo día:
+
+- **Las dos etapas en la maqueta, con un selector.** En *Configuración › Etapa* el encargado
+  nacional elige «Marcha blanca» (etapa 1) o «Abierto a trabajadores» (etapa 2), con fecha
+  desde la que rige y respaldo, como un parámetro; un cambio programado se puede anular, y
+  queda en Actividad. El Panel nacional muestra la etapa vigente. Parte en marcha blanca.
+- **Quiénes reservan por sí mismos en la etapa 2: los trabajadores de CONAF** (afiliados/as,
+  no afiliados/as y plazo fijo). Jubilados/as y funcionarios/as de otros servicios públicos
+  siguen pidiéndolo a la encargada.
+- **Ingreso.** Con su cuenta institucional del COIPO IAM. Sin rol de esta aplicación, en la
+  etapa 2 entra como «Trabajador/a» quien lo es según la nómina; en la marcha blanca no entra.
+  [PENDIENTE: con Luis Monsalve] si el IAM dará un rol `trabajador` a las cuentas
+  institucionales o si la aplicación lo decide por la nómina, como en la maqueta.
+- **Lo que hace el trabajador:** busca por región, abre la ficha de una casa con un
+  calendario que muestra solo libre u ocupado (nunca quién ocupa), reserva a su nombre con el
+  mismo formulario de los encargados pero aceptando él el reglamento y, con planilla,
+  autorizando el descuento; queda confirmada al instante con la ficha por correo (vía
+  «Aplicativo»). En *Mis reservas* ve las suyas, también las que le registró una encargada, y
+  puede desistir; no ve reservas de otras personas ni las pantallas de los encargados.
+- **Reglas:** las mismas de la marcha blanca (misma casa una vez por mes, anticipación,
+  capacidad, desistimiento, formas de pago); no hay aprobación.
+- **Temporadas altas con postulación y sorteo vuelven en la etapa 2** (segunda entrega, en
+  construcción): se quitaron el 13-11-2026 porque «el sistema no será utilizado por los
+  usuarios», premisa que cambió. En la marcha blanca verano e invierno siguen por orden de
+  llegada.
+- La sección «Primera etapa solo con encargados» (12-11-2026) sigue vigente como descripción
+  de la etapa 1.
+
 ## Alcance
 
 - Solo casas de veraneo. Se eliminan las casas solo de huéspedes (Copiapó, Concepción,

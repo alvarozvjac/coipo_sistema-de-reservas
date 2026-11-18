@@ -127,6 +127,10 @@ Todas las decisiones de diseño, con su fecha y fuente, están en `fuente/docs/D
   reemplaza la regla de una reserva por mes del Art. 7 · Álvaro Zegers.
 - 2026-11-13 · Tarifas por noche en un carril horizontal de tarjetas (4 a la vista), con la
   nueva tarifa dentro de la tarjeta · Álvaro Zegers.
+- 2026-11-18 · El cliente no quería quitar que los afiliados reserven: marcha blanca con
+  encargados y, después, etapa 2 con los trabajadores de CONAF. Se hacen las dos etapas con un
+  selector; en la etapa 2 reservan los trabajadores y vuelven las temporadas con sorteo ·
+  Álvaro Zegers, transmitiendo lo que explicó el cliente.
 - 2026-11-02 · Insumos en este repositorio público, con cargos en vez de nombres de
   Bienestar · Álvaro Zegers eligió el repositorio; el criterio de nombres es de esta
   documentación (regla 8 de la metodología).
@@ -437,6 +441,26 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   tableta).
 - Pública: GitHub Pages sirve `2d80015` (sha256 igual al local, 1.612.068 bytes); consola sin
   errores.
+
+### Etapa 2: selector y portal del trabajador (18-11-2026, local, sin publicar)
+
+- Pedido: Álvaro Zegers, 18-11-2026 08:33; respuestas: ambas etapas con un selector; vuelven
+  las temporadas con sorteo en la etapa 2 (segunda entrega); reservan los trabajadores de
+  CONAF.
+- Se reaprovechó del historial lo que había quitado el commit `051a2f3` (ficha de la casa y
+  calendario de `d98e20d`/`e81ce1d`), adaptado a las reglas vigentes; el formulario de
+  reserva es el mismo de los encargados.
+- Playwright (fecha fija 02-11-2026), 1366×900 y 390×844, 0 fallas: e2e18 31 (nueva:
+  marcha blanca sin ingreso de la trabajadora; el nacional abre la etapa 2 con respaldo;
+  ella reserva Rocas de Santo Domingo, ve Mis reservas y desiste; no ve reservas ajenas ni
+  pantallas de encargados; Actividad; vuelta a la marcha blanca; cambio programado y su
+  anulación), e2e14 62, e2e15 21, e2e16 23, e2e17 32, e2e4 17, e2e9 28. axe-core: 0
+  infracciones, ahora también en Etapa y en las cinco pantallas del trabajador; jueces: 0
+  bloqueantes.
+- Corregido con axe y al mirar las capturas: los días del calendario medían 23,9 px de ancho
+  (mínimo 24); el radio de «Descuento por planilla» contenía controles (cuotas y
+  autorización); una casilla se encogía a 13 px; y si la llegada estaba a menos de 10 días
+  hábiles, el formulario decía «si desiste hasta el 23 oct» (fecha ya pasada).
 
 ## Validación
 

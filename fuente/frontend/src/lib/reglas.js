@@ -224,4 +224,6 @@ export const VIAS = {
   presencial: 'Presencial',
   whatsapp: 'WhatsApp',
   otra: 'Otra',
+  // Etapa 2 (decisión 18-11-2026): la persona reservó por sí misma. No se elige al registrar.
+  aplicativo: 'Aplicativo (reservó la persona)',
 }
