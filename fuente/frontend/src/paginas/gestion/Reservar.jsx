@@ -126,7 +126,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
       : null;
 
   const pagoValido =
-    pago === "planilla" ? autoriza : pago === "transferencia" && vioCuenta;
+    pago === "planilla" ? autoriza : pago === "transferencia" && (vioCuenta || asistida);
   const pasoValido = [
     erroresFechas.length === 0,
     !excede && !otrosConError && !contactoError && !errorGrupo && !errorPerro,
@@ -135,7 +135,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
   const glosa = glosaTransferencia(casa, proximoCodigo());
   const elegirTransferencia = () => {
     setPago("transferencia");
-    setCuadro(true);
+    if (!asistida) setCuadro(true); // al encargado no se le interrumpe el registro (18-11-2026)
   };
   const limiteDesistir = limiteDesistimiento(entrada ?? "2026-01-01");
 
@@ -532,13 +532,13 @@ export function Reservar({ titular, gestor, casaId, panel }) {
                     titulo="Transferencia electrónica"
                     detalle="Antes de llegar, a la cuenta corriente de CONAF."
                   >
-                    {pago === "transferencia" && vioCuenta && (
+                    {pago === "transferencia" && (vioCuenta || asistida) && (
                       <div
                         onClick={(e) => e.stopPropagation()}
                         className="mt-3 rounded-lg bg-white p-3 text-[15px] ring-1 ring-borde"
                       >
                         <span className="text-[13px] text-tinta-500">
-                          Glosa de su transferencia
+                          {asistida ? "Glosa que debe usar la persona" : "Glosa de su transferencia"}
                         </span>
                         <span className="block font-semibold text-verde-800">
                           {glosa}
@@ -686,6 +686,7 @@ export function Reservar({ titular, gestor, casaId, panel }) {
             monto={total}
             glosa={glosa}
             plazo="antes de su llegada"
+            tercero={asistida}
             onCerrar={cerrarCuadro}
           />
         )}

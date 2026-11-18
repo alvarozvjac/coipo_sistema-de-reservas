@@ -57,7 +57,7 @@ function SorteoEnCurso({ s, lista }) {
   return (
     <div className="mt-10 border-t border-borde pt-8">
       <div className="flex flex-wrap items-center gap-3">
-        <h2 className="text-xl font-bold">Sorteo en curso · {s.nombre}</h2>
+        <h2 className="text-xl font-bold">{s.estado === 'sorteado' ? 'Resultado del sorteo' : 'Sorteo en curso'} · {s.nombre}</h2>
         <span className={`rounded-full px-2.5 py-0.5 text-[13px] font-semibold ${s.estado === 'sorteado' ? 'bg-verde-100 text-verde-800' : 'bg-sky-100 text-sky-800'}`}>
           {s.estado === 'sorteado' ? 'Sorteo realizado' : 'Postulación abierta'}
         </span>

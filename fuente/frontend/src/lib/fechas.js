@@ -14,6 +14,16 @@ export function hoyISO() {
   return aISO(new Date(Date.UTC(f.getFullYear(), f.getMonth(), f.getDate())))
 }
 
+/**
+ * Fecha y hora local 'AAAA-MM-DDTHH:MM:SS', sin zona (hallazgo 18-11-2026: con
+ * toISOString quedaba en UTC, 3 horas adelantada en Chile y, de noche, en el día
+ * siguiente). Es la misma zona de hoyISO().
+ */
+export function ahora(f = new Date()) {
+  const z = (n) => String(n).padStart(2, '0')
+  return `${f.getFullYear()}-${z(f.getMonth() + 1)}-${z(f.getDate())}T${z(f.getHours())}:${z(f.getMinutes())}:${z(f.getSeconds())}`
+}
+
 export const sumarDias = (iso, n) => {
   const f = aFecha(iso)
   f.setUTCDate(f.getUTCDate() + n)

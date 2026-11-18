@@ -1,6 +1,6 @@
 import { almacen, obtenerCasa, todasLasReservas } from './servicio.js'
 import { CUENTAS, PERFIL_POR_ROL } from './iam.js'
-import { fechaLarga, hoyISO, rangoFechas } from '../lib/fechas.js'
+import { fechaLarga, hoyISO, rangoFechas, ahora } from '../lib/fechas.js'
 import { pesos } from '../lib/formato.js'
 import { PARAMETROS, glosaTransferencia } from '../lib/reglas.js'
 import { ETAPAS } from './etapa.js'
@@ -18,7 +18,6 @@ import { ETAPAS } from './etapa.js'
  *   actividad(filtros)                  GET  /api/actividad
  */
 
-const ahora = () => new Date().toISOString().slice(0, 19)
 
 /* ---------- Usuarios y encargadas (solo lectura: se editan en el IAM) ---------- */
 

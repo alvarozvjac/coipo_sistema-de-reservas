@@ -57,7 +57,7 @@ function Copiar({ valor, etiqueta }) {
  * Cuadro centrado con los datos para transferir. Se abre al elegir la
  * transferencia; el usuario debe cerrarlo para continuar.
  */
-export function CuadroTransferencia({ monto, glosa, plazo, onCerrar }) {
+export function CuadroTransferencia({ monto, glosa, plazo, tercero = false, onCerrar }) {
   const boton = useRef(null)
   useEffect(() => {
     boton.current?.focus()
@@ -74,12 +74,13 @@ export function CuadroTransferencia({ monto, glosa, plazo, onCerrar }) {
           Datos para la transferencia
         </h2>
         <p className="mt-1 text-[15px] text-tinta-700">
-          Transfiera {monto ? <strong>{pesos(monto)}</strong> : 'el total de la estadía'} {plazo} a la siguiente cuenta. Escriba la glosa tal como aparece: así Bienestar identifica su pago.
+          {tercero ? 'La persona debe transferir ' : 'Transfiera '}
+          {monto ? <strong>{pesos(monto)}</strong> : 'el total de la estadía'} {tercero ? 'antes de llegar' : plazo} a la siguiente cuenta, con la glosa tal como aparece: así Bienestar identifica {tercero ? 'el' : 'su'} pago.
         </p>
         <div className="mt-4">
           <DatosCuenta monto={monto} glosa={glosa} />
         </div>
-        <p className="mt-3 text-[13px] text-tinta-500">Estos datos también quedarán en su comprobante de reserva.</p>
+        <p className="mt-3 text-[13px] text-tinta-500">{tercero ? 'Estos datos le llegan por correo a la persona junto con la ficha de la reserva.' : 'Estos datos también quedarán en su comprobante de reserva.'}</p>
         <Boton ref={boton} className="mt-5 w-full" onClick={onCerrar}>
           Entendido, cerrar
         </Boton>

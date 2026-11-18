@@ -1,6 +1,6 @@
 import { almacen, interno, listarCasas, obtenerCasa, ocupacionesDe, registrarAlDesistir } from './servicio.js'
 import { etapaAbierta } from './etapa.js'
-import { hoyISO, sumarDias } from '../lib/fechas.js'
+import { hoyISO, sumarDias, ahora } from '../lib/fechas.js'
 import { PARAMETROS, fraseTemporada, glosaTransferencia, noches, tarifaPara } from '../lib/reglas.js'
 import { HORAS_OFERTA, calendarioDe, calendarioTemporada, inicioTemporada, nochesTurno, pagoTemporada, puedePostular, sortear, turnosDe } from '../lib/sorteo.js'
 
@@ -23,7 +23,6 @@ import { HORAS_OFERTA, calendarioDe, calendarioTemporada, inicioTemporada, noche
 
 const estado = () => almacen.leer()
 const guardar = () => almacen.guardar()
-const ahora = () => new Date().toISOString().slice(0, 19)
 
 /* ---------- Sorteo en foco ---------- */
 
@@ -247,7 +246,7 @@ function ofrecerSiguiente(casaId, turno) {
   const siguiente = s.postulaciones.filter((p) => p.casa_id === casaId && p.turno === turno && p.estado === 'espera').sort((a, b) => a.posicion - b.posicion)[0]
   if (!siguiente) return
   siguiente.estado = 'ofertada'
-  siguiente.oferta = { enviada_en: ahora(), vence_en: new Date(Date.now() + HORAS_OFERTA * 3600000).toISOString().slice(0, 19) }
+  siguiente.oferta = { enviada_en: ahora(), vence_en: ahora(new Date(Date.now() + HORAS_OFERTA * 3600000)) }
   siguiente.notificaciones.push({ tipo: 'oferta', en: ahora(), detalle: `Se liberó el turno: tiene ${HORAS_OFERTA} horas para aceptarlo` })
 }
 

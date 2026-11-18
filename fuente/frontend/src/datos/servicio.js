@@ -29,12 +29,11 @@ import { CASAS } from './casas.js'
 import { NOMINA } from './usuarios.js'
 import { ADICIONAL_BASE, aleatorio, crearPersonas, semillas as semillasBase } from './semillas.js'
 
-import { hoyISO, mesDe, primerDiaMes, sumarDias, sumarMeses } from '../lib/fechas.js'
+import { hoyISO, mesDe, primerDiaMes, sumarDias, sumarMeses, ahora } from '../lib/fechas.js'
 import { ADICIONAL_TARIFA, cargoDesistimiento, noches, tarifaTramo } from '../lib/reglas.js'
 
 const CLAVE = 'reserva_veraneo_v23'
 
-const ahora = () => new Date().toISOString().slice(0, 19)
 
 const casaBase = (id) => CASAS.find((c) => c.id === id)
 
@@ -296,11 +295,20 @@ export const registrarAlDesistir = (f) => alDesistir.push(f)
 /* ---------- Cobros (Art. 21, Anexo A) ---------- */
 
 /** Transferencias por registrar, de reservas confirmadas; con región, solo las casas de esa región. */
+/**
+ * Transferencias por registrar: estadías confirmadas y, desde el 18-11-2026, los
+ * cargos por desistimiento fuera de plazo que se pagan por transferencia (antes
+ * quedaban pendientes en el panel sin dónde registrarlos). `monto` y `limite`
+ * dicen cuánto y hasta cuándo; `cargo` distingue el desistimiento.
+ */
 export const pagosPorRegistrar = (region = '') =>
   estado.reservas
-    .filter((r) => r.estado === 'confirmada' && r.forma_pago.tipo !== 'planilla' && !r.pago && (!region || casaBase(r.casa_id)?.region === region))
-    .map(conCasa)
-    .sort((a, b) => (a.entrada < b.entrada ? -1 : 1))
+    .filter((r) => r.forma_pago.tipo !== 'planilla' && !r.pago && (r.estado === 'confirmada' || (r.estado === 'desistida' && r.cargo_desistimiento > 0)) && (!region || casaBase(r.casa_id)?.region === region))
+    .map((r) => {
+      const cargo = r.estado === 'desistida'
+      return { ...conCasa(r), cargo, monto: cargo ? r.cargo_desistimiento : r.total, limite: cargo ? r.desistida_en.slice(0, 10) : r.forma_pago.anticipado ? r.entrada : r.salida }
+    })
+    .sort((a, b) => (a.limite < b.limite ? -1 : 1))
 
 export function registrarPago(codigo, { comprobante }, actor) {
   const r = estado.reservas.find((x) => x.codigo === codigo)
@@ -368,6 +376,9 @@ export function transferenciasDelPeriodo(periodo, region = '') {
       if (r.pago) {
         if (mesDe(r.pago.registrado_en) === periodo) lineas.push({ ...base, concepto: `Estadía ${r.entrada} a ${r.salida}`, monto: r.total, recibido: true, comprobante: r.pago.comprobante, por: r.pago.por, fecha: r.pago.registrado_en.slice(0, 10) })
       } else if (mesDe(r.entrada) === periodo) lineas.push({ ...base, concepto: `Estadía ${r.entrada} a ${r.salida}`, monto: r.total, recibido: false, vence: r.entrada })
+    }
+    if (r.estado === 'desistida' && r.cargo_desistimiento > 0 && r.pago && mesDe(r.pago.registrado_en) === periodo) {
+      lineas.push({ ...base, concepto: 'Desistimiento fuera de plazo: estadía completa', monto: r.cargo_desistimiento, recibido: true, comprobante: r.pago.comprobante, por: r.pago.por, fecha: r.pago.registrado_en.slice(0, 10) })
     }
     if (r.estado === 'desistida' && r.cargo_desistimiento > 0 && !r.pago && mesDe(r.desistida_en) === periodo) {
       lineas.push({ ...base, concepto: 'Desistimiento fuera de plazo: estadía completa', monto: r.cargo_desistimiento, recibido: false, vence: r.desistida_en })

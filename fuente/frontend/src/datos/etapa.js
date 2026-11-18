@@ -1,5 +1,5 @@
 import { almacen } from './servicio.js'
-import { hoyISO } from '../lib/fechas.js'
+import { hoyISO, ahora } from '../lib/fechas.js'
 
 /*
  * Etapa del sistema (decisión 18-11-2026). Bienestar parte con una marcha
@@ -30,7 +30,6 @@ export const ETAPAS = {
 
 export const ETAPA_INICIAL = 'marcha_blanca'
 
-const ahora = () => new Date().toISOString().slice(0, 19)
 
 /** Cambios de etapa, del más reciente al más antiguo. */
 export const historialEtapa = () => [...(almacen.leer().etapas ?? [])].sort((a, b) => (a.en < b.en ? 1 : -1))

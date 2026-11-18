@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CheckCircle2, Ticket } from 'lucide-react'
 import { REGIONES } from '../../datos/casas.js'
@@ -171,10 +171,16 @@ function Regla({ t, d }) {
 }
 
 function Exito({ codigo, postulacion, onOtra, propio = false }) {
+  // La confirmación queda a la vista y con el foco (hallazgo 18-11-2026: quedaba bajo el pliegue).
+  const titulo = useRef(null)
+  useEffect(() => {
+    titulo.current?.scrollIntoView({ block: 'center' })
+    titulo.current?.focus({ preventScroll: true })
+  }, [])
   return (
     <Tarjeta className="mx-auto max-w-xl p-6 text-center">
       <CheckCircle2 className="mx-auto size-12 text-verde-600" aria-hidden />
-      <h2 className="mt-3 text-xl font-bold">{propio ? 'Postulación recibida' : 'Postulación registrada'}</h2>
+      <h2 ref={titulo} tabIndex={-1} className="mt-3 text-xl font-bold outline-none">{propio ? 'Postulación recibida' : 'Postulación registrada'}</h2>
       <p className="mt-1 text-[15px] text-tinta-500">
         Código <strong className="text-tinta-900">{codigo}</strong>. Se envió el comprobante a {postulacion?.contacto.correo}.
       </p>
@@ -249,10 +255,7 @@ function Formulario({ sorteo: s, usuario, gestor, condicion, onListo }) {
       ...(gestor && { registrada_por: { nombre: gestor.nombre, perfil: gestor.perfil, region: gestor.region ?? null } }),
     })
     if (r.error) setError(r.error)
-    else {
-      window.scrollTo({ top: 0 })
-      onListo(r.codigo)
-    }
+    else onListo(r.codigo)
   }
 
   const err = (k) => intento && errores[k] && <p className="mt-2 text-sm text-error-700">{errores[k]}</p>

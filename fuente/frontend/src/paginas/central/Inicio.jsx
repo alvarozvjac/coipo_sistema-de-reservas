@@ -23,7 +23,7 @@ export function InicioCentral() {
   const reservas = todasLasReservas()
 
   // Alertas operativas
-  const pagosUrgentes = pagosPorRegistrar().filter((r) => r.forma_pago.anticipado && r.entrada <= sumarDias(hoy, 7))
+  const pagosUrgentes = pagosPorRegistrar().filter((r) => !r.cargo && r.forma_pago.anticipado && r.entrada <= sumarDias(hoy, 7))
   const sinInventario = casas.filter((c) => c.activa && !inventarioDe(c.id))
   const extintores = casas
     .map((c) => ({ casa: c, vence: inventarioDe(c.id)?.seguridad?.extintor_vence }))

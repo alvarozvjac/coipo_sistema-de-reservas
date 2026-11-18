@@ -293,9 +293,10 @@ function Pagos({ pagos }) {
   return (
     <>
       <p className="max-w-3xl text-[15px] text-tinta-500">
-        Transferencias electrónicas por comprobar, de todo el país. La reserva
-        ya está confirmada; deben pagar antes de llegar. Al registrar el N° de
-        operación queda en el reporte de cobranza a su nombre.
+        Transferencias electrónicas por comprobar, de todo el país: estadías
+        confirmadas, que deben pagarse antes de llegar, y cargos por desistir
+        fuera de plazo. Al registrar el N° de operación queda en el reporte de
+        cobranza a su nombre.
       </p>
       {hecho && (
         <div className="mt-3">
@@ -315,7 +316,7 @@ function Pagos({ pagos }) {
           </thead>
           <tbody className="divide-y divide-borde">
             {pagos.map((r) => {
-              const limite = r.forma_pago.anticipado ? r.entrada : r.salida;
+              const limite = r.limite;
               const dias = diasEntre(hoy, limite);
               const urgente = dias <= 7;
               return (
@@ -324,16 +325,22 @@ function Pagos({ pagos }) {
                     <span
                       className={`font-medium ${dias < 0 ? "text-error-700" : urgente ? "text-alerta-700" : ""}`}
                     >
-                      {dias < 0
+                      {r.cargo
+                        ? dias < 0
+                          ? `Pendiente hace ${plural(-dias, "día", "días")}`
+                          : "Pendiente desde hoy"
+                        : dias < 0
                         ? `Vencido hace ${plural(-dias, "día", "días")}`
                         : dias === 0
                           ? "Hoy"
                           : `En ${plural(dias, "día", "días")}`}
                     </span>
                     <span className="block text-[13px] text-tinta-500">
-                      {r.forma_pago.anticipado
-                        ? "Antes de llegar"
-                        : "Antes de la salida"}{" "}
+                      {r.cargo
+                        ? "Aviso de desistimiento"
+                        : r.forma_pago.anticipado
+                          ? "Antes de llegar"
+                          : "Antes de la salida"}{" "}
                       · {fechaCorta(limite)}
                     </span>
                   </td>
@@ -346,11 +353,14 @@ function Pagos({ pagos }) {
                   <td className="px-4 py-2.5">
                     {r.casa.nombre} · {rangoFechas(r.entrada, r.salida)}
                     <span className="block text-[13px] text-tinta-500">
-                      {r.codigo} · {TIPO[r.forma_pago.tipo]}
+                      {r.codigo} ·{" "}
+                      {r.cargo
+                        ? "Cargo por desistir fuera de plazo"
+                        : TIPO[r.forma_pago.tipo]}
                     </span>
                   </td>
                   <td className="px-4 py-2.5 text-right tabular-nums">
-                    {pesos(r.total)}
+                    {pesos(r.monto)}
                   </td>
                   <td className="px-4 py-2.5 text-right">
                     <Boton
@@ -383,8 +393,24 @@ function Pagos({ pagos }) {
         >
           <p className="mt-2 text-[15px] text-tinta-700">
             {registrando.titular.nombre} · {registrando.codigo} ·{" "}
-            <strong>{pesos(registrando.total)}</strong>
+            <strong>{pesos(registrando.monto)}</strong>
+            {registrando.cargo && " · cargo por desistir fuera de plazo"}
           </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (comprobante.trim().length < 3) return;
+              registrarPago(
+                registrando.codigo,
+                { comprobante: comprobante.trim() },
+                usuario,
+              );
+              setHecho(
+                `Transferencia de ${registrando.titular.nombre} registrada (N° ${comprobante.trim()}): queda en el reporte de cobranza a su nombre.`,
+              );
+              setRegistrando(null);
+            }}
+          >
           <Campo
             etiqueta="N° de operación de la transferencia"
             className="mt-4"
@@ -400,23 +426,11 @@ function Pagos({ pagos }) {
             <Boton variante="secundario" onClick={() => setRegistrando(null)}>
               Volver
             </Boton>
-            <Boton
-              disabled={comprobante.trim().length < 3}
-              onClick={() => {
-                registrarPago(
-                  registrando.codigo,
-                  { comprobante: comprobante.trim() },
-                  usuario,
-                );
-                setHecho(
-                  `Transferencia de ${registrando.titular.nombre} registrada (N° ${comprobante.trim()}): queda en el reporte de cobranza a su nombre.`,
-                );
-                setRegistrando(null);
-              }}
-            >
+            <Boton type="submit" disabled={comprobante.trim().length < 3}>
               Registrar
             </Boton>
           </div>
+          </form>
         </Dialogo>
       )}
     </>

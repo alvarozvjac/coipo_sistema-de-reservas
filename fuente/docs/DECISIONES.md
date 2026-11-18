@@ -819,3 +819,33 @@ Fuente: Álvaro Zegers (UIA), 18-11-2026, a pedido de Bienestar (VERIFICADO).
 - [PENDIENTE: Bienestar] Si los indicadores de gestión se obtendrán de otro modo (por
   ejemplo, un tablero institucional o una exportación desde la API en la fase 2), o si no se
   necesitan.
+
+## Correcciones de la prueba publicada (18-11-2026)
+
+Fuente: recorrido completo de la maqueta publicada (Claude, 18-11-2026, 17:00) y pedido de
+Álvaro Zegers de corregir «LAS SEIS» (VERIFICADO).
+
+1. **Cargos por desistimiento pagados por transferencia**: ahora aparecen en Cobros ›
+   Transferencias por registrar («Cargo por desistir fuera de plazo», con el plazo contado
+   desde el aviso) y se registran igual que una estadía. Al registrarlos pasan a
+   «recibidas» en el mes del registro. Antes quedaban pendientes en el panel sin dónde
+   registrarlos.
+2. **Horas en hora de Chile**: los registros (pagos, actividad, sorteo, etapas, plantillas,
+   ofertas) guardan la fecha y hora local del navegador (`ahora()` de `lib/fechas.js`).
+   Antes se guardaban en UTC: 3 horas adelantadas y, después de las 21:00, con el día
+   siguiente. En el producto la hora la pone el servidor ([PENDIENTE: Luis Monsalve] zona
+   horaria de la API, `America/Santiago`).
+3. **Registro de la encargada con transferencia**: ya no se abre la ventana «Datos para la
+   transferencia» al elegir la opción; el formulario muestra «Glosa que debe usar la
+   persona» y «Ver datos de la cuenta». Si la abre, la ventana habla de la persona. El
+   diálogo «Registrar transferencia» se guarda también con Enter.
+4. **Confirmación de la postulación**: «Postulación recibida» queda a la vista y con el
+   foco al postular (antes quedaba bajo el pliegue).
+5. **Textos después del sorteo**: Temporadas dice «Resultado del sorteo» (no «Sorteo en
+   curso») y la columna de cierre, «Cerró el …, al realizar el sorteo»; el inicio de la
+   trabajadora dice el resultado («Resultado del sorteo de …: adjudicada») con «Ver el
+   resultado».
+6. **Numeración de las reservas**: sin cambio. VERIFICADO en `datos/semillas.js`: las
+   reservas de prueba van de R-2026-0301 a R-2026-1002 en todo el país (en Valparaíso se
+   ven solo hasta la 0554), así que R-2026-1003 es el número que corresponde.
+

@@ -517,6 +517,24 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   ea6772558e7d0dc3…, 7.974.249 bytes), pestaña «Reservas Casas de Veraneo», sin «Sistema de
   Gestión de Reservas». Consola de Chrome: 0 errores.
 
+### Prueba de la maqueta publicada y correcciones (18-11-2026)
+
+- Pedido de Álvaro Zegers (VERIFICADO, 17:09): «prueba la maqueta»; eligió «Recorrido
+  completo publicado». Recorrido en Chrome de escritorio sobre la URL pública (`60b92dd`),
+  con la fecha real: ingreso por el IAM simulado con `cnunez`, `pherrera` y `mfuentes`;
+  registro con transferencia; registro de la transferencia; pestañas de Configuración;
+  cambio a la etapa 2 (sin respaldo no guarda); postulación (exige autorizar el descuento);
+  reserva directa confirmada; límite de una vez por mes en la misma casa; desistimiento
+  sin costo; sorteo; resultado «Adjudicada» de la trabajadora. Datos de prueba borrados del
+  navegador al terminar. No lo comprobé en teléfono en Chrome (la ventana no se achicó).
+- Hallazgos: seis (ver DECISIONES, «Correcciones de la prueba publicada»). A las 17:18
+  Álvaro Zegers pidió «LAS SEIS».
+- Verificación local (390×844 y 1366×900, fecha fija 2026-11-02): e2e20 nueva, 20 sin
+  fallas (cargos registrables y con Enter, hora local, sin ventana para la encargada,
+  postulación a la vista, textos tras el sorteo); e2e14 63, e2e15 21, e2e16 22, e2e17 32,
+  e2e18 31, e2e19 30, e2e4 y e2e9 28 sin fallas; axe 0 violaciones. Capturas en teléfono
+  miradas: la confirmación de la postulación y el aviso del resultado quedan a la vista.
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la

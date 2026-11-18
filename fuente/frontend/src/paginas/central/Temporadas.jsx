@@ -75,7 +75,7 @@ export function Temporadas() {
                     {cal.map((c) => `${c.turnos.length}${cal.length > 1 ? (c.clave === 'general' ? ' generales' : ` en ${plural(c.casas.length, 'casa', 'casas')}`) : ''}`).join(' y ')}
                   </td>
                   <td className="px-4 py-2.5 text-sm">
-                    {sorteoDe(t.id) ? `Abierta el ${fechaCorta(sorteoDe(t.id).postulacion.desde)} · cierra el ${fechaCorta(sorteoDe(t.id).postulacion.hasta, true)}` : `Cierra el ${fechaCorta(t.postulacion.hasta, true)}`}
+                    {sorteoDe(t.id)?.estado === 'sorteado' ? `Cerró el ${fechaCorta(sorteoDe(t.id).sorteado_en.slice(0, 10), true)}, al realizar el sorteo` : sorteoDe(t.id) ? `Abierta el ${fechaCorta(sorteoDe(t.id).postulacion.desde)} · cierra el ${fechaCorta(sorteoDe(t.id).postulacion.hasta, true)}` : `Cierra el ${fechaCorta(t.postulacion.hasta, true)}`}
                   </td>
                   <td className="px-4 py-2.5">
                     <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[13px] font-semibold ${e.clase}`}>{e.etiqueta}</span>
