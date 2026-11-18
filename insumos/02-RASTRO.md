@@ -534,6 +534,9 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   postulación a la vista, textos tras el sorteo); e2e14 63, e2e15 21, e2e16 22, e2e17 32,
   e2e18 31, e2e19 30, e2e4 y e2e9 28 sin fallas; axe 0 violaciones. Capturas en teléfono
   miradas: la confirmación de la postulación y el aviso del resultado quedan a la vista.
+- VERIFICADO: publicado en `4428cce`; GitHub Pages sirve el mismo `index.html` (sha256
+  d226d1bff7598bdf…, 7.975.727 bytes) y contiene «Cargo por desistir fuera de plazo».
+  Consola de Chrome: 0 errores.
 
 ## Validación
 
