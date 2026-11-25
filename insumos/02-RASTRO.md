@@ -564,6 +564,13 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   fija 25-11-2026, 0 errores de página) y el PDF de `npm run manual:pdf` (25 páginas,
   2,9 MB), mirado página por página. Cubre los tres perfiles, las dos etapas, el registro
   paso a paso, Cobros, Configuración, temporadas y sorteo, reglas y datos de prueba.
+- Texto de Actividad sin «aprobaciones» (`d174ac2`, publicado y verificado por sha256).
+- «Vista celular» con `<dialog>` nativo y `postMessage` al mismo origen (hallazgo H). Pedido
+  de Álvaro Zegers; la consulta a `modern-web-guidance` que pide `prompts/07` no corrió (el
+  permiso automático rechazó el `npx`) y él eligió «sigue sin la guía». Playwright sobre la
+  página publicada en local: abre modal con el foco en «Cerrar», Tab no sale, Esc y «Cerrar»
+  cierran y el foco vuelve al botón, Esc dentro del marco cierra, un mensaje ajeno no; 0
+  errores de página. Captura mirada: igual que antes.
 
 ## Validación
 
