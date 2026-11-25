@@ -41,7 +41,7 @@ imprimir; con `PYTHONIOENCODING=utf-8` corre entero. Es de `coipo_jueces`, no de
 | H | La «Vista celular» arma su diálogo con un `div role="dialog"`, sin atrapar el foco, y responde a `postMessage(…, "*")` | `prompts/07` | Abierto, menor: es una herramienta de presentación, no parte del producto |
 | I | La Actividad está en Configuración solo para el encargado nacional; el patrón de la fábrica la da a administrador y auditor | `docs/decisiones/2026-11-auditoria-siempre.md` | Para el porte: la pone la siembra |
 
-| J | La pestaña Actividad dice que registra «reservas, aprobaciones, pagos…», y no hay aprobación de reservas desde el 13-11-2026 | — | Abierto, menor: texto de la interfaz |
+| J | La pestaña Actividad dice que registra «reservas, aprobaciones, pagos…», y no hay aprobación de reservas desde el 13-11-2026 | — | **Corregido** el 25-11-2026 (`paginas/central/config/Actividad.jsx`); captura del manual y página publicada regeneradas |
 
 ### 0.3 Qué se comprobó y qué no
 
