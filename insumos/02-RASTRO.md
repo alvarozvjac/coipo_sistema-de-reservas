@@ -571,6 +571,11 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   página publicada en local: abre modal con el foco en «Cerrar», Tab no sale, Esc y «Cerrar»
   cierran y el foco vuelve al botón, Esc dentro del marco cierra, un mensaje ajeno no; 0
   errores de página. Captura mirada: igual que antes.
+- Aplicativo final: Álvaro Zegers pidió integrar `coipo_cabania` y que
+  `reserva-bienestar.conaf.cl` tenga el sistema final. Pidió renombrar `coipo_cabania` a
+  `reserva-bienestar.conaf.cl`; no se hizo (rompe su despliegue y la norma de nombres de la
+  fábrica) y eligió un repositorio nuevo, `coipo_reserva_bienestar`. Plan y decisiones
+  pendientes en `fuente/docs/PLAN-coipo_reserva_bienestar.md`.
 
 ## Validación
 
