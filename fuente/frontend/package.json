@@ -8,7 +8,10 @@
     "build": "vite build",
     "build:pagina": "vite build --mode pagina && node scripts/pagina.mjs",
     "preview": "vite preview",
-    "lint": "oxlint src"
+    "lint": "oxlint src",
+    "manual:capturas": "node scripts/manual/capturar.mjs",
+    "manual:pdf": "node scripts/manual/imprimir.mjs",
+    "manual": "npm run build && npm run manual:capturas && npm run manual:pdf"
   },
   "dependencies": {
     "jspdf": "^3.0.1",
@@ -24,6 +27,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.0.3",
     "oxlint": "^1.71.0",
+    "playwright-core": "1.49.1",
     "tailwindcss": "^4.3.3",
     "vite": "^8.1.1"
   }

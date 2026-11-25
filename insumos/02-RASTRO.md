@@ -555,9 +555,15 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   de `4428cce`: 0 apariciones de `vc-btn`). Corregido; además `<meta name="color-scheme">`
   y `fetchPriority="high"` en el banner (UI-21), y `.oxlintrc.json` con las reglas del Zen
   de la semilla (COD-5).
-- Sin verificar: en este PC no hay Node, así que no corrieron `npm run lint`, el build ni
-  Playwright, y el `index.html` publicado **no** se regeneró. Falta hacerlo en un PC con
-  Node antes del commit de publicación.
+- Primer commit (`03413d3`) sin Node en el PC. Después, a pedido de Álvaro Zegers
+  («regenera el manual PDF»; eligió «Node portátil y manual nuevo»), con Node 22.12 portátil:
+  `npm run lint` da 101 errores y 60 avisos con las reglas nuevas (deuda COD-5, detalle en
+  CUMPLIMIENTO §0.3); build y `build:pagina` sin errores; `index.html` regenerado.
+- Manual de usuario nuevo: la fuente del anterior nunca se versionó. Ahora
+  `fuente/docs/manual/manual.html` con 30 capturas (`npm run manual:capturas`, Chrome, fecha
+  fija 25-11-2026, 0 errores de página) y el PDF de `npm run manual:pdf` (25 páginas,
+  2,9 MB), mirado página por página. Cubre los tres perfiles, las dos etapas, el registro
+  paso a paso, Cobros, Configuración, temporadas y sorteo, reglas y datos de prueba.
 
 ## Validación
 

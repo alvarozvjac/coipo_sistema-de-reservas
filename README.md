@@ -56,7 +56,9 @@ De ejemplo: R-2026-0195 (Valparaíso, transferencia por registrar).
 - `insumos/`: problema, solución, rastro y entrega de la iniciativa CON001 según la
   metodología UIA del tramo previo a la fábrica (`00-PROBLEMA.md`, `01-SOLUCION.md`,
   `02-RASTRO.md`, `03-ENTREGA.md`).
-- `manual-usuario.pdf`: manual de usuario de los encargados, con capturas y diagramas de flujo.
+- `manual-usuario.pdf`: manual de usuario (encargada regional, encargado nacional y
+  trabajadores en la etapa 2), con capturas y diagramas de flujo. Su fuente está en
+  `fuente/docs/manual/` y se regenera con `npm run manual`.
 - `index.html`: la maqueta completa en un solo archivo (código, estilos e imágenes
   incluidos). Se genera desde `fuente/` con `npm run build:pagina` (archivo
   `fuente/frontend/dist-pagina/github-pages/index.html`).
@@ -73,8 +75,11 @@ npm install
 npm run dev            # para trabajar: http://localhost:5173
 npm run build:pagina   # genera la página única
 copy dist-pagina\github-pages\index.html ..\..\index.html
-copy public\manual-usuario.pdf ..\..\manual-usuario.pdf
+npm run manual         # si cambió una pantalla: capturas nuevas y el PDF, ya copiado a la raíz
 ```
+
+`npm run manual` usa el Chrome instalado en el equipo. Si cambia una pantalla, hay que
+revisar también el texto de su sección en `fuente/docs/manual/manual.html`.
 
 Luego se hace commit y push a `main`; GitHub Pages publica en uno o dos minutos.
 

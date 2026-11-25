@@ -29,7 +29,13 @@ npm install
 npm run dev            # http://localhost:5173
 npm run lint           # oxlint con las reglas del Zen de la semilla (COD-5)
 npm run build:pagina   # página única para GitHub Pages
+npm run manual         # capturas (Chrome instalado, fecha fija 25-11-2026) y PDF del manual
 ```
+
+El manual de usuario se escribe en `docs/manual/manual.html`; sus capturas, en
+`docs/manual/capturas/`, las toma `scripts/manual/capturar.mjs`, e `imprimir.mjs` deja el PDF
+en `frontend/public/` y en la raíz del repositorio. Usa `playwright-core` con el canal
+`chrome`: no descarga navegadores.
 
 En la pantalla de ingreso, «Ingresar con COIPO IAM» abre el IAM simulado: se elige una
 cuenta de prueba (contraseña «maqueta»). **«Reiniciar datos de prueba»**, en el pie,

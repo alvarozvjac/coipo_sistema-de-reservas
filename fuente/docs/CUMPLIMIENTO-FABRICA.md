@@ -36,18 +36,29 @@ imprimir; con `PYTHONIOENCODING=utf-8` corre entero. Es de `coipo_jueces`, no de
 | C | Sin `<meta name="color-scheme">` y el banner sin prioridad de carga | `UI-21`, `prompts/07` (`dark-mode`, `optimize-image-priority`) | **Corregido** en `index.html` y `componentes/Banner.jsx` |
 | D | `.oxlintrc.json` solo con `no-undef` | COD-5 | **Corregido**: las reglas de `semilla/ESQUELETO/frontend/.oxlintrc.json` que aplican a JavaScript, en `error`. Las `typescript/*` no aplican mientras no haya TypeScript |
 | E | `fuente/README.md` describía el ingreso con RUT y código y archivos que no existen (`lib/acta.js`, `paginas/solicitante/`, `paginas/otros/`); esta revisión citaba `lib/indicadores.js`, que tampoco existe | AGENTS.md §3, regla 1 | **Corregido** |
-| F | `manual-usuario.pdf` es del 12-11 (fecha de creación del PDF y último commit `fd19f0a`); después cambiaron la aprobación, el efectivo, el Panel de la encargada, las etapas y el sorteo, y también los RUT de ejemplo | — | **Pendiente**: regenerarlo. INFERIDO: no se pudo leer su texto en este PC |
+| F | `manual-usuario.pdf` es del 12-11 (fecha de creación del PDF y último commit `fd19f0a`); después cambiaron la aprobación, el efectivo, el Panel de la encargada, las etapas y el sorteo, y también los RUT de ejemplo. Su fuente (el documento que se imprimía) nunca se versionó | — | **Corregido**: manual nuevo, con fuente versionada en `fuente/docs/manual/manual.html`, 30 capturas que toma `npm run manual:capturas` con la fecha fija del 25-11-2026 y PDF que imprime `npm run manual:pdf` (25 páginas, 2,9 MB) |
 | G | `sembrar.py --maqueta` espera HTML, CSS y JS planos y toma las hojas de los `<link rel=stylesheet>`. El `index.html` publicado es un solo archivo con el CSS en línea, y el CSS de `fuente/` es la fuente de Tailwind, no el compilado: la cara no llegaría a `frontend/src/maqueta/` | `semilla/siembra/maqueta.py` (líneas 1-24 y 213-263); `prompts/06` | **Para decidir** con Luis Monsalve: portar `fuente/` con `prompts/55-migrar-a-typescript-y-hexagonal.md`, o entregar un build sin incrustar (HTML con su CSS compilado aparte). INFERIDO: no se corrió la siembra |
 | H | La «Vista celular» arma su diálogo con un `div role="dialog"`, sin atrapar el foco, y responde a `postMessage(…, "*")` | `prompts/07` | Abierto, menor: es una herramienta de presentación, no parte del producto |
 | I | La Actividad está en Configuración solo para el encargado nacional; el patrón de la fábrica la da a administrador y auditor | `docs/decisiones/2026-11-auditoria-siempre.md` | Para el porte: la pone la siembra |
 
-### 0.3 Lo que no se comprobó (DESCONOCIDO)
+| J | La pestaña Actividad dice que registra «reservas, aprobaciones, pagos…», y no hay aprobación de reservas desde el 13-11-2026 | — | Abierto, menor: texto de la interfaz |
 
-En este PC no hay Node.js: no corrieron `npm run lint` (con las reglas nuevas es probable
-que haya infracciones, sobre todo `complexity` y `max-lines` en `datos/casas.js`), el build,
-ni las baterías de Playwright y axe-core. El `index.html` y el manual publicados **no** se
-regeneraron: los arreglos A a C están en `fuente/` y llegan a la página con el próximo
-`npm run build:pagina`. La forma de un teléfono «no real» no la define la fábrica
+### 0.3 Qué se comprobó y qué no
+
+Con Node.js 22.12 portátil (VERIFICADO, sha256 del zip contra `SHASUMS256.txt` de nodejs.org):
+
+- `npm run lint` con las reglas nuevas: **101 errores** (55 `no-nested-ternary`, 34
+  `complexity` —la mayor, 49 en `Formulario` de `paginas/gestion/Postular.jsx`—, 8
+  `eqeqeq`, 2 `max-params`, 1 `max-depth` y 1 `max-lines` en `datos/casas.js`) y 60 avisos
+  de `jsx-a11y` y `react`. Es la deuda COD-5 medida, no un defecto nuevo: se paga al portar a
+  TypeScript y capas.
+- `npm run build` y `npm run build:pagina` sin errores. El `index.html` de la raíz se regeneró:
+  trae la «Vista celular» (`vc-btn`), el `meta color-scheme` y los RUT de prueba.
+- El recorrido de `npm run manual:capturas` (Chrome, 30 pantallas de los tres perfiles y las
+  dos etapas, con el registro de una reserva): 0 errores de página.
+
+DESCONOCIDO: no se corrieron las baterías `e2e*` ni axe-core, que no están versionadas en
+este repositorio. La forma de un teléfono «no real» no la define la fábrica
 (`DATOS_DE_PRUEBA.md` §5.4 dice «ningún teléfono chileno con forma real» sin decir cuál
 es); `+56 9 0000 NNNN` es una elección de esta revisión.
 

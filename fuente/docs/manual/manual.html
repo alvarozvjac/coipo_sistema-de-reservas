@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8" />
+<title>Manual de usuario · Casas de Veraneo</title>
+<!--
+  Fuente del manual de usuario. Se imprime a PDF con `npm run manual:pdf` (scripts/manual/imprimir.mjs),
+  que deja fuente/frontend/public/manual-usuario.pdf y la copia de la raíz del repositorio.
+  Las capturas las toma `npm run manual:capturas` con la fecha fija del 25-11-2026.
+  Al cambiar una pantalla: volver a capturar, revisar el texto de su sección y volver a imprimir.
+-->
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm; }
+  :root { --verde: #064928; --verde-claro: #e8f1eb; --tinta: #1d1c1a; --gris: #5d5a55; --borde: #d9d5cf; --aviso: #fff6e0; }
+  * { box-sizing: border-box; }
+  html { color-scheme: light; }
+  body { margin: 0; font: 10.5pt/1.5 "Segoe UI", system-ui, -apple-system, sans-serif; color: var(--tinta); background: #fff; }
+  h1, h2, h3 { color: var(--verde); line-height: 1.2; }
+  h2 { font-size: 17pt; margin: 0 0 8pt; padding-bottom: 4pt; border-bottom: 2px solid var(--verde); break-before: page; }
+  h3 { font-size: 12.5pt; margin: 16pt 0 4pt; break-after: avoid; }
+  p, ul, ol { margin: 0 0 7pt; }
+  li { margin-bottom: 2pt; }
+  figure { margin: 8pt 0 12pt; break-inside: avoid; }
+  figure img { width: 80%; margin: 0 auto; border: 1px solid var(--borde); border-radius: 4pt; display: block; }
+  figure.media img { width: 72%; margin: 0 auto; }
+  figcaption { font-size: 9pt; color: var(--gris); margin: 3pt auto 0; width: 80%; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; font-size: 9.5pt; break-inside: avoid; }
+  th, td { border: 1px solid var(--borde); padding: 4pt 6pt; text-align: left; vertical-align: top; }
+  th { background: var(--verde-claro); }
+  .nota { background: var(--verde-claro); border-left: 3pt solid var(--verde); padding: 6pt 9pt; margin: 8pt 0; break-inside: avoid; }
+  .aviso { background: var(--aviso); border-left: 3pt solid #b7791f; padding: 6pt 9pt; margin: 8pt 0; break-inside: avoid; }
+  .boton { display: inline-block; padding: 0 5pt; border: 1px solid var(--borde); border-radius: 3pt; font-weight: 600; white-space: nowrap; }
+  .portada { height: 255mm; display: flex; flex-direction: column; }
+  .portada img { width: 100%; }
+  .portada .titulo { margin-top: 55mm; }
+  .portada h1 { font-size: 30pt; margin: 0 0 6pt; }
+  .portada .sub { font-size: 14pt; color: var(--gris); margin: 0; }
+  .portada .pie { margin-top: auto; font-size: 9.5pt; color: var(--gris); border-top: 1px solid var(--borde); padding-top: 8pt; }
+  .indice { break-before: page; }
+  .indice h2 { break-before: avoid; }
+  .indice ol { columns: 1; padding-left: 16pt; }
+  .indice ol ol { margin-top: 2pt; }
+  svg.flujo { width: 100%; height: auto; display: block; margin: 6pt 0 10pt; }
+  svg.flujo text { font: 9pt "Segoe UI", system-ui, sans-serif; fill: var(--tinta); }
+  svg.flujo .caja { fill: #fff; stroke: var(--verde); stroke-width: 1.4; }
+  svg.flujo .caja-v { fill: var(--verde-claro); stroke: var(--verde); stroke-width: 1.4; }
+  svg.flujo .flecha { stroke: var(--verde); stroke-width: 1.4; fill: none; marker-end: url(#punta); }
+  svg.flujo .t-b { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<section class="portada">
+  <img src="../../frontend/src/assets/banner-conaf-uia.jpg" alt="CONAF · Unidad de Información y Análisis" />
+  <div class="titulo">
+    <h1>Casas de Veraneo</h1>
+    <p class="sub">Manual de usuario del sistema de reservas<br />Servicio de Bienestar · CONAF</p>
+  </div>
+  <div class="pie">
+    Versión del 25 de noviembre de 2026, para la maqueta de validación
+    (<code>alvarozvjac.github.io/coipo_sistema-de-reservas</code>). Elaborado por la Unidad de Información y
+    Análisis (UIA). Personas, RUT, reservas y fotografías son ficticios; las casas y tarifas son las del
+    llamado de verano 2027. Norma de referencia: Reglamento General de Uso de Casas de Veraneo o Descanso
+    (propuesta de actualización, octubre 2026).
+  </div>
+</section>
+
+<section class="indice">
+  <h2>Contenido</h2>
+  <ol>
+    <li>Qué es el sistema y quién lo usa</li>
+    <li>Ingreso</li>
+    <li>Encargada regional
+      <ol><li>Reservas: tablero y listado</li><li>Registrar una reserva</li><li>Ficha de la reserva y desistimiento</li><li>Inventario de las casas</li></ol>
+    </li>
+    <li>Encargado nacional
+      <ol><li>Panel nacional</li><li>Reservas de todo el país</li><li>Cobros</li><li>Configuración</li><li>Cambiar de etapa</li><li>Temporadas altas y sorteo</li></ol>
+    </li>
+    <li>Etapa 2: trabajadores de CONAF</li>
+    <li>Reglas principales</li>
+    <li>Para probar la maqueta</li>
+  </ol>
+</section>
+
+<section>
+  <h2>1. Qué es el sistema y quién lo usa</h2>
+  <p>
+    Casas de Veraneo reemplaza las planillas y formularios con que hoy se reservan las casas de veraneo
+    del Servicio de Bienestar. Toda reserva que se registra con fechas disponibles queda
+    <strong>confirmada</strong> en el momento y la persona recibe por correo la <strong>ficha de la
+    reserva</strong>: quienes viajan, las direcciones de la casa y su inventario. No hay aprobación
+    posterior ni pago en efectivo.
+  </p>
+
+  <h3>Perfiles</h3>
+  <table>
+    <tr><th style="width:24%">Perfil</th><th>Qué hace</th></tr>
+    <tr><td>Encargada regional</td><td>Ve la ocupación de todo el país; registra reservas en las casas de su región, a pedido de la persona por cualquier vía (teléfono, correo, presencial, WhatsApp u otra); registra desistimientos; mantiene el inventario de las casas de su región.</td></tr>
+    <tr><td>Encargado nacional</td><td>Todo lo anterior en cualquier casa del país, más el Panel nacional, los Cobros (descuentos por planilla y transferencias), la Configuración del sistema y las temporadas altas con su sorteo.</td></tr>
+    <tr><td>Trabajador/a de CONAF</td><td>Solo en la etapa 2: busca casas, reserva a su nombre, postula al sorteo de temporada alta y ve sus reservas.</td></tr>
+  </table>
+
+  <h3>Las dos etapas</h3>
+  <p>El encargado nacional elige la etapa en <strong>Configuración › Etapa</strong> (sección 4.5).</p>
+  <table>
+    <tr><th style="width:24%">Etapa</th><th>Cómo funciona</th></tr>
+    <tr><td>Etapa 1 · Marcha blanca</td><td>Solo las encargadas regionales y el encargado nacional registran reservas, a pedido de la persona. Verano e invierno se registran como cualquier fecha, por orden de llegada.</td></tr>
+    <tr><td>Etapa 2 · Abierto a trabajadores</td><td>Además, los trabajadores de CONAF (afiliados/as, no afiliados/as y plazo fijo) ingresan con su cuenta institucional y reservan a su nombre. Las temporadas altas se asignan por postulación y sorteo. Jubilados/as y funcionarios de otros servicios públicos siguen pidiéndolo a la encargada.</td></tr>
+  </table>
+
+  <h3>Cómo se paga</h3>
+  <table>
+    <tr><th style="width:40%">Quién</th><th>Forma de pago</th></tr>
+    <tr><td>Funcionarios/as de CONAF (afiliados/as activos/as y no afiliados/as)</td><td>Descuento por planilla, hasta en 3 cuotas en la reserva directa.</td></tr>
+    <tr><td>Funcionarios/as de CONAF a plazo fijo</td><td>Descuento por planilla o transferencia electrónica.</td></tr>
+    <tr><td>Afiliados/as jubilados/as y funcionarios/as de otros servicios públicos</td><td>Transferencia electrónica antes de llegar. La reserva queda confirmada al registrarla; la transferencia queda pendiente hasta que el encargado nacional registra en Cobros que llegó.</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>2. Ingreso</h2>
+  <p>
+    Se ingresa con la cuenta institucional a través del <strong>COIPO IAM</strong>, que administra el
+    acceso a las aplicaciones de CONAF. El perfil (encargada regional, encargado nacional o trabajador/a)
+    y la región de la encargada salen del rol que el IAM le asigna en esta aplicación: no se eligen en
+    la pantalla.
+  </p>
+  <ol>
+    <li>En la pantalla de ingreso, pulse <span class="boton">Ingresar con COIPO IAM</span>.</li>
+    <li>En la pantalla del IAM escriba su usuario y contraseña y pulse ingresar.</li>
+    <li>El IAM lo devuelve al sistema, a la pantalla de inicio de su perfil.</li>
+  </ol>
+  <figure><img src="capturas/01-ingreso.jpg" alt="Pantalla de ingreso" /><figcaption>Figura 1. Pantalla de ingreso. Desde aquí también se descarga este manual.</figcaption></figure>
+  <figure><img src="capturas/02-iam.jpg" alt="Pantalla del IAM" /><figcaption>Figura 2. Pantalla del COIPO IAM. En la maqueta está simulada.</figcaption></figure>
+  <p>
+    Una cuenta sin rol en esta aplicación ve el aviso «Su cuenta no tiene acceso a esta aplicación» y no
+    queda con sesión. En la etapa 1 eso le ocurre a todo trabajador/a; en la etapa 2 los trabajadores de
+    CONAF entran con su perfil.
+  </p>
+  <figure><img src="capturas/03-sin-acceso.jpg" alt="Cuenta sin acceso" /><figcaption>Figura 3. Una cuenta sin rol en la aplicación, en la etapa 1.</figcaption></figure>
+  <p>
+    El pie de cada pantalla tiene el enlace a este manual y el botón <span class="boton">Tema</span>, que
+    alterna entre el tema del sistema, claro y oscuro. Para salir, use el botón junto a su nombre, arriba a
+    la derecha.
+  </p>
+</section>
+
+<section>
+  <h2>3. Encargada regional</h2>
+  <p>La encargada regional entra a <strong>Reservas</strong>. Su menú tiene dos opciones: Reservas e Inventario.</p>
+
+  <h3>3.1 Reservas: tablero y listado</h3>
+  <p>
+    Arriba están el buscador (por nombre, RUT o código de reserva), el filtro de región y el de personas.
+    Por defecto se ve la región de la encargada, pero puede elegir cualquier otra o todo el país:
+    <strong>las demás regiones son solo consulta</strong>.
+  </p>
+  <p>
+    El <strong>tablero de ocupación</strong> muestra cuatro semanas desde hoy, una fila por casa. Las
+    reservas confirmadas o en curso van en verde, las finalizadas en gris y las fechas bloqueadas con
+    rayas. <span class="boton">Hoy</span> e <span class="boton">Ir a la fecha</span> mueven el período.
+  </p>
+  <ul>
+    <li>Toque una reserva para abrir su ficha y gestionarla.</li>
+    <li>Para registrar, toque la primera noche libre y luego la última: se abre el registro con la casa y las fechas ya puestas.</li>
+  </ul>
+  <figure><img src="capturas/10-reservas-encargada.jpg" alt="Reservas de la encargada" /><figcaption>Figura 4. Reservas: buscador, filtros y tablero de ocupación de la región.</figcaption></figure>
+  <p>
+    Bajo el tablero, el <strong>listado</strong> trae todas las reservas de la región con su estado:
+    Confirmada, En curso, Finalizada, Desistida o Anulada por Bienestar. Las pestañas filtran por estado y
+    muestran cuántas hay; el selector filtra por casa. Cada fila muestra las fechas, la casa, la persona,
+    la vía por la que pidió la reserva y el total.
+  </p>
+  <figure><img src="capturas/11-listado.jpg" alt="Listado de reservas" /><figcaption>Figura 5. Listado de reservas de la región, con las pestañas por estado.</figcaption></figure>
+
+  <h3>3.2 Registrar una reserva</h3>
+  <p>
+    Se registra lo que una persona pidió por cualquier vía, <strong>solo si hay disponibilidad</strong>.
+    El registro se hace en un panel lateral que se abre con <span class="boton">Nueva solicitud</span> o
+    marcando las noches en el tablero.
+  </p>
+  <svg class="flujo" viewBox="0 0 700 150" role="img" aria-label="Flujo del registro de una reserva">
+    <defs><marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#064928" /></marker></defs>
+    <rect class="caja" x="5" y="20" width="120" height="56" rx="8" /><text x="65" y="44" text-anchor="middle" class="t-b">1. Casa y fechas</text><text x="65" y="62" text-anchor="middle">en su región</text>
+    <rect class="caja" x="150" y="20" width="120" height="56" rx="8" /><text x="210" y="44" text-anchor="middle" class="t-b">2. Persona</text><text x="210" y="62" text-anchor="middle">RUT en la nómina</text>
+    <rect class="caja" x="295" y="20" width="120" height="56" rx="8" /><text x="355" y="44" text-anchor="middle" class="t-b">3. Antecedentes</text><text x="355" y="62" text-anchor="middle">reservas y avisos</text>
+    <rect class="caja" x="440" y="20" width="120" height="56" rx="8" /><text x="500" y="44" text-anchor="middle" class="t-b">4. Quiénes van,</text><text x="500" y="62" text-anchor="middle">contacto y pago</text>
+    <rect class="caja-v" x="585" y="20" width="110" height="56" rx="8" /><text x="640" y="44" text-anchor="middle" class="t-b">Confirmada</text><text x="640" y="62" text-anchor="middle">y ficha por correo</text>
+    <path class="flecha" d="M125,48 H148" /><path class="flecha" d="M270,48 H293" /><path class="flecha" d="M415,48 H438" /><path class="flecha" d="M560,48 H583" />
+    <text x="350" y="112" text-anchor="middle">Si las fechas no están libres o la persona no cumple una regla (anticipación, misma casa en el mes,</text>
+    <text x="350" y="128" text-anchor="middle">capacidad), el panel lo dice y no deja registrar.</text>
+  </svg>
+  <p><strong>Paso 1. Casa y fechas.</strong> Elija la casa (solo las de su región) y las fechas de llegada y salida. La llegada es desde mañana.</p>
+  <figure><img src="capturas/12-registro-casa-fechas.jpg" alt="Panel de registro, paso 1" /><figcaption>Figura 6. Panel de registro: casa y fechas.</figcaption></figure>
+  <p>
+    <strong>Paso 2. A nombre de quién.</strong> Indique si es funcionario/a de CONAF o afiliado/a
+    jubilado/a (se busca por RUT con <span class="boton">Buscar en la nómina</span>) o funcionario/a de
+    otro servicio público (se escriben sus datos: nombre, RUT, servicio, región y contacto).
+  </p>
+  <p>
+    <strong>Paso 3. Antecedentes.</strong> El panel muestra las reservas de la persona de los últimos 12
+    meses y las próximas, y los avisos que corresponden (por ejemplo, que ya tiene una reserva ese mes).
+  </p>
+  <figure><img src="capturas/13-registro-persona.jpg" alt="Persona y antecedentes" /><figcaption>Figura 7. La persona encontrada en la nómina y sus antecedentes.</figcaption></figure>
+  <p>
+    <strong>Paso 4. Quiénes van.</strong> La persona a cargo en la casa y cada acompañante, con nombre,
+    edad y relación, sin pasar la capacidad de la casa. Si viaja un perro de asistencia (Ley 20.422), se
+    marca y se adjuntan su credencial y certificado sanitario.
+  </p>
+  <figure><img src="capturas/14-registro-quienes.jpg" alt="Quiénes van" /><figcaption>Figura 8. Quiénes van.</figcaption></figure>
+  <p>
+    <strong>Contacto y pago.</strong> Teléfono y correo para la estadía (al correo llega la ficha). La
+    forma de pago depende de quién es la persona (sección 1): con descuento por planilla se eligen las
+    cuotas y se marca que la persona autorizó el descuento.
+  </p>
+  <figure><img src="capturas/15-registro-pago.jpg" alt="Contacto y pago" /><figcaption>Figura 9. Contacto y forma de pago con las cuotas del descuento por planilla.</figcaption></figure>
+  <p>
+    <strong>Antes de enviar.</strong> El panel resume qué pasará: la reserva queda confirmada y se envía
+    la ficha; hasta qué día se puede desistir sin costo; y las condiciones de uso de la casa. Indique la
+    <strong>vía</strong> por la que la persona pidió la reserva y declare que ella se la pidió y que
+    conoce y acepta el reglamento.
+  </p>
+  <figure><img src="capturas/16-registro-enviar.jpg" alt="Antes de enviar" /><figcaption>Figura 10. Antes de enviar: confirmación, plazo para desistir y vía de la solicitud.</figcaption></figure>
+
+  <h3>3.3 Ficha de la reserva y desistimiento</h3>
+  <p>
+    Al registrar, o al tocar una reserva en el tablero o el listado, se abre su ficha: código, casa y
+    dirección, fechas con horario de ingreso y salida, quienes viajan, total y forma de pago. Si paga por
+    transferencia, trae los <strong>datos para transferir</strong> con la glosa que debe usar.
+  </p>
+  <figure><img src="capturas/17-ficha.jpg" alt="Ficha de la reserva" /><figcaption>Figura 11. Ficha de una reserva pagada por transferencia (R-2026-0195).</figcaption></figure>
+  <ul>
+    <li><span class="boton">Descargar ficha (PDF)</span> genera el documento que recibe la persona, con el acta para el ingreso y la salida.</li>
+    <li>El inventario de la casa aparece al final: la persona tiene 12 horas desde el ingreso para informar daños o faltantes (Art. 13).</li>
+    <li><span class="boton">Registrar desistimiento</span> anula la reserva a pedido de la persona. Si desiste con al menos 10 días hábiles de aviso no tiene costo; después, o si no se presenta, paga la estadía completa, salvo fuerza mayor acreditada.</li>
+  </ul>
+
+  <h3>3.4 Inventario de las casas</h3>
+  <p>
+    En <strong>Inventario</strong> la encargada mantiene el inventario de cada casa de su región, por
+    secciones (mobiliario, equipamiento, menaje, ropa de cama…), con cantidad, estado (bueno, regular o
+    malo) y observación. Cada vez que guarda se crea una versión nueva, y la ficha actualizada se envía
+    al correo de cada reserva confirmada que aún no comienza.
+  </p>
+  <figure><img src="capturas/18-inventario.jpg" alt="Inventario" /><figcaption>Figura 12. Inventario de las casas de la región.</figcaption></figure>
+</section>
+
+<section>
+  <h2>4. Encargado nacional</h2>
+  <p>El menú del encargado nacional tiene Panel, Reservas, Cobros y Configuración; en la etapa 2 se agrega Temporadas.</p>
+
+  <h3>4.1 Panel nacional</h3>
+  <p>
+    Resume el día: transferencias por registrar, reservas registradas en los últimos 7 días, llegadas de
+    hoy y mañana y la ocupación nacional de los próximos 30 días. <strong>Requiere atención</strong>
+    reúne lo que hay que resolver: pagos anticipados sin registrar con llegada en 7 días, extintores
+    vencidos o por vencer, casas sin inventario y devoluciones pendientes. Abajo están las llegadas y
+    salidas de hoy y mañana, con el teléfono de contacto. El subtítulo indica la etapa vigente.
+  </p>
+  <figure><img src="capturas/20-panel.jpg" alt="Panel nacional" /><figcaption>Figura 13. Panel nacional.</figcaption></figure>
+
+  <h3>4.2 Reservas de todo el país</h3>
+  <p>
+    Es la misma pantalla que la de la encargada (sección 3.1), con todo el país y la posibilidad de
+    registrar en <strong>cualquier casa</strong>. Lo que registra el encargado nacional también queda
+    confirmado al registrarlo.
+  </p>
+  <figure><img src="capturas/21-reservas-nacional.jpg" alt="Reservas del encargado nacional" /><figcaption>Figura 14. Reservas de todo el país.</figcaption></figure>
+
+  <h3>4.3 Cobros</h3>
+  <p><strong>Panel de descuentos.</strong> Por mes: el total a descontar por planilla (con la cantidad de descuentos y personas) y las transferencias del mes, recibidas y pendientes.</p>
+  <ul>
+    <li><span class="boton">Descargar CSV para Remuneraciones</span>: la nómina de descuentos del mes.</li>
+    <li><span class="boton">Descargar reporte de cobranza</span>: el detalle de lo cobrado.</li>
+    <li><span class="boton">Marcar como informada</span>: deja constancia de que la nómina se envió a Remuneraciones.</li>
+  </ul>
+  <figure><img src="capturas/22-cobros-descuentos.jpg" alt="Panel de descuentos" /><figcaption>Figura 15. Cobros: panel de descuentos del mes.</figcaption></figure>
+  <p>
+    <strong>Transferencias por registrar.</strong> Las transferencias por comprobar de todo el país:
+    estadías confirmadas que deben pagarse antes de llegar y cargos por desistir fuera de plazo. Cuando el
+    dinero llega, <span class="boton">Registrar transferencia</span> con el número de operación: queda en
+    el reporte de cobranza. <strong>Devoluciones</strong> lista lo que hay que devolver por reservas que
+    Bienestar anuló (por ejemplo, por un bloqueo de fechas).
+  </p>
+  <svg class="flujo" viewBox="0 0 700 90" role="img" aria-label="Flujo de una reserva pagada por transferencia">
+    <rect class="caja" x="5" y="15" width="150" height="56" rx="8" /><text x="80" y="39" text-anchor="middle" class="t-b">Se registra</text><text x="80" y="57" text-anchor="middle">queda confirmada</text>
+    <rect class="caja" x="185" y="15" width="150" height="56" rx="8" /><text x="260" y="39" text-anchor="middle" class="t-b">Ficha y datos</text><text x="260" y="57" text-anchor="middle">para transferir</text>
+    <rect class="caja" x="365" y="15" width="150" height="56" rx="8" /><text x="440" y="39" text-anchor="middle" class="t-b">La persona transfiere</text><text x="440" y="57" text-anchor="middle">antes de llegar</text>
+    <rect class="caja-v" x="545" y="15" width="150" height="56" rx="8" /><text x="620" y="39" text-anchor="middle" class="t-b">Cobros › Registrar</text><text x="620" y="57" text-anchor="middle">N° de operación</text>
+    <path class="flecha" d="M155,43 H183" /><path class="flecha" d="M335,43 H363" /><path class="flecha" d="M515,43 H543" />
+  </svg>
+  <figure><img src="capturas/23-cobros-transferencias.jpg" alt="Transferencias por registrar" /><figcaption>Figura 16. Cobros: transferencias por registrar.</figcaption></figure>
+
+  <h3>4.4 Configuración</h3>
+  <p>La configuración tiene ocho pestañas.</p>
+  <p>
+    <strong>Casas.</strong> Las casas en servicio con su capacidad, tarifa, estado del inventario y otras
+    direcciones (retiro de llaves, estacionamiento). <span class="boton">Retirar del sistema</span> es
+    para una casa que deja de ofrecerse sin fecha de término: deja de aparecer y sus reservas futuras se
+    anulan con aviso. Para cerrar solo algunas noches se usan los bloqueos.
+  </p>
+  <figure><img src="capturas/24-config-casas.jpg" alt="Configuración: casas" /><figcaption>Figura 17. Configuración › Casas.</figcaption></figure>
+  <p>
+    <strong>Tarifas.</strong> Tarifa por noche de cada casa en dos tramos según el grado del
+    trabajador/a (04 a 14 y 15 a 19). Se pueden <strong>digitar en pantalla</strong> o <strong>cargar
+    una planilla Excel o CSV</strong> con el formato tipo. Los cambios rigen para las reservas nuevas;
+    las ya hechas mantienen su tarifa.
+  </p>
+  <figure><img src="capturas/25-config-tarifas.jpg" alt="Configuración: tarifas" /><figcaption>Figura 18. Configuración › Tarifas.</figcaption></figure>
+  <p>
+    <strong>Bloqueos de fechas.</strong> Cierra noches concretas de una casa por mantención o fuerza
+    mayor, con su motivo. Si ya había reservas en esas fechas, se anulan, se avisa a cada persona y se
+    registra la devolución de lo pagado (Art. 11).
+  </p>
+  <figure><img src="capturas/26-config-bloqueos.jpg" alt="Configuración: bloqueos" /><figcaption>Figura 19. Configuración › Bloqueos de fechas.</figcaption></figure>
+  <p>
+    <strong>Usuarios y encargadas.</strong> Quién tiene acceso, con qué rol y región. La lista la entrega
+    el COIPO IAM: para dar o quitar acceso a una encargada se pide en el IAM, no aquí.
+  </p>
+  <figure><img src="capturas/27-config-usuarios.jpg" alt="Configuración: usuarios" /><figcaption>Figura 20. Configuración › Usuarios y encargadas.</figcaption></figure>
+  <p>
+    <strong>Parámetros.</strong> Los valores del reglamento que usa el sistema (sección 6). Cada cambio
+    pide desde cuándo rige y la resolución, memo o acuerdo que lo respalda, y queda en el historial. Lo
+    ya registrado conserva lo que se le aplicó.
+  </p>
+  <figure><img src="capturas/28-config-parametros.jpg" alt="Configuración: parámetros" /><figcaption>Figura 21. Configuración › Parámetros.</figcaption></figure>
+  <p><strong>Plantillas de correo.</strong> El texto de los correos que envía el sistema: la ficha de la reserva, los datos para transferir, el desistimiento registrado y la anulación por Bienestar.</p>
+  <figure><img src="capturas/29-config-plantillas.jpg" alt="Configuración: plantillas" /><figcaption>Figura 22. Configuración › Plantillas de correo.</figcaption></figure>
+  <p>
+    <strong>Actividad.</strong> Lo que hicieron los encargados en el sistema, con fecha, persona y
+    detalle, filtrable por área y persona y descargable en CSV. Las acciones automáticas no aparecen.
+  </p>
+  <figure><img src="capturas/30-config-actividad.jpg" alt="Configuración: actividad" /><figcaption>Figura 23. Configuración › Actividad.</figcaption></figure>
+
+  <h3>4.5 Cambiar de etapa</h3>
+  <p>
+    En <strong>Configuración › Etapa</strong> se ve la etapa vigente y su historial.
+    <span class="boton">Cambiar de etapa</span> pide la nueva etapa, desde cuándo rige (hoy o una fecha
+    futura) y el documento que la respalda. Lo ya registrado no cambia.
+  </p>
+  <figure><img src="capturas/31-config-etapa.jpg" alt="Configuración: etapa" /><figcaption>Figura 24. Configuración › Etapa, en la marcha blanca.</figcaption></figure>
+  <figure><img src="capturas/32-cambiar-etapa.jpg" alt="Cambiar de etapa" /><figcaption>Figura 25. El cambio a la etapa 2, con su respaldo.</figcaption></figure>
+
+  <h3>4.6 Temporadas altas y sorteo (etapa 2)</h3>
+  <p>
+    En la etapa 2, verano e invierno se asignan por sorteo en turnos fijos y sus fechas quedan cerradas a
+    la reserva directa (Art. 6). En <strong>Temporadas</strong> el encargado nacional:
+  </p>
+  <ul>
+    <li>crea y edita cada temporada (<span class="boton">Nueva temporada</span>, <span class="boton">Editar</span>): fechas, largo de los turnos, calendarios y cierre de la postulación;</li>
+    <li>abre la postulación con <span class="boton">Habilitar postulación</span>: hasta entonces nadie puede postular;</li>
+    <li>sigue el sorteo en curso: postulaciones, turnos ofrecidos, turnos con postulantes y postulantes por cupo;</li>
+    <li>al cerrar la postulación, pulsa <span class="boton">Realizar sorteo</span>. Las vacantes que queden se pueden reservar directo.</li>
+  </ul>
+  <p>
+    Los trabajadores postulan desde el aplicativo. Las postulaciones de jubilados/as, o de quien lo pida,
+    las registran los encargados en «Registrar postulación», donde también se retira una postulación.
+  </p>
+  <svg class="flujo" viewBox="0 0 700 90" role="img" aria-label="Flujo del sorteo de temporada alta">
+    <rect class="caja" x="5" y="15" width="125" height="56" rx="8" /><text x="67" y="39" text-anchor="middle" class="t-b">Crear temporada</text><text x="67" y="57" text-anchor="middle">turnos y cierre</text>
+    <rect class="caja" x="147" y="15" width="125" height="56" rx="8" /><text x="209" y="39" text-anchor="middle" class="t-b">Habilitar</text><text x="209" y="57" text-anchor="middle">postulación</text>
+    <rect class="caja" x="289" y="15" width="125" height="56" rx="8" /><text x="351" y="39" text-anchor="middle" class="t-b">Postulaciones</text><text x="351" y="57" text-anchor="middle">app y encargadas</text>
+    <rect class="caja" x="431" y="15" width="125" height="56" rx="8" /><text x="493" y="39" text-anchor="middle" class="t-b">Sorteo</text><text x="493" y="57" text-anchor="middle">al cierre</text>
+    <rect class="caja-v" x="573" y="15" width="122" height="56" rx="8" /><text x="634" y="39" text-anchor="middle" class="t-b">Adjudicadas</text><text x="634" y="57" text-anchor="middle">vacantes, directo</text>
+    <path class="flecha" d="M130,43 H145" /><path class="flecha" d="M272,43 H287" /><path class="flecha" d="M414,43 H429" /><path class="flecha" d="M556,43 H571" />
+  </svg>
+  <figure><img src="capturas/33-temporadas.jpg" alt="Temporadas altas y sorteo" /><figcaption>Figura 26. Temporadas altas y sorteo.</figcaption></figure>
+</section>
+
+<section>
+  <h2>5. Etapa 2: trabajadores de CONAF</h2>
+  <p>
+    Desde que rige la etapa 2, los trabajadores de CONAF (afiliados/as, no afiliados/as y plazo fijo)
+    ingresan con su cuenta institucional. Su menú tiene <strong>Reservar</strong> y <strong>Mis
+    reservas</strong>.
+  </p>
+  <p>
+    <strong>Reservar.</strong> Las casas por región, con hasta 90 días de anticipación. Si hay una
+    temporada alta con la postulación abierta, un aviso lo dice y lleva a postular.
+  </p>
+  <figure><img src="capturas/40-trabajador-inicio.jpg" alt="Inicio del trabajador" /><figcaption>Figura 27. Inicio del trabajador/a: casas por región.</figcaption></figure>
+  <p>
+    <strong>Ficha de la casa.</strong> Fotografías, descripción, lo que incluye, lo que hay cerca, las
+    condiciones de uso y la tarifa según su grado. En el calendario se marca la llegada y la salida y se
+    pulsa <span class="boton">Reservar estas fechas</span>: se completan quienes van, el contacto y el
+    pago, se acepta el reglamento y, si las fechas siguen libres, la reserva queda confirmada al instante
+    y la ficha llega por correo.
+  </p>
+  <figure><img src="capturas/41-trabajador-casa.jpg" alt="Ficha de la casa" /><figcaption>Figura 28. Ficha de la casa con el calendario de disponibilidad.</figcaption></figure>
+  <p>
+    <strong>Postular al sorteo.</strong> Se elige la temporada, la casa y el turno (se ve cuántas
+    personas ya postularon a cada uno), las personas y el contacto, y se autoriza el descuento por
+    planilla en cuotas si se adjudica.
+  </p>
+  <figure><img src="capturas/42-trabajador-sorteo.jpg" alt="Postular al sorteo" /><figcaption>Figura 29. Postulación al sorteo de temporada alta.</figcaption></figure>
+  <p>
+    <strong>Mis reservas.</strong> Las próximas y las anteriores, con su estado, y las postulaciones con
+    su resultado. Desde <span class="boton">Ver detalle</span> se abre la ficha y se puede desistir.
+  </p>
+  <figure><img src="capturas/43-trabajador-mis-reservas.jpg" alt="Mis reservas" /><figcaption>Figura 30. Mis reservas.</figcaption></figure>
+</section>
+
+<section>
+  <h2>6. Reglas principales</h2>
+  <p>
+    Valores con que parte el sistema. El encargado nacional los cambia en <strong>Configuración ›
+    Parámetros</strong>, con vigencia y respaldo; lo que muestre esa pestaña es lo que rige.
+  </p>
+  <table>
+    <tr><th style="width:52%">Regla</th><th>Valor</th></tr>
+    <tr><td>Anticipación máxima para reservar</td><td>90 días</td></tr>
+    <tr><td>Anticipación máxima para funcionarios/as de otros servicios públicos (Art. 9)</td><td>15 días</td></tr>
+    <tr><td>Aviso para desistir sin costo</td><td>10 días hábiles antes de la llegada (Memorándum 6188/2026)</td></tr>
+    <tr><td>Veces que una persona puede reservar la misma casa</td><td>1 por mes calendario</td></tr>
+    <tr><td>Cuotas del descuento por planilla en la reserva directa</td><td>hasta 3</td></tr>
+    <tr><td>Turno de temporada alta (etapa 2)</td><td>6 noches, pagadas en 6 cuotas</td></tr>
+    <tr><td>Días de aseo entre reservas</td><td>1</td></tr>
+    <tr><td>Ingreso y salida (Art. 12)</td><td>desde las 15:00 · hasta las 12:00</td></tr>
+    <tr><td>Plazo para informar daños o faltantes (Art. 13)</td><td>12 horas desde el ingreso</td></tr>
+    <tr><td>Aviso de retiro anticipado (Art. 10 e)</td><td>2 días; sin aviso se cobra el período completo</td></tr>
+    <tr><td>Noches liberadas por matrimonio o acuerdo de unión civil (Art. 20)</td><td>3, una vez, entre marzo y diciembre; se solicitan a la encargada regional</td></tr>
+  </table>
+  <h3>Condiciones de uso de la casa</h3>
+  <ul>
+    <li>La reserva es personal e intransferible: no se puede ceder ni subarrendar (Art. 8).</li>
+    <li>No puede pernoctar más gente que la autorizada en la reserva; cada persona adicional paga la tarifa con 50 % de recargo (Art. 14).</li>
+    <li>No se permiten mascotas, salvo perros de asistencia informados en la reserva (Art. 15).</li>
+    <li>Prohibido fumar en interiores y encender fuego fuera de lugares habilitados; cierre el gas al salir (Art. 16).</li>
+    <li>Descanso entre las 22:00 y las 08:00 y respeto del reglamento del condominio (Art. 17).</li>
+  </ul>
+  <p>
+    Los datos de las personas se usan solo para gestionar el beneficio de alojamiento, conforme a las
+    Leyes 19.628 y 21.719 (Art. 25 del reglamento).
+  </p>
+</section>
+
+<section>
+  <h2>7. Para probar la maqueta</h2>
+  <div class="aviso">
+    La maqueta es una demostración, no el sistema en operación. Todo lo que se haga queda solo en el
+    navegador de quien la usa; <strong>Reiniciar datos de prueba</strong>, en el pie de página, vuelve
+    todo al estado inicial.
+  </div>
+  <h3>Cuentas del IAM simulado</h3>
+  <p>La contraseña de todas es <code>maqueta</code>.</p>
+  <table>
+    <tr><th style="width:22%">Usuario</th><th>Perfil</th></tr>
+    <tr><td><code>cnunez</code></td><td>Encargada regional de Valparaíso</td></tr>
+    <tr><td><code>pherrera</code></td><td>Encargado nacional</td></tr>
+    <tr><td><code>mfuentes</code></td><td>Trabajadora afiliada: sin acceso en la etapa 1; trabajadora en la etapa 2</td></tr>
+    <tr><td><code>jpavez</code></td><td>Trabajador no afiliado: sin acceso en la etapa 1; trabajador en la etapa 2</td></tr>
+  </table>
+  <h3>RUT de prueba para registrar</h3>
+  <table>
+    <tr><th style="width:22%">RUT</th><th>Persona</th></tr>
+    <tr><td>11.111.111-1</td><td>María Fuentes Rojas, afiliada</td></tr>
+    <tr><td>22.222.222-2</td><td>Paula Ortiz Cárcamo, plazo fijo</td></tr>
+    <tr><td>33.333.333-3</td><td>Hernán Soto Valenzuela, jubilado</td></tr>
+    <tr><td>77.777.777-7</td><td>Nora Castillo Vergara, jubilada; paga por transferencia</td></tr>
+  </table>
+  <p>
+    Son los RUT de prueba de Clave Única: ninguna persona real tiene un RUT de esa forma. Los correos de
+    las personas ficticias terminan en <code>.invalid</code>, un dominio que no existe. Una reserva de
+    ejemplo pagada por transferencia y pendiente de registrar es la R-2026-0195 (Valparaíso).
+  </p>
+  <div class="nota">
+    En un computador, el botón flotante <strong>Vista celular</strong>, abajo a la izquierda, muestra la
+    maqueta dentro de un marco de teléfono de 390 × 844 px. Se cierra con «Cerrar» o con Esc.
+  </div>
+</section>
+
+</body>
+</html>
