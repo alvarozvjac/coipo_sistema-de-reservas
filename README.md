@@ -38,9 +38,9 @@ asigna. El pie de página tiene el botón **«Tema»** (sistema, claro u oscuro)
 | Trabajador/a (etapa 2) | Reservar: casas por región, ficha de la casa con calendario de disponibilidad, reserva a su nombre con aceptación del reglamento; postular al sorteo de temporada alta; Mis reservas, con postulaciones, la ficha y el desistimiento |
 | Encargado nacional | Panel nacional (con la etapa vigente); Reservas con tablero de todo el país (registra en cualquier casa, queda confirmada al registrarla); Cobros (panel de descuentos por mes con planilla y transferencias, nómina para Remuneraciones, transferencias por registrar); Configuración (etapa del sistema, casas y otras direcciones, tarifas digitadas o por planilla, bloqueos de fechas, usuarios y encargadas leídos del IAM, parámetros del reglamento con vigencia y respaldo, plantillas de correo y registro de actividad) |
 
-Para registrar a nombre de una persona, pruebe con los RUT ficticios 13.457.902-1 (María
-Fuentes, afiliada), 16.882.409-2 (Paula Ortiz, plazo fijo), 6.884.215-8 (Hernán Soto,
-jubilado) o 7.215.346-4 (Nora Castillo, jubilada, paga por transferencia).
+Para registrar a nombre de una persona, pruebe con los RUT ficticios 11.111.111-1 (María
+Fuentes, afiliada), 22.222.222-2 (Paula Ortiz, plazo fijo), 33.333.333-3 (Hernán Soto,
+jubilado) o 77.777.777-7 (Nora Castillo, jubilada, paga por transferencia).
 
 **Sin aprobación, ficha y transferencia (13-11-2026):** toda reserva registrada queda
 confirmada y la persona recibe la ficha de la reserva (PDF con acompañantes, direcciones e

@@ -1,4 +1,19 @@
 {
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
   "env": { "browser": true, "es2024": true },
-  "rules": { "no-undef": "error" }
+  "plugins": ["react", "oxc", "jsx-a11y", "import"],
+  "rules": {
+    "no-undef": "error",
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }],
+    "max-lines": ["error", { "max": 800, "skipBlankLines": false, "skipComments": false }],
+    "no-empty": "error",
+    "eqeqeq": "error",
+    "no-nested-ternary": "error",
+    "max-depth": ["error", 4],
+    "max-params": ["error", 5],
+    "complexity": ["error", 10],
+    "prefer-const": "error",
+    "no-var": "error"
+  }
 }

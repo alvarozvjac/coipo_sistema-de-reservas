@@ -1,5 +1,58 @@
 # Cumplimiento del estándar de coipo_master_produccion
 
+## 0. Revisión del 25-11-2026
+
+Pedida por Álvaro Zegers (UIA): «Revisa el aplicativo bajo los criterios del coipo master»,
+y después «haz los arreglos rápidos y actualiza la documentación». Entre el 11 y el 24-11
+la fábrica sumó unos 160 commits; esta revisión mira lo que cambió y vuelve a correr los
+jueces. Las secciones 1 a 5 son la revisión del 12-11, con las cifras de la sección 3
+puestas al día.
+
+Fuentes leídas (VERIFICADO): `coipo_master_produccion` @ `fc1907b` (2026-11-24):
+`FILOSOFIA.md`, `AGENTS.md`, `docs/ESTANDAR_CODIGO.md` (COD-5 y modo UB),
+`docs/DATOS_DE_PRUEBA.md`, `identidad/ESTANDAR_UI.md` (§1-bis y §9, `UI-21`),
+`prompts/06-portar-una-maqueta.md`, `prompts/07-frontend-moderno.md`,
+`semilla/siembra/maqueta.py`, `semilla/ESQUELETO/frontend/.oxlintrc.json` e `index.html`,
+`semilla/ESQUELETO/datos_prueba/personas.json`. Jueces: `coipo_jueces` @ `93fee54`
+(2026-11-25).
+
+### 0.1 Jueces
+
+| Corrida | Resultado |
+|---|---|
+| Repositorio tal cual | 0 bloqueantes, 0 avisos. `j01`, `j06` y `j11` SIN_EVALUAR (sin compose ni `/health`); `j12` a `j16` NO_APLICA (sin `.semilla`). **No es un aprobado** |
+| Copia con `adopta: interfaz` y el frontend en la raíz, antes de los arreglos | `j13` OK (3 comprobaciones). `j14` AVISA FAB-8 (sin `docs/CONSTRUCCION.md`). `j16` AVISA COD-1 (`datos/casas.js`, 979 líneas), COD-2 ×2, COD-3 y COD-5 ×2 (`.oxlintrc.json` sin las reglas del Zen; ningún CI corre `npm run lint`) |
+| La misma copia, después de los arreglos | 0 bloqueantes, 6 avisos: se fue COD-5 de `.oxlintrc.json`; queda el de CI (este repositorio no tiene workflows: publica GitHub Pages desde `main`) |
+
+Con la salida de la consola de Windows (cp1252), `correr.py` termina con un traceback al
+imprimir; con `PYTHONIOENCODING=utf-8` corre entero. Es de `coipo_jueces`, no de la maqueta.
+
+### 0.2 Hallazgos y qué se hizo
+
+| # | Hallazgo | Norma | Estado |
+|---|---|---|---|
+| A | 8 de los 9 RUT de personas tenían el dígito verificador **válido** (el noveno, 12.345.678-9, era el ejemplo de formato), los 210 generados también, y los correos eran de dominios reales (`conaf.cl`, `gmail.com`, `sag.gob.cl`, `servicio.gob.cl`) con teléfonos de forma real | `docs/DATOS_DE_PRUEBA.md` §2 | **Corregido.** Nómina con nombre: RUT de prueba de Clave Única, 11.111.111-1 a 88.888.888-8. Generados: verificador incorrecto a propósito (`rutFicticio`, `datos/semillas.js`); por eso «Buscar» del panel de registro ya no los encuentra (exige un RUT válido): para probar se usan los de la nómina. Correos `*.invalid`. Teléfonos `+56 9 0000 NNNN`. `sub` del IAM simulado `local-NNN`. Clave de datos `reserva_veraneo_v24`. Queda 61.313.000-4 (INFERIDO: el RUT institucional de CONAF, para transferir) |
+| B | La página publicada salía sin la «Vista celular» que promete el README y sin el tema antes de pintar: `scripts/pagina.mjs` borraba los `<script>` en línea (VERIFICADO: 0 apariciones de `vc-btn` en el `index.html` de `4428cce`) | README; `prompts/07`, `dark-mode-toggle` | **Corregido** en `pagina.mjs`, que ahora además se detiene si faltan |
+| C | Sin `<meta name="color-scheme">` y el banner sin prioridad de carga | `UI-21`, `prompts/07` (`dark-mode`, `optimize-image-priority`) | **Corregido** en `index.html` y `componentes/Banner.jsx` |
+| D | `.oxlintrc.json` solo con `no-undef` | COD-5 | **Corregido**: las reglas de `semilla/ESQUELETO/frontend/.oxlintrc.json` que aplican a JavaScript, en `error`. Las `typescript/*` no aplican mientras no haya TypeScript |
+| E | `fuente/README.md` describía el ingreso con RUT y código y archivos que no existen (`lib/acta.js`, `paginas/solicitante/`, `paginas/otros/`); esta revisión citaba `lib/indicadores.js`, que tampoco existe | AGENTS.md §3, regla 1 | **Corregido** |
+| F | `manual-usuario.pdf` es del 12-11 (fecha de creación del PDF y último commit `fd19f0a`); después cambiaron la aprobación, el efectivo, el Panel de la encargada, las etapas y el sorteo, y también los RUT de ejemplo | — | **Pendiente**: regenerarlo. INFERIDO: no se pudo leer su texto en este PC |
+| G | `sembrar.py --maqueta` espera HTML, CSS y JS planos y toma las hojas de los `<link rel=stylesheet>`. El `index.html` publicado es un solo archivo con el CSS en línea, y el CSS de `fuente/` es la fuente de Tailwind, no el compilado: la cara no llegaría a `frontend/src/maqueta/` | `semilla/siembra/maqueta.py` (líneas 1-24 y 213-263); `prompts/06` | **Para decidir** con Luis Monsalve: portar `fuente/` con `prompts/55-migrar-a-typescript-y-hexagonal.md`, o entregar un build sin incrustar (HTML con su CSS compilado aparte). INFERIDO: no se corrió la siembra |
+| H | La «Vista celular» arma su diálogo con un `div role="dialog"`, sin atrapar el foco, y responde a `postMessage(…, "*")` | `prompts/07` | Abierto, menor: es una herramienta de presentación, no parte del producto |
+| I | La Actividad está en Configuración solo para el encargado nacional; el patrón de la fábrica la da a administrador y auditor | `docs/decisiones/2026-11-auditoria-siempre.md` | Para el porte: la pone la siembra |
+
+### 0.3 Lo que no se comprobó (DESCONOCIDO)
+
+En este PC no hay Node.js: no corrieron `npm run lint` (con las reglas nuevas es probable
+que haya infracciones, sobre todo `complexity` y `max-lines` en `datos/casas.js`), el build,
+ni las baterías de Playwright y axe-core. El `index.html` y el manual publicados **no** se
+regeneraron: los arreglos A a C están en `fuente/` y llegan a la página con el próximo
+`npm run build:pagina`. La forma de un teléfono «no real» no la define la fábrica
+(`DATOS_DE_PRUEBA.md` §5.4 dice «ningún teléfono chileno con forma real» sin decir cuál
+es); `+56 9 0000 NNNN` es una elección de esta revisión.
+
+---
+
 Revisión del 12-11-2026, pedida por Álvaro Zegers (UIA). Alcance acordado: **se corrige la
 interfaz** según `identidad/ESTANDAR_UI.md` y **se informa** la brecha con
 `docs/ESTANDAR_CODIGO.md`, sin reescribir el código. Es insumo para la fase en que Luis
@@ -79,8 +132,8 @@ autoalojada de la semilla (`tipografia.css`): la maqueta usa la del sistema.
 
 | Regla | Estado | Medición (VERIFICADO) |
 |---|---|---|
-| COD-1 ningún archivo sobre 1000 líneas; sobre 800, aviso | **Brecha menor** | Ninguno pasa de 1000 desde el 12-11-2026 (se separaron las semillas de `datos/servicio.js` a `datos/semillas.js`). Sobre 800, aviso: `datos/servicio.js` 976, `datos/casas.js` 979 (dato), `paginas/central/Casas.jsx` 847 |
-| COD-2 TypeScript estricto | **Brecha** | 44 archivos `.js`/`.jsx` y 0 `.ts`/`.tsx` en `src/`; no hay `tsconfig.json`; el CI no corre `tsc` |
+| COD-1 ningún archivo sobre 1000 líneas; sobre 800, aviso | **Brecha menor** | Ninguno pasa de 1000 desde el 12-11-2026 (se separaron las semillas de `datos/servicio.js` a `datos/semillas.js`). Al 25-11-2026, sobre 800 solo queda `datos/casas.js` con 979 (dato); cerca del límite, `paginas/gestion/Reservar.jsx` 793 y `paginas/central/Casas.jsx` 774. `datos/servicio.js` bajó a 551 |
+| COD-2 TypeScript estricto | **Brecha** | Al 25-11-2026, 66 archivos `.js`/`.jsx` y 0 `.ts`/`.tsx` en `src/` (eran 44 el 12-11); no hay `tsconfig.json`; no hay CI que corra `tsc` |
 | COD-3 hexagonal (dominio puro, puertos, adaptadores) | **Brecha parcial** | no hay `dominio/`, `aplicacion/` ni `adaptadores/`. Hay separación útil para migrar: `lib/reglas.js` y `lib/sorteo.js` son reglas puras; `datos/servicio.js` imita la API (es el futuro adaptador http); `datos/iam.js` imita el puerto de identidad |
 
 **Por qué no se reescribe ahora.** La maqueta es la herramienta para conversar con
@@ -90,8 +143,9 @@ en TypeScript y hexagonal. Reescribir la maqueta duplicaría ese trabajo.
 **Lo que conviene a la fábrica** (propuesta para Luis Monsalve):
 
 1. Sembrar `coipo_<nombre>` con `semilla/sembrar.py` y llevar desde la maqueta solo lo que
-   ya está separado: `lib/reglas.js` → `dominio/reglas.ts`, `lib/indicadores.js` →
-   `dominio/indicadores.ts`.
+   ya está separado: `lib/reglas.js` → `dominio/reglas.ts` y `lib/sorteo.js` →
+   `dominio/sorteo.ts`. (Hasta el 25-11-2026 aquí decía `lib/indicadores.js`, que no
+   existe.) Antes, decidir cómo entra la maqueta: ver el hallazgo G de la sección 0.
 2. Partir `datos/servicio.js` por recurso (reservas, casas, cobros, inventario, configuración)
    como puertos de `aplicacion/puertos/` con su adaptador http.
 3. `datos/casas.js` es dato (22 casas del llamado): va a `datos_prueba/` o a una migración

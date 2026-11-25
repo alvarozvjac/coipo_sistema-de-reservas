@@ -11,7 +11,19 @@ const leer = (ruta) => readFileSync(join(dir, ruta.replace(/^\//, '')), 'utf8')
 const css = [...html.matchAll(/<link rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g)].map((m) => leer(m[1])).join('\n')
 const js = [...html.matchAll(/<script type="module"[^>]*src="([^"]+)"[^>]*><\/script>/g)].map((m) => leer(m[1])).join('\n')
 const titulo = html.match(/<title>.*?<\/title>/)[0]
-const cuerpo = html.match(/<body>([\s\S]*?)<\/body>/)[1].replace(/<script[\s\S]*?<\/script>/g, '').trim()
+const cabeza = html.match(/<head>([\s\S]*?)<\/head>/)[1]
+const cuerpoConScripts = html.match(/<body>([\s\S]*?)<\/body>/)[1]
+const cuerpo = cuerpoConScripts.replace(/<script[\s\S]*?<\/script>/g, '').trim()
+// Los scripts clásicos en línea (sin atributos) de index.html: el tema antes de pintar, en
+// <head>, y la «Vista celular», en <body>. Hasta el 25-11-2026 se descartaban y la página
+// publicada salía sin los dos.
+const enLinea = (bloque) => [...bloque.matchAll(/<script>[\s\S]*?<\/script>/g)].map((m) => m[0]).join('\n')
+const scriptsCabeza = enLinea(cabeza)
+const scriptsCuerpo = enLinea(cuerpoConScripts)
+const esquemaDeColor = cabeza.match(/<meta name="color-scheme"[^>]*>/)?.[0] ?? ''
+if (!scriptsCabeza || !scriptsCuerpo || !esquemaDeColor) {
+  throw new Error('index.html ya no trae el tema antes de pintar, la Vista celular o el meta color-scheme: revise scripts/pagina.mjs')
+}
 
 const salida = `${titulo}
 <style>
@@ -35,7 +47,9 @@ const completo = `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
 <meta name="description" content="Maqueta de validación del sistema de reservas de casas de veraneo del Servicio de Bienestar de CONAF. Datos ficticios." />
+${esquemaDeColor}
 ${titulo}
+${scriptsCabeza}
 <style>
 ${css}
 </style>
@@ -45,6 +59,7 @@ ${cuerpo}
 <script type="module">
 ${js.replace(/<\/script/gi, '<\\/script')}
 </script>
+${scriptsCuerpo}
 </body>
 </html>
 `

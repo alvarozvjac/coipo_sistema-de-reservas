@@ -20,6 +20,14 @@ const casaBase = (id) => CASAS.find((c) => c.id === id)
 
 /* ---------- Personas ficticias ---------- */
 
+/**
+ * RUT de relleno con el dígito verificador INCORRECTO a propósito (docs/DATOS_DE_PRUEBA.md de
+ * coipo_master_produccion): un RUT con verificador válido puede ser de una persona real, y los
+ * únicos válidos que se admiten son los nueve de prueba de Clave Única (11.111.111-1 a
+ * 99.999.999-9), que se reservan para las personas con nombre de usuarios.js.
+ */
+const DIGITOS_VERIFICADORES = '0123456789K'
+
 export function rutFicticio(cuerpo) {
   let s = 0
   let f = 2
@@ -28,7 +36,8 @@ export function rutFicticio(cuerpo) {
     f = f === 7 ? 2 : f + 1
   }
   const r = 11 - (s % 11)
-  const dv = r === 11 ? '0' : r === 10 ? 'K' : String(r)
+  const correcto = r === 11 ? '0' : r === 10 ? 'K' : String(r)
+  const dv = DIGITOS_VERIFICADORES[(DIGITOS_VERIFICADORES.indexOf(correcto) + 1) % 11]
   return `${String(cuerpo).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}-${dv}`
 }
 
@@ -55,8 +64,8 @@ export function crearPersonas(cantidad, azar) {
       calidad,
       plazo_fijo: calidad === 'afiliado' && azar() < 0.1,
       ...(['afiliado', 'no_afiliado'].includes(calidad) && { grado: 4 + ((i * 7) % 16) }),
-      correo: calidad === 'jubilado' ? `${correoBase}@gmail.com` : calidad === 'otro_servicio' ? `${correoBase}@servicio.gob.cl` : `${correoBase}@conaf.cl`,
-      telefono: `+56 9 ${5000 + ((i * 37) % 4999)} ${1000 + ((i * 53) % 8999)}`,
+      correo: calidad === 'jubilado' ? `${correoBase}@correo.invalid` : calidad === 'otro_servicio' ? `${correoBase}@servicio.invalid` : `${correoBase}@conaf.invalid`,
+      telefono: `+56 9 0000 ${1000 + ((i * 53) % 8999)}`,
     })
   }
   return lista
@@ -104,11 +113,11 @@ const VIAS_SEMILLA = ['telefono', 'correo', 'telefono', 'presencial', 'whatsapp'
 export function semillas(hoy) {
   const azar = aleatorio(20261020)
   const personas = crearPersonas(210, azar)
-  const maria = { id: 1, nombre: 'María Fuentes Rojas', rut: '13.457.902-1', rol: 'Técnica administrativa', region: '05', calidad: 'afiliado', grado: 16, correo: 'maria.fuentes@conaf.cl', telefono: '+56 9 6123 4587' }
-  const hernan = { id: 3, nombre: 'Hernán Soto Valenzuela', rut: '6.884.215-8', rol: 'Afiliado jubilado', region: '08', calidad: 'jubilado', correo: 'hsoto.valenzuela@gmail.com', telefono: '+56 9 8455 1290' }
-  const externo = { nombre: 'Rodrigo Pérez Leiva', rut: rutFicticio(14552310), rol: 'Funcionario de Servicio Agrícola y Ganadero', region: '05', calidad: 'otro_servicio', correo: 'rodrigo.perez@sag.gob.cl', telefono: '+56 9 7712 4410' }
+  const maria = { id: 1, nombre: 'María Fuentes Rojas', rut: '11.111.111-1', rol: 'Técnica administrativa', region: '05', calidad: 'afiliado', grado: 16, correo: 'maria.fuentes@conaf.invalid', telefono: '+56 9 0000 4587' }
+  const hernan = { id: 3, nombre: 'Hernán Soto Valenzuela', rut: '33.333.333-3', rol: 'Afiliado jubilado', region: '08', calidad: 'jubilado', correo: 'hsoto.valenzuela@correo.invalid', telefono: '+56 9 0000 1290' }
+  const externo = { nombre: 'Rodrigo Pérez Leiva', rut: rutFicticio(14552310), rol: 'Funcionario de Servicio Agrícola y Ganadero', region: '05', calidad: 'otro_servicio', correo: 'rodrigo.perez@sag.invalid', telefono: '+56 9 0000 4410' }
   // Nora está en la nómina de demostración (datos/usuarios.js) con su propio RUT ficticio.
-  const jubilada = { id: 7, nombre: 'Nora Castillo Vergara', rut: '7.215.346-4', rol: 'Afiliada jubilada', region: '05', calidad: 'jubilado', correo: 'nora.castillo@gmail.com', telefono: '+56 9 6630 2194' }
+  const jubilada = { id: 7, nombre: 'Nora Castillo Vergara', rut: '77.777.777-7', rol: 'Afiliada jubilada', region: '05', calidad: 'jubilado', correo: 'nora.castillo@correo.invalid', telefono: '+56 9 0000 2194' }
   const conf = (dias) => ({ confirmada_por: AUTOMATICA, creada_en: sumarDias(hoy, -dias) + 'T09:30:00', confirmada_en: sumarDias(hoy, -dias) + 'T09:30:00' })
   const auto = (creada) => ({ confirmada_por: AUTOMATICA, creada_en: creada, confirmada_en: creada })
   const porNacional = (creada) => ({

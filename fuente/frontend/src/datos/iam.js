@@ -50,10 +50,10 @@ export const PERFIL_POR_ROL = {
  * acceso a esta aplicación.
  */
 export const CUENTAS = [
-  { username: 'cnunez', sub: 'iam-105', nomina: 5, email: 'carolina.nunez@conaf.cl', role: 'encargado_regional', region_id: '05', etiqueta: 'Encargada regional (Valparaíso)' },
-  { username: 'pherrera', sub: 'iam-106', nomina: 6, email: 'patricia.herrera@conaf.cl', role: 'encargado_nacional', region_id: null, etiqueta: 'Encargado nacional' },
-  { username: 'mfuentes', sub: 'iam-101', nomina: 1, email: 'maria.fuentes@conaf.cl', role: null, region_id: null, etiqueta: 'Trabajadora afiliada (entra solo en la etapa 2)' },
-  { username: 'jpavez', sub: 'iam-104', nomina: 4, email: 'jorge.pavez@conaf.cl', role: null, region_id: null, etiqueta: 'Trabajador no afiliado (entra solo en la etapa 2)' },
+  { username: 'cnunez', sub: 'local-105', nomina: 5, email: 'carolina.nunez@conaf.invalid', role: 'encargado_regional', region_id: '05', etiqueta: 'Encargada regional (Valparaíso)' },
+  { username: 'pherrera', sub: 'local-106', nomina: 6, email: 'patricia.herrera@conaf.invalid', role: 'encargado_nacional', region_id: null, etiqueta: 'Encargado nacional' },
+  { username: 'mfuentes', sub: 'local-101', nomina: 1, email: 'maria.fuentes@conaf.invalid', role: null, region_id: null, etiqueta: 'Trabajadora afiliada (entra solo en la etapa 2)' },
+  { username: 'jpavez', sub: 'local-104', nomina: 4, email: 'jorge.pavez@conaf.invalid', role: null, region_id: null, etiqueta: 'Trabajador no afiliado (entra solo en la etapa 2)' },
 ]
 
 const CLAVE_ESTADO = 'iam_maqueta_state'

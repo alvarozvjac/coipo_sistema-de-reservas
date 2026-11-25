@@ -7,9 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Reservas Casas de Veraneo</title>
+    <!-- Claro y oscuro: el navegador pinta el lienzo y los controles nativos en el esquema
+         correcto antes de que cargue la hoja (semilla/ESQUELETO/frontend/index.html, guía
+         `dark-mode` de modern-web-guidance; UI-21). -->
+    <meta name="color-scheme" content="light dark" />
     <script>
-      /* Tema antes de pintar (evita el destello claro en tema oscuro). Misma clave que la semilla: coipo_tema. */
-      try { var t = localStorage.getItem('coipo_tema'); if (t === 'claro' || t === 'oscuro') document.documentElement.setAttribute('data-theme', t) } catch (e) {}
+      /* Tema antes de pintar (evita el destello claro en tema oscuro). Misma clave que la semilla: coipo_tema.
+         scripts/pagina.mjs copia este script a la página publicada. */
+      try {
+        var t = localStorage.getItem('coipo_tema')
+        if (t === 'claro' || t === 'oscuro') {
+          document.documentElement.setAttribute('data-theme', t)
+          document.querySelector('meta[name="color-scheme"]').content = t === 'claro' ? 'light' : 'dark'
+        }
+      } catch (e) { /* almacenamiento bloqueado: manda el sistema */ }
     </script>
   </head>
   <body>

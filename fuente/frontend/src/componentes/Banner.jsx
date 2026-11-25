@@ -23,7 +23,7 @@ export function Banner() {
       <div className="relative inline-block align-top">
         <picture>
           <source media="(max-width: 559.98px)" srcSet={corto} width={875} height={177} />
-          <img src={banner} alt="CONAF · Unidad de Información y Análisis" width={3032} height={177} className="block h-[max(68px,calc(100vw/17.1299))] w-auto max-w-none" />
+          <img src={banner} alt="CONAF · Unidad de Información y Análisis" width={3032} height={177} fetchPriority="high" className="block h-[max(68px,calc(100vw/17.1299))] w-auto max-w-none" />
         </picture>
         <div className="absolute inset-y-0 left-[28.86%] hidden max-w-[60%] flex-col justify-center pl-6 text-sobre-banner lg:flex">
           <span className="text-[clamp(17px,1.25vw,24px)] font-bold leading-tight">Casas de Veraneo</span>

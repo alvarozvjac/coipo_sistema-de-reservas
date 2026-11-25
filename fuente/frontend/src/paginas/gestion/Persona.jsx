@@ -154,8 +154,8 @@ export function Persona({ persona, onPersona, titulo = "1. ¿A nombre de quién?
             </div>
           )}
           <p className="mt-3 text-[13px] text-tinta-500">
-            Maqueta: pruebe con 13.457.902-1 (María Fuentes), 16.882.409-2
-            (Paula Ortiz, plazo fijo) o 6.884.215-8 (Hernán Soto, jubilado).
+            Maqueta: pruebe con 11.111.111-1 (María Fuentes), 22.222.222-2
+            (Paula Ortiz, plazo fijo) o 33.333.333-3 (Hernán Soto, jubilado).
           </p>
         </div>
       ) : (

@@ -380,7 +380,7 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
 - Defecto de datos visto en la captura y corregido con acuerdo de Álvaro Zegers: R-2026-0195
   estaba a nombre de «Nora Castillo Vergara» con un RUT que en la nómina era de otra persona
   (afiliada activa). Nora quedó en la nómina de demostración como jubilada, con RUT ficticio
-  propio (7.215.346-4). La clave de datos pasó a `reserva_veraneo_v20`.
+  propio (desde el 25-11-2026, el de prueba 77.777.777-7). La clave de datos pasó a `reserva_veraneo_v20`.
 - Pública: GitHub Pages sirve `9f30f03` (sha256 igual al local, 1.612.357 bytes); consola sin
   errores.
 
@@ -538,6 +538,27 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   d226d1bff7598bdf…, 7.975.727 bytes) y contiene «Cargo por desistir fuera de plazo».
   Consola de Chrome: 0 errores.
 
+### Revisión contra la fábrica al 25-11-2026 y arreglos rápidos (25-11-2026, local, sin publicar)
+
+- Pedido de Álvaro Zegers: «Revisa el aplicativo bajo los criterios del coipo master»; tras
+  el informe, «haz los arreglos rápidos y actualiza la documentación». Fuentes:
+  `coipo_master_produccion` @ `fc1907b` y `coipo_jueces` @ `93fee54`. Detalle en
+  `fuente/docs/CUMPLIMIENTO-FABRICA.md` §0.
+- Datos de prueba según `docs/DATOS_DE_PRUEBA.md` de la fábrica: los ocho RUT de la nómina
+  de demostración pasan a los RUT de prueba de Clave Única (María Fuentes 11.111.111-1,
+  Paula Ortiz 22.222.222-2, Hernán Soto 33.333.333-3, Nora Castillo 77.777.777-7…); los
+  RUT generados llevan el dígito verificador incorrecto a propósito; los correos terminan
+  en `.invalid`; los teléfonos, en `+56 9 0000 NNNN`; el `sub` del IAM simulado empieza por
+  `local-`. La clave de datos pasó a `reserva_veraneo_v24`.
+- `scripts/pagina.mjs` descartaba los scripts en línea de `index.html`: la página publicada
+  salía sin la «Vista celular» y sin el tema antes de pintar (VERIFICADO en el `index.html`
+  de `4428cce`: 0 apariciones de `vc-btn`). Corregido; además `<meta name="color-scheme">`
+  y `fetchPriority="high"` en el banner (UI-21), y `.oxlintrc.json` con las reglas del Zen
+  de la semilla (COD-5).
+- Sin verificar: en este PC no hay Node, así que no corrieron `npm run lint`, el build ni
+  Playwright, y el `index.html` publicado **no** se regeneró. Falta hacerlo en un PC con
+  Node antes del commit de publicación.
+
 ## Validación
 
 - Sin aprobación trazable de la maqueta nueva. La conformidad del 28-09-2026 fue sobre la
@@ -545,6 +566,14 @@ obliga (§1-bis); las diferencias quedan para Luis en `03-ENTREGA.md`.
   versión mostrada (URL + commit), observaciones clasificadas y aprobación.
 
 ## Aprendizajes
+
+- 2026-11-25 · CON001 · «Ficticio» no basta para un RUT: con dígito verificador válido
+  puede ser de una persona real, y la maqueta es pública. Usar desde el inicio los RUT de
+  prueba de Clave Única y correos `.invalid` (`docs/DATOS_DE_PRUEBA.md` de la fábrica).
+- 2026-11-25 · CON001 · Lo que el paso de empaquetado descarta no lo ve quien prueba en
+  local: la «Vista celular» y el tema antes de pintar funcionaban con `npm run dev` y no
+  estaban en la página publicada. Buscar en el `index.html` publicado lo que el README
+  promete, no solo recorrer la página.
 
 - 2026-11-12 · CON001 · Un juez que no encuentra lo que busca puede no decirlo: `j16`
   no evaluó TypeScript ni capas porque el frontend vive en `fuente/frontend/`, y su

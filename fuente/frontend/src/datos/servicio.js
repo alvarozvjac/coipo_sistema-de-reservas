@@ -32,7 +32,7 @@ import { ADICIONAL_BASE, aleatorio, crearPersonas, semillas as semillasBase } fr
 import { hoyISO, mesDe, primerDiaMes, sumarDias, sumarMeses, ahora } from '../lib/fechas.js'
 import { ADICIONAL_TARIFA, cargoDesistimiento, noches, tarifaTramo } from '../lib/reglas.js'
 
-const CLAVE = 'reserva_veraneo_v23'
+const CLAVE = 'reserva_veraneo_v24'
 
 
 const casaBase = (id) => CASAS.find((c) => c.id === id)

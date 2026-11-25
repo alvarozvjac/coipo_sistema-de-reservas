@@ -18,9 +18,9 @@ export const NOMINA = [
   {
     id: 1,
     nombre: 'María Fuentes Rojas',
-    rut: '13.457.902-1',
-    correo: 'maria.fuentes@conaf.cl',
-    telefono: '+56 9 6123 4587',
+    rut: '11.111.111-1',
+    correo: 'maria.fuentes@conaf.invalid',
+    telefono: '+56 9 0000 4587',
     region: '05',
     rol: 'Técnica administrativa',
     unidad: 'Dirección Regional Valparaíso',
@@ -37,9 +37,9 @@ export const NOMINA = [
   {
     id: 2,
     nombre: 'Paula Ortiz Cárcamo',
-    rut: '16.882.409-2',
-    correo: 'paula.ortiz@conaf.cl',
-    telefono: '+56 9 5520 7714',
+    rut: '22.222.222-2',
+    correo: 'paula.ortiz@conaf.invalid',
+    telefono: '+56 9 0000 7714',
     region: '09',
     rol: 'Guardaparque',
     unidad: 'P.N. Conguillío, Dirección Regional Araucanía',
@@ -52,9 +52,9 @@ export const NOMINA = [
   {
     id: 3,
     nombre: 'Hernán Soto Valenzuela',
-    rut: '6.884.215-8',
-    correo: 'hsoto.valenzuela@gmail.com',
-    telefono: '+56 9 8455 1290',
+    rut: '33.333.333-3',
+    correo: 'hsoto.valenzuela@correo.invalid',
+    telefono: '+56 9 0000 1290',
     region: '08',
     rol: 'Afiliado jubilado',
     unidad: '—',
@@ -66,9 +66,9 @@ export const NOMINA = [
   {
     id: 4,
     nombre: 'Jorge Pavez Contreras',
-    rut: '15.336.204-1',
-    correo: 'jorge.pavez@conaf.cl',
-    telefono: '+56 9 7341 0028',
+    rut: '44.444.444-4',
+    correo: 'jorge.pavez@conaf.invalid',
+    telefono: '+56 9 0000 0028',
     region: '13',
     rol: 'Analista de presupuesto',
     unidad: 'Gerencia de Finanzas, Oficina Central',
@@ -81,9 +81,9 @@ export const NOMINA = [
   {
     id: 5,
     nombre: 'Carolina Núñez Vidal',
-    rut: '14.102.558-9',
-    correo: 'carolina.nunez@conaf.cl',
-    telefono: '+56 9 6610 4432',
+    rut: '55.555.555-5',
+    correo: 'carolina.nunez@conaf.invalid',
+    telefono: '+56 9 0000 4432',
     region: '05',
     rol: 'Encargada regional de Bienestar',
     unidad: 'Bienestar, Región de Valparaíso',
@@ -96,9 +96,9 @@ export const NOMINA = [
   {
     id: 6,
     nombre: 'Patricia Herrera Muñoz',
-    rut: '12.554.871-7',
-    correo: 'patricia.herrera@conaf.cl',
-    telefono: '+56 9 7788 1203',
+    rut: '66.666.666-6',
+    correo: 'patricia.herrera@conaf.invalid',
+    telefono: '+56 9 0000 1203',
     region: '13',
     rol: 'Encargada nacional de casas de veraneo',
     unidad: 'Servicio de Bienestar, Oficina Central',
@@ -111,9 +111,9 @@ export const NOMINA = [
   {
     id: 7,
     nombre: 'Nora Castillo Vergara',
-    rut: '7.215.346-4',
-    correo: 'nora.castillo@gmail.com',
-    telefono: '+56 9 6630 2194',
+    rut: '77.777.777-7',
+    correo: 'nora.castillo@correo.invalid',
+    telefono: '+56 9 0000 2194',
     region: '05',
     rol: 'Afiliada jubilada',
     unidad: '—',
@@ -127,10 +127,10 @@ export const NOMINA = [
 /** Persona de otro servicio público para los botones de demostración (no está en nómina). */
 export const EXTERNO_DEMO = {
   nombre: 'Andrea Molina Pizarro',
-  rut: '15.903.447-K',
+  rut: '88.888.888-8',
   institucion: 'Servicio Agrícola y Ganadero',
-  correo: 'andrea.molina@sag.gob.cl',
-  telefono: '+56 9 6234 1187',
+  correo: 'andrea.molina@sag.invalid',
+  telefono: '+56 9 0000 1187',
 }
 
 const normalizarRut = (r) => String(r).replace(/[^0-9kK]/g, '').toUpperCase()
@@ -147,5 +147,5 @@ export const porId = (id) => NOMINA.find((p) => p.id === id) ?? null
  */
 export function correoEncargada(region) {
   const enNomina = NOMINA.find((p) => p.perfil === 'encargada' && p.region === region)
-  return enNomina?.correo ?? `bienestar.region${region}@conaf.cl`
+  return enNomina?.correo ?? `bienestar.region${region}@conaf.invalid`
 }
